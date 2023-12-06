@@ -1,138 +1,138 @@
-
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const http = require("http").Server(app)
-const { MongoClient } = require('mongodb');
-const mongoose = require('mongoose');
+const http = require("http").Server(app);
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const preguntsMillonario = require("./src/preguntas/preguntas").Preguntas();
-const PreguntasClasif = require("./src/preguntas/clasificatorias").PreguntasClasif();
+const PreguntasClasif =
+  require("./src/preguntas/clasificatorias").PreguntasClasif();
 const Objetos = require("./src/prototipos/objetos").Objetos();
-const PreguntsMillonario = PreguntasClasif
-const array = preguntsMillonario
+const PreguntsMillonario = PreguntasClasif;
+const array = preguntsMillonario;
 let ArrayDePreguntas = [];
-let warming = false
-let helpTime = 30
-let fullMillonarioUsers = []
+let warming = false;
+let helpTime = 30;
+let fullMillonarioUsers = [];
 let PORT = process.env.PORT || 3002;
-let millonarioUsersDb = []
-let entregasUsersDb = []
+let millonarioUsersDb = [];
+let entregasUsersDb = [];
 
 const io = require("socket.io")(http, {
-    cors: { origin: "*" },
-})
-let aliverUser = []
-let dbUsers = []
-let carguesDb = []
-let dbCargues = []
+  cors: { origin: "*" },
+});
+let aliverUser = [];
+let dbUsers = [];
+let carguesDb = [];
+let dbCargues = [];
 
-let dbUsersMillonario = []
-let dbUserEntregas = []
-let millonariosGames = Objetos.millonariosGames
-let millonariosPublicGames = Objetos.millonariosPublicGames
-let newArray = []
-let newclasif = []
-let start = false
-let win = false
-let finalDone = false
-let newQuestion = {}
+let dbUsersMillonario = [];
+let dbUserEntregas = [];
+let millonariosGames = Objetos.millonariosGames;
+let millonariosPublicGames = Objetos.millonariosPublicGames;
+let newArray = [];
+let newclasif = [];
+let start = false;
+let win = false;
+let finalDone = false;
+let newQuestion = {};
 let helpsUsed = {
-    help1: true,
-    help2: true,
-    help3: true,
-    help4: true,
-}
-let ipInPlay = ''
-let millonarioActualTurn = 1
-let nowInjail = []
-let helpArray = []
-let nowClasific = false
-let nowInMillonario = false
-let millonarioParticipantsPunt = []
-let millonarioParticipants = []
-let ipArraw = []
-let ipUsers = []
-let ipUsersCalamar = []
-let puenteActual = []
-let levelInActual = 0
-let puenteActive = false
-let inMessage = 0
-let nickarray = []
-let chatUsers = 0
-let puenteTurn = 0
-let inGame = false
-let chatArray = []
-let inVideo = false
-let inVideoStream = ""
-let theTime = 0
-let posFor = -1
-let theUrl = ''
-let newServer = true
-const bodyParser = require('body-parser');
+  help1: true,
+  help2: true,
+  help3: true,
+  help4: true,
+};
+let ipInPlay = "";
+let millonarioActualTurn = 1;
+let nowInjail = [];
+let helpArray = [];
+let nowClasific = false;
+let nowInMillonario = false;
+let millonarioParticipantsPunt = [];
+let millonarioParticipants = [];
+let ipArraw = [];
+let ipUsers = [];
+let ipUsersCalamar = [];
+let puenteActual = [];
+let levelInActual = 0;
+let puenteActive = false;
+let inMessage = 0;
+let nickarray = [];
+let chatUsers = 0;
+let puenteTurn = 0;
+let inGame = false;
+let chatArray = [];
+let inVideo = false;
+let inVideoStream = "";
+let theTime = 0;
+let posFor = -1;
+let theUrl = "";
+let newServer = true;
+const bodyParser = require("body-parser");
 const router = express.Router();
 const Page = {
-    'nombre': '',
-    'name': '',
-    'color': '',
-    'logo': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzydjZUpggIFF4sP8e3qwtOvcfVhKOFRpLeQ&usqp=CAU',
-    'secciones': []
-}
-let playersArray = []
-let empresitas = []
-let temp = []
-let winIp = ''
-let lastChoose = -1
-empresitas.push(Page)
-empresitas.push()
-let stored = ''
-let checkArray = []
+  nombre: "",
+  name: "",
+  color: "",
+  logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzydjZUpggIFF4sP8e3qwtOvcfVhKOFRpLeQ&usqp=CAU",
+  secciones: [],
+};
+let playersArray = [];
+let empresitas = [];
+let temp = [];
+let winIp = "";
+let lastChoose = -1;
+empresitas.push(Page);
+empresitas.push();
+let stored = "";
+let checkArray = [];
 app.use(cors());
 http.listen(PORT, () => {
-    console.log("listening on in ", PORT)
-})
-let cont = 0
-let contHelp = 0
-let userInActual = ""
-let positionUser = 0
-let timeGame = 300
-const usuario = "moet"
-const password = "nuevaclave"
-const dbName = "users"
-const uri = `mongodb+srv://${usuario}:${password}@cluster0.pby86pv.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('conectado a mongodb'))
-    .catch(e => console.log('error de conexión', e))
+  console.log("listening on in ", PORT);
+});
+let cont = 0;
+let contHelp = 0;
+let userInActual = "";
+let positionUser = 0;
+let timeGame = 300;
+const usuario = "moet";
+const password = "nuevaclave";
+const dbName = "users";
+
 async function main(socket) {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        let miAux = []
-        let miAux2 = []
-        await client.connect()
-        dbUsers = client.db('users')
-        const dbUsersLog = client.db('LogisticaDeEntrega')
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    let miAux2 = [];
+    await client.connect();
+    dbUsers = client.db("users");
+    const dbUsersLog = client.db("LogisticaDeEntrega");
 
-        dbUsersMillonario = dbUsers.collection('millonario')
-        dbUserEntregas = dbUsersLog.collection('users')
-        dbCargues = dbUsersLog.collection('cargues')
-        // Make the appropriate DB calls
+    dbUsersMillonario = dbUsers.collection("millonario");
+    dbUserEntregas = dbUsersLog.collection("users");
+    dbCargues = dbUsersLog.collection("cargues");
+    // Make the appropriate DB calls
 
-        let resUsers = await dbUsersMillonario.find({}).project({})
-        let resArrayUsers = await resUsers.toArray()
-        resArrayUsers.map((key, i) => {
-            miAux.push({
-                name: key['_name']['$name'],
-                ip: key['_ip']['$ip'],
-                password: key['_password']['$password'],
-            })
-
-        })
-        millonarioUsersDb = miAux;
-        let resUsersLog = await dbUserEntregas.find({}).project({})
-        let resCarguesLog = await dbCargues.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
-        let resArrayCarguesLog = await resCarguesLog.toArray()
-        /*  resArrayUsersLog.map((key, i) => {
+    let resUsers = await dbUsersMillonario.find({}).project({});
+    let resArrayUsers = await resUsers.toArray();
+    resArrayUsers.map((key, i) => {
+      miAux.push({
+        name: key["_name"]["$name"],
+        ip: key["_ip"]["$ip"],
+        password: key["_password"]["$password"],
+      });
+    });
+    millonarioUsersDb = miAux;
+    let resUsersLog = await dbUserEntregas.find({}).project({});
+    let resCarguesLog = await dbCargues.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
+    let resArrayCarguesLog = await resCarguesLog.toArray();
+    /*  resArrayUsersLog.map((key, i) => {
              miAux2.push({
                  userName: key['_userName']['$userName'],
                  ip: key['_ip']['$ip'],
@@ -141,538 +141,517 @@ async function main(socket) {
              })
  
          }) */
-        carguesDb = resArrayCarguesLog
-        entregasUsersDb = resArrayUsersLog;
-        await listDatabases(client);
-        if (socket) {
-            socket.emit(
-                'logistica', {
-                'sector': 'entregasRes',
-                'actionTodo': 'db',
-                'db': entregasUsersDb
-
-            }
-            )
-            socket.emit(
-                'logistica', {
-                'sector': 'cargues',
-                'actionTodo': 'db',
-                'db': carguesDb
-
-            }
-            )
-        }
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
+    carguesDb = resArrayCarguesLog;
+    entregasUsersDb = resArrayUsersLog;
+    await listDatabases(client);
+    if (socket) {
+      socket.emit("logistica", {
+        sector: "entregasRes",
+        actionTodo: "db",
+        db: entregasUsersDb,
+      });
+      socket.emit("logistica", {
+        sector: "cargues",
+        actionTodo: "db",
+        db: carguesDb,
+      });
     }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
 }
 main().catch(console.error);
 const listDatabases = async (client) => {
-    databasesList = await client.db().admin().listDatabases();
-    let db = databasesList.databases
-    let dbRes = []
-    databasesList.databases.forEach(db => { dbRes.push(db); });
+  databasesList = await client.db().admin().listDatabases();
+  let db = databasesList.databases;
+  let dbRes = [];
+  databasesList.databases.forEach((db) => {
+    dbRes.push(db);
+  });
 };
 const reqUsers = async (Name, pass, ownIp) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        let miAux = []
-        await client.connect()
-        dbUsers = client.db('users')
-        dbUsersMillonario = dbUsers.collection('millonario')
-        await dbUsersMillonario.insertOne({
-            '_name': {
-                '$name': Name,
-            },
-            '_password': {
-                '$password': pass,
-            },
-            '_ip': {
-                '$ip': ownIp,
-            }
-        })
-        // Make the appropriate DB calls
-        let resUsers = await dbUsersMillonario.find({}).project({})
-        let resArrayUsers = await resUsers.toArray()
-        resArrayUsers.map((key, i) => {
-            miAux.push({
-                name: key['_name']['$name'],
-                ip: key['_ip']['$ip'],
-                password: key['_password']['$password'],
-            })
-
-        })
-        millonarioUsersDb = miAux;
-        await listDatabases(client);
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-
-}
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    await client.connect();
+    dbUsers = client.db("users");
+    dbUsersMillonario = dbUsers.collection("millonario");
+    await dbUsersMillonario.insertOne({
+      _name: {
+        $name: Name,
+      },
+      _password: {
+        $password: pass,
+      },
+      _ip: {
+        $ip: ownIp,
+      },
+    });
+    // Make the appropriate DB calls
+    let resUsers = await dbUsersMillonario.find({}).project({});
+    let resArrayUsers = await resUsers.toArray();
+    resArrayUsers.map((key, i) => {
+      miAux.push({
+        name: key["_name"]["$name"],
+        ip: key["_ip"]["$ip"],
+        password: key["_password"]["$password"],
+      });
+    });
+    millonarioUsersDb = miAux;
+    await listDatabases(client);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+};
 const reqUsersLog = async (socket, userName, pass, tipo) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        let miAux = []
-        await client.connect()
-        dbUserEntregas = client.db('LogisticaDeEntrega')
-        let dbUserslog = dbUserEntregas.collection('users')
-        await dbUserslog.insertOne({
-            'userName': userName,
-            'password': pass,
-            'tipo': tipo,
-            'planillas': [],
-            'historialEntregas': [],
-            'liquidacion': [{
-                'planilla': 0, 'efectivo': 0, 'consignaciones': 0, 'parciales': 0, 'relacion': 0, 'facturasEntregadas': [], 'credito': 0, 'consignaciones': [], 'dinero': {
-                    'billetes': {
-                        'cienMil': 0,
-                        'cincuentaMil': 0,
-                        'veinteMil': 0,
-                        'diezMil': 0,
-                        'cincoMil': 0,
-                        'dosMil': 0,
-                        'mil': 0
-                    },
-                    'monedas': {
-                        'milM': 0,
-                        'quinientos': 0,
-                        'dosCientos': 0,
-                        'cien': 0,
-                        'cincuentaCentavos': 0
-                    },
-                    'total': 0
-                }
-            }],
-            'dinero': 0,
-            'entregas': 0,
-            'asignados': 0,
-            'restantes': 0
-        })
-        // Make the appropriate DB calls
-        let resUsersLog = await dbUserslog.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
-        entregasUsersDb = resArrayUsersLog;
-        await listDatabases(client);
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-}
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    await client.connect();
+    dbUserEntregas = client.db("LogisticaDeEntrega");
+    let dbUserslog = dbUserEntregas.collection("users");
+    await dbUserslog.insertOne({
+      userName: userName,
+      password: pass,
+      tipo: tipo,
+      planillas: [],
+      historialEntregas: [],
+      liquidacion: [
+        {
+          planilla: 0,
+          efectivo: 0,
+          consignaciones: 0,
+          parciales: 0,
+          relacion: 0,
+          facturasEntregadas: [],
+          credito: 0,
+          consignaciones: [],
+          dinero: {
+            billetes: {
+              cienMil: 0,
+              cincuentaMil: 0,
+              veinteMil: 0,
+              diezMil: 0,
+              cincoMil: 0,
+              dosMil: 0,
+              mil: 0,
+            },
+            monedas: {
+              milM: 0,
+              quinientos: 0,
+              dosCientos: 0,
+              cien: 0,
+              cincuentaCentavos: 0,
+            },
+            total: 0,
+          },
+        },
+      ],
+      dinero: 0,
+      entregas: 0,
+      asignados: 0,
+      restantes: 0,
+    });
+    // Make the appropriate DB calls
+    let resUsersLog = await dbUserslog.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
+    entregasUsersDb = resArrayUsersLog;
+    await listDatabases(client);
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+};
 const updateEntregadoresLog = async (socket, user, datos, add) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        await client.connect()
-        dbUserEntregas = client.db('LogisticaDeEntrega')
-        let dbUserslog = dbUserEntregas.collection('users')
-        await dbUserslog.updateOne({ 'userName': user },
-            {
-                $set: { ...datos }
-            })
-        let resUsersLog = await dbUserslog.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    await client.connect();
+    dbUserEntregas = client.db("LogisticaDeEntrega");
+    let dbUserslog = dbUserEntregas.collection("users");
+    await dbUserslog.updateOne(
+      { userName: user },
+      {
+        $set: { ...datos },
+      }
+    );
+    let resUsersLog = await dbUserslog.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
 
-        entregasUsersDb = resArrayUsersLog;
+    entregasUsersDb = resArrayUsersLog;
 
-        await listDatabases(client);
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
+    await listDatabases(client);
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    // Make the appropriate DB calls
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+  const client2 = new MongoClient(uri);
+  try {
+    let miAux = [];
+    await client2.connect();
+    dbCargues = client2.db("LogisticaDeEntrega");
+    let dbcargueslog = dbCargues.collection("cargues");
+    carguesDb.map((key, i) => {
+      if (parseInt(key.numero) === parseInt(datos)) {
+        console.log(key, "ESO");
+        miAux = key.planilla;
+        miAux.entregadores.push(user);
+      }
+    });
+    await dbcargueslog.updateOne(
+      { numero: parseInt(datos) },
+      {
+        $set: { planilla: miAux },
+      }
+    );
+    // Make the appropriate DB calls
+    let resCarguesLog = await dbcargueslog.find({}).project({});
+    let resArrayCarguesLog = await resCarguesLog.toArray();
 
-        }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-        }
-        )
-        // Make the appropriate DB calls
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-    const client2 = new MongoClient(uri);
-    try {
-        let miAux = []
-        await client2.connect()
-        dbCargues = client2.db('LogisticaDeEntrega')
-        let dbcargueslog = dbCargues.collection('cargues')
-        carguesDb.map((key, i) => {
-            if (parseInt(key.numero) === parseInt(datos)) {
-                console.log(key, 'ESO');
-                miAux = key.planilla
-                miAux.entregadores.push(user)
-            }
-        })
-        await dbcargueslog.updateOne({ 'numero': parseInt(datos) },
-            {
-                $set: { planilla: miAux }
-            })
-        // Make the appropriate DB calls
-        let resCarguesLog = await dbcargueslog.find({}).project({})
-        let resArrayCarguesLog = await resCarguesLog.toArray()
+    carguesDb = resArrayCarguesLog;
 
-        carguesDb = resArrayCarguesLog;
-
-        await listDatabases(client2);
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'cargues',
-            'actionTodo': 'db',
-            'db': carguesDb
-
-        }
-        )
-        socket.emit(
-            'logistica', {
-            'sector': 'cargues',
-            'actionTodo': 'db',
-            'db': carguesDb
-
-        }
-        )
-       
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client2.close();
-    }
-
-}
+    await listDatabases(client2);
+    socket.broadcast.emit("logistica", {
+      sector: "cargues",
+      actionTodo: "db",
+      db: carguesDb,
+    });
+    socket.emit("logistica", {
+      sector: "cargues",
+      actionTodo: "db",
+      db: carguesDb,
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client2.close();
+  }
+};
 const actualizeEntregador = async (socket, datos) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        let miAux = []
-        await client.connect()
-        dbUserEntregas = client.db('LogisticaDeEntrega')
-        let dbUserslog = dbUserEntregas.collection('users')
-        await dbUserslog.updateOne({ 'userName': datos.userName },
-            {
-                $set: { ...datos }
-            })
-        let resUsersLog = await dbUserslog.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    await client.connect();
+    dbUserEntregas = client.db("LogisticaDeEntrega");
+    let dbUserslog = dbUserEntregas.collection("users");
+    await dbUserslog.updateOne(
+      { userName: datos.userName },
+      {
+        $set: { ...datos },
+      }
+    );
+    let resUsersLog = await dbUserslog.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
 
-        entregasUsersDb = resArrayUsersLog;
-        await listDatabases(client);
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
+    entregasUsersDb = resArrayUsersLog;
+    await listDatabases(client);
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
 
-        }
-        )
-
-
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-
-
-
-}
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+};
 const updateUsersLog = async (socket, user, datos, add, many) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    await client.connect();
+    dbUserEntregas = client.db("LogisticaDeEntrega");
+    let dbUserslog = dbUserEntregas.collection("users");
 
-        let miAux = []
-        await client.connect()
-        dbUserEntregas = client.db('LogisticaDeEntrega')
-        let dbUserslog = dbUserEntregas.collection('users')
+    let theUser = [];
+    let oldAsignadas = 0;
+    let oldFaltantes = 0;
 
-        let theUser = []
-        let oldAsignadas = 0
-        let oldFaltantes = 0
-
-        let isAsignada = false
-        entregasUsersDb.map((key, i) => {
-            if (key.userName === user) {
-                oldFaltantes = parseInt(key.restantes)
-                theUser = key.planillas
-                theUser.map((keyUser, iUser) => {
-                    if (parseInt(keyUser) === parseInt(datos)) {
-                        isAsignada = true
-                    }
-                })
-                if (!isAsignada) {
-                    theUser.push(datos)
-                }
-            }
-        })
-        await dbUserslog.updateOne({ 'userName': user },
-
-            {
-                $set: {
-                    'planillas': theUser,
-                    'asignados': oldAsignadas + parseInt(many),
-                    'restantes': oldFaltantes + parseInt(many)
-
-                }
-            })
-        let resUsersLog = await dbUserslog.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
-
-        entregasUsersDb = resArrayUsersLog;
-        await listDatabases(client);
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
+    let isAsignada = false;
+    entregasUsersDb.map((key, i) => {
+      if (key.userName === user) {
+        oldFaltantes = parseInt(key.restantes);
+        theUser = key.planillas;
+        theUser.map((keyUser, iUser) => {
+          if (parseInt(keyUser) === parseInt(datos)) {
+            isAsignada = true;
+          }
+        });
+        if (!isAsignada) {
+          theUser.push(datos);
         }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
+      }
+    });
+    await dbUserslog.updateOne(
+      { userName: user },
+
+      {
+        $set: {
+          planillas: theUser,
+          asignados: oldAsignadas + parseInt(many),
+          restantes: oldFaltantes + parseInt(many),
+        },
+      }
+    );
+    let resUsersLog = await dbUserslog.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
+
+    entregasUsersDb = resArrayUsersLog;
+    await listDatabases(client);
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+  const client2 = new MongoClient(uri);
+  try {
+    let miAux = [];
+    await client2.connect();
+    dbCargues = client2.db("LogisticaDeEntrega");
+    let dbcargueslog = dbCargues.collection("cargues");
+    carguesDb.map((key, i) => {
+      if (parseInt(key.numero) === parseInt(datos)) {
+        console.log(key, "ESO");
+        miAux = key.planilla;
+        miAux.entregadores.push(user);
+      }
+    });
+    if (!miAux !== true) {
+      await dbcargueslog.updateOne(
+        { numero: parseInt(datos) },
+        {
+          $set: { planilla: miAux },
         }
-        )
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
+      );
+      let resCarguesLog = await dbcargueslog.find({}).project({});
+      let resArrayCarguesLog = await resCarguesLog.toArray();
+
+      carguesDb = resArrayCarguesLog;
+
+      await listDatabases(client2);
+      socket.emit("logistica", {
+        sector: "cargues",
+        actionTodo: "db",
+        db: carguesDb,
+      });
+      socket.broadcast.emit("logistica", {
+        sector: "cargues",
+        actionTodo: "db",
+        db: carguesDb,
+      });
     }
-    const client2 = new MongoClient(uri);
-    try {
-
-        let miAux = []
-        await client2.connect()
-        dbCargues = client2.db('LogisticaDeEntrega')
-        let dbcargueslog = dbCargues.collection('cargues')
-        carguesDb.map((key, i) => {
-            if (parseInt(key.numero) === parseInt(datos)) {
-                console.log(key, 'ESO');
-                miAux = key.planilla
-                miAux.entregadores.push(user)
-            }
-        })
-        if (!miAux !== true) {
-            await dbcargueslog.updateOne({ 'numero': parseInt(datos) },
-                {
-                    $set: { planilla: miAux }
-                })
-            let resCarguesLog = await dbcargueslog.find({}).project({})
-            let resArrayCarguesLog = await resCarguesLog.toArray()
-
-            carguesDb = resArrayCarguesLog;
-
-            await listDatabases(client2);
-            socket.emit(
-                'logistica', {
-                'sector': 'cargues',
-                'actionTodo': 'db',
-                'db': carguesDb
-
-            }
-            )
-            socket.broadcast.emit(
-                'logistica', {
-                'sector': 'cargues',
-                'actionTodo': 'db',
-                'db': carguesDb
-
-            }
-            )
-
-        }
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client2.close();
-    }
-
-
-}
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client2.close();
+  }
+};
 
 const reqCarguesLog = async (socket, numero, planilla) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        let miAux = []
-        await client.connect()
-        dbCargues = client.db('LogisticaDeEntrega')
-        let dbcargueslog = dbCargues.collection('cargues')
-        await dbcargueslog.insertOne({
-            'numero': numero,
-            'planilla': {
-                "devoluciones": planilla.devoluciones,
-                "valorParciales": planilla.valorParciales,
-                "numeroDePlanilla": planilla.numeroDePlanilla,
-                "facturas": planilla.facturas,
-                "total": planilla.total,
-                "totalContado": planilla.totalContado,
-                "totalCredito": planilla.totalCredito,
-                "agotados": planilla.agotados,
-                "consignaciones": planilla.consignaciones,
-                "observaciones": planilla.observaciones,
-                "facturasEntregadas": planilla.facturasEntregadas,
-                "valorEntregado": planilla.valorEntregado,
-                "entregadores": planilla.entregadores
-            }
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    let miAux = [];
+    await client.connect();
+    dbCargues = client.db("LogisticaDeEntrega");
+    let dbcargueslog = dbCargues.collection("cargues");
+    await dbcargueslog.insertOne({
+      numero: numero,
+      planilla: {
+        devoluciones: planilla.devoluciones,
+        valorParciales: planilla.valorParciales,
+        numeroDePlanilla: planilla.numeroDePlanilla,
+        facturas: planilla.facturas,
+        total: planilla.total,
+        totalContado: planilla.totalContado,
+        totalCredito: planilla.totalCredito,
+        agotados: planilla.agotados,
+        consignaciones: planilla.consignaciones,
+        observaciones: planilla.observaciones,
+        facturasEntregadas: planilla.facturasEntregadas,
+        valorEntregado: planilla.valorEntregado,
+        entregadores: planilla.entregadores,
+      },
+    });
+    // Make the appropriate DB calls
+    let resCarguesLog = await dbcargueslog.find({}).project({});
+    let resArrayCarguesLog = await resCarguesLog.toArray();
 
-        })
-        // Make the appropriate DB calls
-        let resCarguesLog = await dbcargueslog.find({}).project({})
-        let resArrayCarguesLog = await resCarguesLog.toArray()
+    carguesDb = resArrayCarguesLog;
 
-        carguesDb = resArrayCarguesLog;
-
-        await listDatabases(client);
-
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-    socket.emit(
-        'logistica', {
-        'sector': 'cargues',
-        'actionTodo': 'db',
-        'db': carguesDb
-
-    }
-    )
-    socket.broadcast.emit(
-        'logistica', {
-        'sector': 'cargues',
-        'actionTodo': 'db',
-        'db': carguesDb
-
-    }
-    )
-    socket.emit(
-        'logistica', {
-        'sector': 'entregasRes',
-        'actionTodo': 'db',
-        'db': entregasUsersDb
-
-    }
-    )
-    socket.broadcast.emit(
-        'logistica', {
-        'sector': 'entregasRes',
-        'actionTodo': 'db',
-        'db': entregasUsersDb
-
-    }
-    )
-}
+    await listDatabases(client);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+  socket.emit("logistica", {
+    sector: "cargues",
+    actionTodo: "db",
+    db: carguesDb,
+  });
+  socket.broadcast.emit("logistica", {
+    sector: "cargues",
+    actionTodo: "db",
+    db: carguesDb,
+  });
+  socket.emit("logistica", {
+    sector: "entregasRes",
+    actionTodo: "db",
+    db: entregasUsersDb,
+  });
+  socket.broadcast.emit("logistica", {
+    sector: "entregasRes",
+    actionTodo: "db",
+    db: entregasUsersDb,
+  });
+};
 const entregaCorrecta = async (socket, numero, entregador) => {
-    socket.emit(
-        'logistica', {
-        'sector': 'confirmEntrega',
-        'actionTodo': 'confirmEntrega',
-        'data': [numero,entregador]
-    }
-    )
-    socket.broadcast.emit(
-        'logistica', {
-        'sector': 'confirmEntrega',
-        'actionTodo': 'confirmEntrega',
-        'data': [numero,entregador]
-    }
-    )
-    console.log('numero  ', numero, '  entregador  ', entregador);
-    entregasUsersDb.map((key, i) => {
-        if (key.tipo === "entregador") {
-            key.planillas.map((keyPlan, iPlan) => {
-                if (parseInt(keyPlan) === parseInt(numero) && key.userName !== entregador) {
-                    entregarUno(socket, key.userName, parseInt(key.restantes))
-                }
-            })
+  socket.emit("logistica", {
+    sector: "confirmEntrega",
+    actionTodo: "confirmEntrega",
+    data: [numero, entregador],
+  });
+  socket.broadcast.emit("logistica", {
+    sector: "confirmEntrega",
+    actionTodo: "confirmEntrega",
+    data: [numero, entregador],
+  });
+  console.log("numero  ", numero, "  entregador  ", entregador);
+  entregasUsersDb.map((key, i) => {
+    if (key.tipo === "entregador") {
+      key.planillas.map((keyPlan, iPlan) => {
+        if (
+          parseInt(keyPlan) === parseInt(numero) &&
+          key.userName !== entregador
+        ) {
+          entregarUno(socket, key.userName, parseInt(key.restantes));
         }
-    })
-    
-}
+      });
+    }
+  });
+};
 const entregarUno = async (socket, entregador, faltantes) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
-    try {
-        await client.connect()
-        dbUserEntregas = client.db('LogisticaDeEntrega')
-        let dbUserslog = dbUserEntregas.collection('users')
-        await dbUserslog.updateOne({ 'userName': entregador },
-            {
-                $set: { 'restantes': parseInt(faltantes) - 1 }
-            })
-        let resUsersLog = await dbUserslog.find({}).project({})
-        let resArrayUsersLog = await resUsersLog.toArray()
-        entregasUsersDb = resArrayUsersLog;
-        await listDatabases(client);
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-    } catch (e) {
-        console.error(e);
-    } finally {
-        await client.close();
-    }
-
-
-}
+  const uri =
+    "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  });
+  try {
+    await client.connect();
+    dbUserEntregas = client.db("LogisticaDeEntrega");
+    let dbUserslog = dbUserEntregas.collection("users");
+    await dbUserslog.updateOne(
+      { userName: entregador },
+      {
+        $set: { restantes: parseInt(faltantes) - 1 },
+      }
+    );
+    let resUsersLog = await dbUserslog.find({}).project({});
+    let resArrayUsersLog = await resUsersLog.toArray();
+    entregasUsersDb = resArrayUsersLog;
+    await listDatabases(client);
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await client.close();
+  }
+};
 /*
 
 const sumarUno = async (socket, entregador, entregas) => {
-    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-    const client = new MongoClient(uri);
+    const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+        const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
     try {
         await client.connect()
         dbCargues = client.db('LogisticaDeEntrega')
@@ -709,1178 +688,1042 @@ const sumarUno = async (socket, entregador, entregas) => {
 
 } */
 const updateCarguesLog = async (socket, numero, planilla) => {
-    if (!planilla !== true) {
-        const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
-        const client = new MongoClient(uri);
-        try {
-            let miAux = []
-            await client.connect()
-            dbCargues = client.db('LogisticaDeEntrega')
-            let dbcargueslog = dbCargues.collection('cargues')
-            await dbcargueslog.updateOne({ 'numero': parseInt(numero) },
-                {
-                    $set: { planilla: planilla }
-                })
-            // Make the appropriate DB calls
-            let resCarguesLog = await dbcargueslog.find({}).project({})
-            let resArrayCarguesLog = await resCarguesLog.toArray()
+  if (!planilla !== true) {
+    const uri =
+      "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: ServerApiVersion.v1,
+    });
 
-            carguesDb = resArrayCarguesLog;
-
-            await listDatabases(client);
-
-        } catch (e) {
-            console.error(e);
-        } finally {
-            await client.close();
+    try {
+      let miAux = [];
+      await client.connect();
+      dbCargues = client.db("LogisticaDeEntrega");
+      let dbcargueslog = dbCargues.collection("cargues");
+      await dbcargueslog.updateOne(
+        { numero: parseInt(numero) },
+        {
+          $set: { planilla: planilla },
         }
-        socket.emit(
-            'logistica', {
-            'sector': 'cargues',
-            'actionTodo': 'db',
-            'db': carguesDb
+      );
+      // Make the appropriate DB calls
+      let resCarguesLog = await dbcargueslog.find({}).project({});
+      let resArrayCarguesLog = await resCarguesLog.toArray();
 
-        }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'cargues',
-            'actionTodo': 'db',
-            'db': carguesDb
+      carguesDb = resArrayCarguesLog;
 
-        }
-        )
-        socket.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
-        socket.broadcast.emit(
-            'logistica', {
-            'sector': 'entregasRes',
-            'actionTodo': 'db',
-            'db': entregasUsersDb
-
-        }
-        )
+      await listDatabases(client);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      await client.close();
     }
-
-}
+    socket.emit("logistica", {
+      sector: "cargues",
+      actionTodo: "db",
+      db: carguesDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "cargues",
+      actionTodo: "db",
+      db: carguesDb,
+    });
+    socket.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+    socket.broadcast.emit("logistica", {
+      sector: "entregasRes",
+      actionTodo: "db",
+      db: entregasUsersDb,
+    });
+  }
+};
 app.use(express.static("public"));
 io.on("connection", (socket) => {
-
-    socket.handshake.address != '::ffff:127.0.0.1' ? console.log("User connection", socket.id) : console.log
-    const checkingUsers = () => {
-        let aliveUsers = []
-        let aliveUsersB = []
-        if (aliverUser.length > 0) {
-            aliverUser.map((key, i) => {
-                fullMillonarioUsers.map((compare, x) => {
-                    if (key.ip == compare.ip) {
-                        aliveUsers.push(compare)
-                    }
-                })
-                millonarioParticipants.map((compare, x) => {
-                    if (key.ip == compare.ip) {
-                        aliveUsersB.push(compare)
-                    }
-                })
-            })
-            fullMillonarioUsers = aliveUsers
-            millonarioParticipants = aliveUsersB
-            socket.broadcast.emit(
-                'millonario', {
-                'actionTodo': 'playerDataRes',
-                'dataIn': millonarioParticipants,
-            })
-        }
-        aliverUser = []
+  socket.handshake.address != "::ffff:127.0.0.1"
+    ? console.log("User connection", socket.id)
+    : console.log;
+  const checkingUsers = () => {
+    let aliveUsers = [];
+    let aliveUsersB = [];
+    if (aliverUser.length > 0) {
+      aliverUser.map((key, i) => {
+        fullMillonarioUsers.map((compare, x) => {
+          if (key.ip == compare.ip) {
+            aliveUsers.push(compare);
+          }
+        });
+        millonarioParticipants.map((compare, x) => {
+          if (key.ip == compare.ip) {
+            aliveUsersB.push(compare);
+          }
+        });
+      });
+      fullMillonarioUsers = aliveUsers;
+      millonarioParticipants = aliveUsersB;
+      socket.broadcast.emit("millonario", {
+        actionTodo: "playerDataRes",
+        dataIn: millonarioParticipants,
+      });
     }
+    aliverUser = [];
+  };
 
-    const actUsers = () => {
-        if (checkArray.length > 0) {
-            let findedArray = [checkArray[checkArray.length - 1].ip]
-            for (let index = checkArray.length - 1; index > -1; --index) {
-                const element = checkArray[index].ip;
-                let finded = false
-                for (let index2 = 0; index2 < findedArray.length; index2++) {
-                    const element2 = findedArray[index2];
-                    if (element === element2) {
-                        finded = true
-                    }
-                }
-                if (!finded) {
-                    findedArray.push(element)
-                }
-
-            }
-            let namesArray = []
-            for (let index = 0; index < nickarray.length; index++) {
-                const element = nickarray[index];
-                findedArray.map((key, i) => {
-                    if (key === element.ip) {
-                        namesArray.push(element)
-                    }
-                    return
-                })
-            }
-
-            socket.broadcast.emit(
-                'chat', {
-                'actionTodo': 'users',
-                'dataIn': findedArray.length
-            })
-
-
-            socket.broadcast.emit(
-                'chat', {
-                'actionTodo': 'newMessage',
-                'dataIn': chatArray
-            })
-
-            socket.broadcast.emit(
-                'chat', {
-                'actionTodo': 'nicksAct',
-                'dataIn': namesArray
-            })
-
-
-            chatUsers = findedArray.length
-            checkArray = []
+  const actUsers = () => {
+    if (checkArray.length > 0) {
+      let findedArray = [checkArray[checkArray.length - 1].ip];
+      for (let index = checkArray.length - 1; index > -1; --index) {
+        const element = checkArray[index].ip;
+        let finded = false;
+        for (let index2 = 0; index2 < findedArray.length; index2++) {
+          const element2 = findedArray[index2];
+          if (element === element2) {
+            finded = true;
+          }
         }
+        if (!finded) {
+          findedArray.push(element);
+        }
+      }
+      let namesArray = [];
+      for (let index = 0; index < nickarray.length; index++) {
+        const element = nickarray[index];
+        findedArray.map((key, i) => {
+          if (key === element.ip) {
+            namesArray.push(element);
+          }
+          return;
+        });
+      }
 
+      socket.broadcast.emit("chat", {
+        actionTodo: "users",
+        dataIn: findedArray.length,
+      });
 
+      socket.broadcast.emit("chat", {
+        actionTodo: "newMessage",
+        dataIn: chatArray,
+      });
+
+      socket.broadcast.emit("chat", {
+        actionTodo: "nicksAct",
+        dataIn: namesArray,
+      });
+
+      chatUsers = findedArray.length;
+      checkArray = [];
     }
-    if (newServer) {
-        setInterval(actUsers, 10000);
-        /* setInterval(() => {
+  };
+  if (newServer) {
+    setInterval(actUsers, 10000);
+    /* setInterval(() => {
             checkingUsers()
         }, 60000); */
-        newServer = false
-    }
+    newServer = false;
+  }
 
-    const checkUsersProg = () => {
-        console.log('s');
-    }
-    if (!start) {
-        checkUsersProg()
-        start = true
-
-    }
-    const checkUsers = (id) => {
-        if (id) {
-            fullMillonarioUsers.map((key, i) => {
-                if (key.socketId === id) {
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'isOut',
-                        'dataIn': key.name
-                    })
-
-                }
-            })
-            let millonarioParticipantsCopy = []
-            millonarioParticipants.map((key, x) => {
-                if (key.socketId === id) {
-                    console.log('pafuera', key.name)
-                } else {
-                    millonarioParticipantsCopy.push(key)
-                }
-            })
-            millonarioParticipants = millonarioParticipantsCopy
-            socket.broadcast.emit(
-                'millonario', {
-                'actionTodo': 'playerDataRes',
-                'dataIn': millonarioParticipantsCopy,
-            })
+  const checkUsersProg = () => {
+    console.log("s");
+  };
+  if (!start) {
+    checkUsersProg();
+    start = true;
+  }
+  const checkUsers = (id) => {
+    if (id) {
+      fullMillonarioUsers.map((key, i) => {
+        if (key.socketId === id) {
+          socket.broadcast.emit("millonario", {
+            actionTodo: "isOut",
+            dataIn: key.name,
+          });
+        }
+      });
+      let millonarioParticipantsCopy = [];
+      millonarioParticipants.map((key, x) => {
+        if (key.socketId === id) {
+          console.log("pafuera", key.name);
         } else {
-            socket.broadcast.emit(
-                'chat', {
-                'actionTodo': 'checking',
-                'dataIn': true
-            })
-
-            setTimeout(actUsers, 10000)
+          millonarioParticipantsCopy.push(key);
         }
+      });
+      millonarioParticipants = millonarioParticipantsCopy;
+      socket.broadcast.emit("millonario", {
+        actionTodo: "playerDataRes",
+        dataIn: millonarioParticipantsCopy,
+      });
+    } else {
+      socket.broadcast.emit("chat", {
+        actionTodo: "checking",
+        dataIn: true,
+      });
 
+      setTimeout(actUsers, 10000);
     }
-    socket.on('logistica', (paquete) => {
-        const paqueteObj = paquete.dataIn
-        if (paquete.actionTodo === 'crearUsuarios') {
-            reqUsersLog(socket, paqueteObj.user.userName, paqueteObj.user.password, paqueteObj.user.tipo)
+  };
+  socket.on("logistica", (paquete) => {
+    const paqueteObj = paquete.dataIn;
+    if (paquete.actionTodo === "crearUsuarios") {
+      reqUsersLog(
+        socket,
+        paqueteObj.user.userName,
+        paqueteObj.user.password,
+        paqueteObj.user.tipo
+      );
+    }
+    if (paquete.actionTodo === "crearCargue") {
+      reqCarguesLog(socket, paqueteObj.numero, paqueteObj.planilla);
+    }
+    if (paquete.actionTodo === "updateCargue") {
+      updateCarguesLog(socket, paqueteObj.numero, paqueteObj.planilla);
+    }
+    if (paquete.actionTodo === "updateEntregador") {
+      actualizeEntregador(socket, paqueteObj);
+    }
+    if (paquete.actionTodo === "updateUnEntregadorData") {
+      updateEntregadoresLog(socket, paqueteObj.id, paqueteObj.data);
+    }
+    if (paquete.actionTodo === "updateEntregadorAdd") {
+      console.log(paquete);
+      updateUsersLog(
+        socket,
+        paqueteObj.userName,
+        parseInt(paqueteObj.numero),
+        true,
+        paqueteObj.asignados
+      );
+    }
+    if (paquete.actionTodo === "entregaCorrecta") {
+      entregaCorrecta(
+        socket,
+        parseInt(paqueteObj.numero),
+        paqueteObj.entregador
+      );
+    }
+    if (paquete.actionTodo === "logDone") {
+      main(socket);
+    }
+  });
+  socket.on("chat", (chat) => {
+    const adress = chat.dataIn.adress;
+
+    let nameCompobe = "";
+    if (nickarray.length !== 0) {
+      nickarray.map((key) => {
+        if (key.adress === adress) {
+          nameCompobe = key.user;
+          return true;
         }
-        if (paquete.actionTodo === 'crearCargue') {
-            reqCarguesLog(socket, paqueteObj.numero, paqueteObj.planilla)
-        }
-        if (paquete.actionTodo === 'updateCargue') {
-            updateCarguesLog(socket, paqueteObj.numero, paqueteObj.planilla)
-        }
-        if (paquete.actionTodo === 'updateEntregador') {
-            actualizeEntregador(socket, paqueteObj)
-        }
-        if (paquete.actionTodo === 'updateUnEntregadorData') {
-            updateEntregadoresLog(socket, paqueteObj.id, paqueteObj.data)
-        }
-        if (paquete.actionTodo === 'updateEntregadorAdd') {
-            console.log(paquete);
-            updateUsersLog(socket, paqueteObj.userName, parseInt(paqueteObj.numero), true, paqueteObj.asignados)
-        }
-        if (paquete.actionTodo === 'entregaCorrecta') {
-            entregaCorrecta(socket, parseInt(paqueteObj.numero), paqueteObj.entregador)
-        }
-        if (paquete.actionTodo === 'logDone') {
-            main(socket)
-
-        }
-    });
-    socket.on('chat', (chat) => {
-        const adress = chat.dataIn.adress
-
-        let nameCompobe = ''
-        if (nickarray.length !== 0) {
-            nickarray.map((key) => {
-
-                if (key.adress === adress) {
-                    nameCompobe = key.user
-                    return true
-                }
-            })
-        }
-
-        const actionTodo = chat.dataIn.actionTodo
-        const date = chat.dataIn.date
-        const user = chat.dataIn.user
-        const chatMsg = chat.dataIn.chat
-        const privateMsg = chat.dataIn.privateMsg
-        const privAdress = chat.dataIn.privAdress
-        const ip = chat.dataIn.ip
-        const video = chat.dataIn.video || false
-        switch (actionTodo) {
-            case 'checkingUsers':
-                checkArray.push({ ip: ip })
-                break;
-            case 'retomed':
-                let findes = false
-                nickarray[chat.dataIn.position].adress = adress
-                break;
-
-            case 'movie':
-                if (privateMsg && (chatMsg === 'videoItem' || chatMsg === 'audioItem')) {
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'privteMsg',
-                        'movie': true,
-                        'dataIn': {
-                            actionTodo: 'privteMsg',
-                            mensaje: {
-                                adress: adress,
-                                chat: chatMsg,
-                                date: date,
-                                user: user,
-                                privAdress: privAdress,
-                                ip: ip,
-                                video: video,
-                                dataIn: {
-                                    ip: ip,
-                                    actionTodo: 'privteMsg',
-                                    privateMsg: true,
-                                    adress: adress,
-                                    chat: chatMsg,
-                                    date: date,
-                                    user: user,
-                                    privAdress: privAdress,
-                                    video: video
-                                }
-                            },
-                            privateMsg: true,
-                        }
-                    })
-                } else {
-                    chatArray.push({
-                        ip: ip,
-                        date: date,
-                        user: user,
-                        chat: chatMsg,
-                        adress: adress,
-                        privateMsg: false,
-                        video: video
-                    });
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'newMessage',
-                        'dataIn': chatArray,
-                        'movie': true
-                    })
-                    inMessage++
-                }
-                break;
-
-            case 'ipSend':
-                let finds = false
-                let retomed = -1
-                let actualChat = -1
-
-                if (nickarray.length > 0) {
-
-                    nickarray.map((key, i) => {
-
-                        if (key.ip === ip) {
-                            finds = true
-                            actualChat = key.inTime
-                            retomed = i
-                            return
-                        }
-
-                    })
-                }
-                if (finds) {
-                    socket.emit(
-                        'chat', {
-                        'actionTodo': 'exist',
-                        'dataIn': {
-                            user: nickarray[retomed],
-                            array: chatArray,
-                            position: retomed,
-                            inTime: actualChat
-
-                        }
-                    })
-                }
-
-                break;
-
-            case 'reset':
-
-                inMessage = 0
-                nickarray = []
-                chatUsers = 0
-                inGame = false
-                chatArray = []
-                inVideo = false
-                theTime = 0
-                theUrl = ''
-                chatArray = []
-
-                socket.broadcastemit(
-                    'chat', {
-                    'actionTodo': 'reset',
-                    'dataIn': chatArray
-                })
-            case 'new':
-                let nickarrayAux = nickarray
-                let find = false
-                nickarray.map((key, i) => {
-                    if (key === user) {
-                        find = true
-                        return
-                    }
-                })
-                if (!find) {
-
-                    socket.emit(
-                        'chat', {
-                        'actionTodo': 'inMessage',
-                        'dataIn': inMessage
-                    })
-                    nickarray.push({ user: user, adress: adress, ip: ip, inTime: chatArray.length, adress: adress })
-                    const auxUsers = chatUsers + 1
-                    chatArray.push({
-                        date: date,
-                        user: 'Sistema',
-                        chat: `${user} se ha conectado`,
-                    });
-
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'newChat',
-                        'dataIn': chatArray
-                    })
-                    chatUsers = auxUsers
-                    inMessage++
-
-                }
-                setTimeout(checkUsers, 5000)
-
-                break;
-            case 'add':
-                if (privateMsg) {
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'privteMsg',
-                        'dataIn': {
-                            actionTodo: 'privteMsg',
-                            mensaje: {
-                                adress: adress,
-                                chat: chatMsg,
-                                date: date,
-                                user: user,
-                                privAdress: privAdress,
-                                ip: ip,
-                                dataIn: {
-                                    ip: ip,
-                                    actionTodo: 'privteMsg',
-                                    privateMsg: true,
-                                    adress: adress,
-                                    chat: chatMsg,
-                                    date: date,
-                                    user: user,
-                                    privAdress: privAdress,
-                                }
-                            },
-                            privateMsg: true,
-
-                        }
-                    })
-                } else {
-
-                    chatArray.push({
-                        ip: ip,
-                        date: date,
-                        user: user,
-                        chat: chatMsg,
-                        adress: adress,
-                        privateMsg: false,
-
-                    });
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'newMessage',
-                        'dataIn': chatArray
-                    })
-                    inMessage++
-
-                }
-
-                break;
-            case 'stream':
-                if (privateMsg) {
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'privteMsgstreaming',
-                        'dataIn': {
-                            actionTodo: 'privteMsgstreaming',
-                            mensaje: {
-                                adress: adress,
-                                chat: chatMsg,
-                                date: date,
-                                user: user,
-                                privAdress: privAdress,
-                                ip: ip,
-                                video: video,
-
-                                dataIn: {
-                                    ip: ip,
-                                    actionTodo: 'privteMsgstreaming',
-                                    privateMsg: true,
-                                    adress: adress,
-                                    chat: chatMsg,
-                                    date: date,
-                                    user: user,
-                                    privAdress: privAdress,
-                                    video: video
-
-                                }
-                            },
-                            privateMsg: true,
-
-                        }
-                    })
-                } else {
-
-                    socket.broadcast.emit(
-                        'chat', {
-                        'actionTodo': 'streaming',
-                        'dataIn': video
-                    })
-                }
-
-                break;
-
-            default:
-                break;
-
-        }
-    });
-    socket.on('BINGO', (msg) => {
-        let actionTodo = msg.actionTodo
-        let dataIn = msg.dataIn
-        let pos = msg.dataIn.pos || ''
-        let ip = msg.dataIn.ip || ''
-        let page = msg.dataIn.page || ''
-        let user = msg.dataIn.user || ''
-        let hora = msg.dataIn.hora || ''
-        let pageFrom = msg.pageFrom || ''
-        switch (actionTodo) {
-            case 'ipSend':
-                let finds = false
-                if (ipArraw.length > 0) {
-                    ipArraw.map((key, i) => {
-                        if (key.ip === ip) {
-                            finds = true
-                            return
-                        }
-                    })
-                }
-                if (finds) {
-                    if (user !== '') {
-                        let finded = false
-                        ipUsers.map((key, i) => {
-                            if (key.user === user) {
-                                finded = true
-                                return
-                            }
-                        })
-                        if (!finded) {
-                            ipUsers.push({
-                                ip: ip,
-                                hora: hora,
-                                user: user,
-                            })
-                            socket.broadcast.emit(
-                                'Secure', {
-                                'actionTodo': 'userNew',
-                                'dataIn': ipUsers
-                            })
-                        }
-                    }
-                    ipArraw.push({
-                        ip: ip,
-                        hora: hora,
-                        page: pageFrom,
-                        mensaje: 'in Again'
-                    })
-                    socket.broadcast.emit(
-                        'Secure', {
-                        'actionTodo': 'userinzabby',
-                        'dataIn': ipArraw
-                    })
-                } else {
-                    if (user !== '') {
-                        ipUsers.push({
-                            ip: ip,
-                            hora: hora,
-                            user: user,
-                        })
-                        socket.broadcast.emit(
-                            'Secure', {
-                            'actionTodo': 'userNew',
-                            'dataIn': ipUsers
-                        })
-                    }
-                    ipArraw.push({
-                        ip: ip,
-                        hora: hora,
-                        page: pageFrom,
-                        mensaje: 'first Time'
-                    })
-                    socket.broadcast.emit(
-                        'Secure', {
-                        'actionTodo': 'userinzabby',
-                        'dataIn': ipArraw
-                    })
-
-
-                }
-                break;
-            case 'resetIp':
-                ipArraw = []
-                socket.broadcast.emit(
-                    'Secure', {
-                    'actionTodo': 'userinzabby',
-                    'dataIn': ipArraw
-                })
-                break;
-            case 'ipReq':
-                socket.emit(
-                    'Secure', {
-                    'actionTodo': 'userinzabby',
-                    'dataIn': ipArraw
-                })
-                socket.emit(
-                    'Secure', {
-                    'actionTodo': 'userNew',
-                    'dataIn': ipUsers
-                })
-                break;
-            case 'ipSendName':
-                ipUsers[pos].user = user
-                socket.emit(
-                    'Secure', {
-                    'actionTodo': 'userNew',
-                    'dataIn': ipUsers
-                })
-                break;
-            case 'elmotemandaavolar':
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'elmotemandaavolar',
-                    'dataIn': msg.dataIn
-                }
-                )
-                break;
-            case 'patadaIndividual':
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'patadaIndividual',
-                    'dataIn': msg.dataIn
-                }
-                )
-                break;
-            case 'bingoSong':
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'bingoSongEmit',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-                }
-                )
-                break;
-
-            case 'win':
-
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'winnner',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'winnner',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                break;
-            case 'taketime':
-                const text = msg.dataIn
-                socket.broadcast.emit(
-                    'goMovie', {
-                    'actionTodo': 'goMovie',
-                    'dataIn': msg.dataIn,
-                    'pageFrom': pageFrom
-
-                })
-                inVideo = true
-                inVideoStream = text
-                break;
-            case 'starting':
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'startedGame',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'startedGame',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-            case 'geted':
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'getback',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-            case 'player':
-                let bingoClient = {
-                    id: pageFrom,
-                    dataIn: dataIn
-                }
-                playersArray.push(bingoClient)
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'playersMaster',
-                    'dataIn': playersArray,
-                    'pageFrom': pageFrom
-                }
-                )
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'players',
-                    'dataIn': bingoClient,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                break;
-
-            case 'playerMaster ':
-                let bingoMaster = {
-                    id: pageFrom,
-                    dataIn: dataIn
-                }
-                playersArray.push(bingoMaster)
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'playersMaster',
-                    'dataIn': playersArray,
-                    'pageFrom': pageFrom
-                }
-                )
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'players',
-                    'dataIn': bingoMaster,
-                    'pageFrom': pageFrom
-                }
-                )
-                break;
-            case 'creating':
-                inVideo = false
-
-                inGame = true
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'createdGame',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-            case 'newAdmin':
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'newRoom',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-
-
-            case 'restart':
-                inGame = false
-                inVideo = false
-                theTime = 0
-                theUrl = ''
-                playersArray = []
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'restarted',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'restarted',
-                    'dataIn': true,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-
-            case 'newBingo':
-                if (dataIn) {
-                    socket.emit(
-                        'BINGO', {
-                        'actionTodo': 'players',
-                        'dataIn': playersArray,
-                        'pageFrom': pageFrom
-
-                    }
-                    )
-                } else {
-                    socket.broadcast.emit(
-                        'BINGO', {
-                        'actionTodo': 'newStart',
-                        'dataIn': true,
-                        'pageFrom': pageFrom
-
-                    }
-                    )
-                    socket.emit(
-                        'BINGO', {
-                        'actionTodo': 'newStart',
-                        'dataIn': true,
-                        'pageFrom': pageFrom
-
-                    }
-                    )
-                }
-                break;
-            case 'actualization':
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'go',
-                    'dataIn': playersArray,
-                    'pageFrom': pageFrom
-
-                }
-                )
-
-                break;
-            case 'start':
-                emiting = true
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'numbers',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                socket.broadcast.emit(
-                    'BINGO', {
-                    'actionTodo': 'numbers',
-                    'dataIn': dataIn,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                break;
-            case 'newpc':
-                if (inVideo) {
-                    socket.emit(
-                        'BINGO', {
-                        'actionTodo': 'goMovie',
-                        'dataIn': inVideoStream,
-                        'pageFrom': pageFrom
-
-                    })
-                }
-
-                socket.emit(
-                    'BINGO', {
-                    'actionTodo': 'newpcres',
-                    'dataIn': inGame,
-                    'pageFrom': pageFrom
-
-                }
-                )
-                break;
-        }
-    })
-    const sendJail = (ip) => {
-        socket.broadcast.emit(
-            'calamar', {
-            'actionTodo': 'estasEnJail',
-            'dataIn': {
+      });
+    }
+
+    const actionTodo = chat.dataIn.actionTodo;
+    const date = chat.dataIn.date;
+    const user = chat.dataIn.user;
+    const chatMsg = chat.dataIn.chat;
+    const privateMsg = chat.dataIn.privateMsg;
+    const privAdress = chat.dataIn.privAdress;
+    const ip = chat.dataIn.ip;
+    const video = chat.dataIn.video || false;
+    switch (actionTodo) {
+      case "checkingUsers":
+        checkArray.push({ ip: ip });
+        break;
+      case "retomed":
+        let findes = false;
+        nickarray[chat.dataIn.position].adress = adress;
+        break;
+
+      case "movie":
+        if (
+          privateMsg &&
+          (chatMsg === "videoItem" || chatMsg === "audioItem")
+        ) {
+          socket.broadcast.emit("chat", {
+            actionTodo: "privteMsg",
+            movie: true,
+            dataIn: {
+              actionTodo: "privteMsg",
+              mensaje: {
+                adress: adress,
+                chat: chatMsg,
+                date: date,
+                user: user,
+                privAdress: privAdress,
                 ip: ip,
-            }
-        })
-    }
-    socket.on('calamar', (msg) => {
-        const minutes = () => {
-            timeGame = timeGame - 1
-
-
-            if (cont === 10) {
-                cont = 0
-            }
-
-            else {
-                if (timeGame < -1) {
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'actionTodo': 'die',
-                        'dataIn': true
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'die',
-                        'dataIn': true
-                    })
-                    cont = 0
-
-                } else {
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'actionTodo': 'TimeReloj',
-                        'dataIn': timeGame
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'TimeReloj',
-                        'dataIn': timeGame
-                    })
-                    if (timeGame === 60) {
-                        socket.broadcast.emit(
-                            'calamar', {
-                            'actionTodo': 'lastMinute',
-                            'dataIn': timeGame
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'lastMinute',
-                            'dataIn': timeGame
-                        })
-                    }
-                    if (timeGame === 0) {
-                        socket.broadcast.emit(
-                            'calamar', {
-                            'actionTodo': 'lostGame',
-                            'dataIn': timeGame
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'lostGame',
-                            'dataIn': timeGame
-                        })
-                    }
-                    setTimeout(minutes, 1000)
-                }
-            }
+                video: video,
+                dataIn: {
+                  ip: ip,
+                  actionTodo: "privteMsg",
+                  privateMsg: true,
+                  adress: adress,
+                  chat: chatMsg,
+                  date: date,
+                  user: user,
+                  privAdress: privAdress,
+                  video: video,
+                },
+              },
+              privateMsg: true,
+            },
+          });
+        } else {
+          chatArray.push({
+            ip: ip,
+            date: date,
+            user: user,
+            chat: chatMsg,
+            adress: adress,
+            privateMsg: false,
+            video: video,
+          });
+          socket.broadcast.emit("chat", {
+            actionTodo: "newMessage",
+            dataIn: chatArray,
+            movie: true,
+          });
+          inMessage++;
         }
-        let hora = msg.dataIn.hora || ''
-        let actionTodo = msg.actionTodo
-        let dataIn = msg.dataIn
-        let puente = msg.dataIn.puente || ''
-        let ip = msg.dataIn.ip || ''
-        let page = msg.dataIn.page || ''
-        let user = msg.dataIn.user || ''
-        let time = msg.dataIn.time || 300
-        let pageFrom = msg.pageFrom || ''
-        let levelIn = msg.dataIn.levelIn
-        switch (actionTodo) {
-            case 'createPuente':
-                timeGame = time
-                finalDone = false
-                levelInActual = 0
-                puenteTurn = 0
-                win = false
-                puenteActual = puente
-                puenteActive = true
+        break;
 
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'fallingin',
-                    'dataIn': puenteTurn
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'fallingin',
-                    'dataIn': puenteTurn
-                })
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'createdOne',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: 1,
-                        participants: ipUsersCalamar
-                    }
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'createdOne',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: 1,
-                        participants: ipUsersCalamar
-                    }
-                })
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'vastu',
-                    'dataIn': ipUsersCalamar[puenteTurn].ip
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'vastu',
-                    'dataIn': ipUsersCalamar[puenteTurn].ip
-                })
-                cont = 0
-                timeGame = time
-                minutes()
-                break;
-            case 'falling':
-                puenteTurn = puenteTurn + 1
-                if (puenteTurn >= ipUsersCalamar.length) {
-                    puenteTurn = 0
-                    nowInjail = []
-                }
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'fallingin',
-                    'dataIn': puenteTurn
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'fallingin',
-                    'dataIn': puenteTurn
-                })
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'vastu',
-                    'dataIn': ipUsersCalamar[puenteTurn].ip
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'vastu',
-                    'dataIn': ipUsersCalamar[puenteTurn].ip
-                })
-                setTimeout(() => { sendJail(ip) }, 6500)
-                break;
-            case 'passing':
-                levelInActual = levelIn
-                puenteActual = puente
-                puenteActive = true
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'newPass',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: levelIn
-                    }
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'newPass',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: levelIn
-                    }
-                })
-                break;
-            case 'playerSend':
-                let findit = false
-                ipUsersCalamar.map((key, i) => {
-                    if (key.ip === ip) {
-                        findit = true
-                    }
-                })
-                if (findit) {
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'playerList',
-                        'dataIn': ipUsersCalamar
-                    })
-                } else {
-                    ipUsersCalamar.push(dataIn)
-                }
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'playerList',
-                    'dataIn': ipUsersCalamar
-                })
+      case "ipSend":
+        let finds = false;
+        let retomed = -1;
+        let actualChat = -1;
 
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'playerList',
-                    'dataIn': ipUsersCalamar
-                })
-                break;
-            /*   case 'estoyEnJail':
+        if (nickarray.length > 0) {
+          nickarray.map((key, i) => {
+            if (key.ip === ip) {
+              finds = true;
+              actualChat = key.inTime;
+              retomed = i;
+              return;
+            }
+          });
+        }
+        if (finds) {
+          socket.emit("chat", {
+            actionTodo: "exist",
+            dataIn: {
+              user: nickarray[retomed],
+              array: chatArray,
+              position: retomed,
+              inTime: actualChat,
+            },
+          });
+        }
+
+        break;
+
+      case "reset":
+        inMessage = 0;
+        nickarray = [];
+        chatUsers = 0;
+        inGame = false;
+        chatArray = [];
+        inVideo = false;
+        theTime = 0;
+        theUrl = "";
+        chatArray = [];
+
+        socket.broadcastemit("chat", {
+          actionTodo: "reset",
+          dataIn: chatArray,
+        });
+      case "new":
+        let nickarrayAux = nickarray;
+        let find = false;
+        nickarray.map((key, i) => {
+          if (key === user) {
+            find = true;
+            return;
+          }
+        });
+        if (!find) {
+          socket.emit("chat", {
+            actionTodo: "inMessage",
+            dataIn: inMessage,
+          });
+          nickarray.push({
+            user: user,
+            adress: adress,
+            ip: ip,
+            inTime: chatArray.length,
+            adress: adress,
+          });
+          const auxUsers = chatUsers + 1;
+          chatArray.push({
+            date: date,
+            user: "Sistema",
+            chat: `${user} se ha conectado`,
+          });
+
+          socket.broadcast.emit("chat", {
+            actionTodo: "newChat",
+            dataIn: chatArray,
+          });
+          chatUsers = auxUsers;
+          inMessage++;
+        }
+        setTimeout(checkUsers, 5000);
+
+        break;
+      case "add":
+        if (privateMsg) {
+          socket.broadcast.emit("chat", {
+            actionTodo: "privteMsg",
+            dataIn: {
+              actionTodo: "privteMsg",
+              mensaje: {
+                adress: adress,
+                chat: chatMsg,
+                date: date,
+                user: user,
+                privAdress: privAdress,
+                ip: ip,
+                dataIn: {
+                  ip: ip,
+                  actionTodo: "privteMsg",
+                  privateMsg: true,
+                  adress: adress,
+                  chat: chatMsg,
+                  date: date,
+                  user: user,
+                  privAdress: privAdress,
+                },
+              },
+              privateMsg: true,
+            },
+          });
+        } else {
+          chatArray.push({
+            ip: ip,
+            date: date,
+            user: user,
+            chat: chatMsg,
+            adress: adress,
+            privateMsg: false,
+          });
+          socket.broadcast.emit("chat", {
+            actionTodo: "newMessage",
+            dataIn: chatArray,
+          });
+          inMessage++;
+        }
+
+        break;
+      case "stream":
+        if (privateMsg) {
+          socket.broadcast.emit("chat", {
+            actionTodo: "privteMsgstreaming",
+            dataIn: {
+              actionTodo: "privteMsgstreaming",
+              mensaje: {
+                adress: adress,
+                chat: chatMsg,
+                date: date,
+                user: user,
+                privAdress: privAdress,
+                ip: ip,
+                video: video,
+
+                dataIn: {
+                  ip: ip,
+                  actionTodo: "privteMsgstreaming",
+                  privateMsg: true,
+                  adress: adress,
+                  chat: chatMsg,
+                  date: date,
+                  user: user,
+                  privAdress: privAdress,
+                  video: video,
+                },
+              },
+              privateMsg: true,
+            },
+          });
+        } else {
+          socket.broadcast.emit("chat", {
+            actionTodo: "streaming",
+            dataIn: video,
+          });
+        }
+
+        break;
+
+      default:
+        break;
+    }
+  });
+  socket.on("BINGO", (msg) => {
+    let actionTodo = msg.actionTodo;
+    let dataIn = msg.dataIn;
+    let pos = msg.dataIn.pos || "";
+    let ip = msg.dataIn.ip || "";
+    let page = msg.dataIn.page || "";
+    let user = msg.dataIn.user || "";
+    let hora = msg.dataIn.hora || "";
+    let pageFrom = msg.pageFrom || "";
+    switch (actionTodo) {
+      case "ipSend":
+        let finds = false;
+        if (ipArraw.length > 0) {
+          ipArraw.map((key, i) => {
+            if (key.ip === ip) {
+              finds = true;
+              return;
+            }
+          });
+        }
+        if (finds) {
+          if (user !== "") {
+            let finded = false;
+            ipUsers.map((key, i) => {
+              if (key.user === user) {
+                finded = true;
+                return;
+              }
+            });
+            if (!finded) {
+              ipUsers.push({
+                ip: ip,
+                hora: hora,
+                user: user,
+              });
+              socket.broadcast.emit("Secure", {
+                actionTodo: "userNew",
+                dataIn: ipUsers,
+              });
+            }
+          }
+          ipArraw.push({
+            ip: ip,
+            hora: hora,
+            page: pageFrom,
+            mensaje: "in Again",
+          });
+          socket.broadcast.emit("Secure", {
+            actionTodo: "userinzabby",
+            dataIn: ipArraw,
+          });
+        } else {
+          if (user !== "") {
+            ipUsers.push({
+              ip: ip,
+              hora: hora,
+              user: user,
+            });
+            socket.broadcast.emit("Secure", {
+              actionTodo: "userNew",
+              dataIn: ipUsers,
+            });
+          }
+          ipArraw.push({
+            ip: ip,
+            hora: hora,
+            page: pageFrom,
+            mensaje: "first Time",
+          });
+          socket.broadcast.emit("Secure", {
+            actionTodo: "userinzabby",
+            dataIn: ipArraw,
+          });
+        }
+        break;
+      case "resetIp":
+        ipArraw = [];
+        socket.broadcast.emit("Secure", {
+          actionTodo: "userinzabby",
+          dataIn: ipArraw,
+        });
+        break;
+      case "ipReq":
+        socket.emit("Secure", {
+          actionTodo: "userinzabby",
+          dataIn: ipArraw,
+        });
+        socket.emit("Secure", {
+          actionTodo: "userNew",
+          dataIn: ipUsers,
+        });
+        break;
+      case "ipSendName":
+        ipUsers[pos].user = user;
+        socket.emit("Secure", {
+          actionTodo: "userNew",
+          dataIn: ipUsers,
+        });
+        break;
+      case "elmotemandaavolar":
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "elmotemandaavolar",
+          dataIn: msg.dataIn,
+        });
+        break;
+      case "patadaIndividual":
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "patadaIndividual",
+          dataIn: msg.dataIn,
+        });
+        break;
+      case "bingoSong":
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "bingoSongEmit",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+        break;
+
+      case "win":
+        socket.emit("BINGO", {
+          actionTodo: "winnner",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "winnner",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+        break;
+      case "taketime":
+        const text = msg.dataIn;
+        socket.broadcast.emit("goMovie", {
+          actionTodo: "goMovie",
+          dataIn: msg.dataIn,
+          pageFrom: pageFrom,
+        });
+        inVideo = true;
+        inVideoStream = text;
+        break;
+      case "starting":
+        socket.emit("BINGO", {
+          actionTodo: "startedGame",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "startedGame",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+
+        break;
+      case "geted":
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "getback",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+
+        break;
+      case "player":
+        let bingoClient = {
+          id: pageFrom,
+          dataIn: dataIn,
+        };
+        playersArray.push(bingoClient);
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "playersMaster",
+          dataIn: playersArray,
+          pageFrom: pageFrom,
+        });
+        socket.emit("BINGO", {
+          actionTodo: "players",
+          dataIn: bingoClient,
+          pageFrom: pageFrom,
+        });
+        break;
+
+      case "playerMaster ":
+        let bingoMaster = {
+          id: pageFrom,
+          dataIn: dataIn,
+        };
+        playersArray.push(bingoMaster);
+        socket.emit("BINGO", {
+          actionTodo: "playersMaster",
+          dataIn: playersArray,
+          pageFrom: pageFrom,
+        });
+        socket.emit("BINGO", {
+          actionTodo: "players",
+          dataIn: bingoMaster,
+          pageFrom: pageFrom,
+        });
+        break;
+      case "creating":
+        inVideo = false;
+
+        inGame = true;
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "createdGame",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+
+        break;
+      case "newAdmin":
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "newRoom",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+
+        break;
+
+      case "restart":
+        inGame = false;
+        inVideo = false;
+        theTime = 0;
+        theUrl = "";
+        playersArray = [];
+        socket.emit("BINGO", {
+          actionTodo: "restarted",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "restarted",
+          dataIn: true,
+          pageFrom: pageFrom,
+        });
+
+        break;
+
+      case "newBingo":
+        if (dataIn) {
+          socket.emit("BINGO", {
+            actionTodo: "players",
+            dataIn: playersArray,
+            pageFrom: pageFrom,
+          });
+        } else {
+          socket.broadcast.emit("BINGO", {
+            actionTodo: "newStart",
+            dataIn: true,
+            pageFrom: pageFrom,
+          });
+          socket.emit("BINGO", {
+            actionTodo: "newStart",
+            dataIn: true,
+            pageFrom: pageFrom,
+          });
+        }
+        break;
+      case "actualization":
+        socket.emit("BINGO", {
+          actionTodo: "go",
+          dataIn: playersArray,
+          pageFrom: pageFrom,
+        });
+
+        break;
+      case "start":
+        emiting = true;
+        socket.emit("BINGO", {
+          actionTodo: "numbers",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+        socket.broadcast.emit("BINGO", {
+          actionTodo: "numbers",
+          dataIn: dataIn,
+          pageFrom: pageFrom,
+        });
+        break;
+      case "newpc":
+        if (inVideo) {
+          socket.emit("BINGO", {
+            actionTodo: "goMovie",
+            dataIn: inVideoStream,
+            pageFrom: pageFrom,
+          });
+        }
+
+        socket.emit("BINGO", {
+          actionTodo: "newpcres",
+          dataIn: inGame,
+          pageFrom: pageFrom,
+        });
+        break;
+    }
+  });
+  const sendJail = (ip) => {
+    socket.broadcast.emit("calamar", {
+      actionTodo: "estasEnJail",
+      dataIn: {
+        ip: ip,
+      },
+    });
+  };
+  socket.on("calamar", (msg) => {
+    const minutes = () => {
+      timeGame = timeGame - 1;
+
+      if (cont === 10) {
+        cont = 0;
+      } else {
+        if (timeGame < -1) {
+          socket.broadcast.emit("calamar", {
+            actionTodo: "die",
+            dataIn: true,
+          });
+          socket.emit("calamar", {
+            actionTodo: "die",
+            dataIn: true,
+          });
+          cont = 0;
+        } else {
+          socket.broadcast.emit("calamar", {
+            actionTodo: "TimeReloj",
+            dataIn: timeGame,
+          });
+          socket.emit("calamar", {
+            actionTodo: "TimeReloj",
+            dataIn: timeGame,
+          });
+          if (timeGame === 60) {
+            socket.broadcast.emit("calamar", {
+              actionTodo: "lastMinute",
+              dataIn: timeGame,
+            });
+            socket.emit("calamar", {
+              actionTodo: "lastMinute",
+              dataIn: timeGame,
+            });
+          }
+          if (timeGame === 0) {
+            socket.broadcast.emit("calamar", {
+              actionTodo: "lostGame",
+              dataIn: timeGame,
+            });
+            socket.emit("calamar", {
+              actionTodo: "lostGame",
+              dataIn: timeGame,
+            });
+          }
+          setTimeout(minutes, 1000);
+        }
+      }
+    };
+    let hora = msg.dataIn.hora || "";
+    let actionTodo = msg.actionTodo;
+    let dataIn = msg.dataIn;
+    let puente = msg.dataIn.puente || "";
+    let ip = msg.dataIn.ip || "";
+    let page = msg.dataIn.page || "";
+    let user = msg.dataIn.user || "";
+    let time = msg.dataIn.time || 300;
+    let pageFrom = msg.pageFrom || "";
+    let levelIn = msg.dataIn.levelIn;
+    switch (actionTodo) {
+      case "createPuente":
+        timeGame = time;
+        finalDone = false;
+        levelInActual = 0;
+        puenteTurn = 0;
+        win = false;
+        puenteActual = puente;
+        puenteActive = true;
+
+        socket.emit("calamar", {
+          actionTodo: "fallingin",
+          dataIn: puenteTurn,
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "fallingin",
+          dataIn: puenteTurn,
+        });
+        socket.emit("calamar", {
+          actionTodo: "createdOne",
+          dataIn: {
+            array: puenteActual,
+            levelIn: 1,
+            participants: ipUsersCalamar,
+          },
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "createdOne",
+          dataIn: {
+            array: puenteActual,
+            levelIn: 1,
+            participants: ipUsersCalamar,
+          },
+        });
+        socket.emit("calamar", {
+          actionTodo: "vastu",
+          dataIn: ipUsersCalamar[puenteTurn].ip,
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "vastu",
+          dataIn: ipUsersCalamar[puenteTurn].ip,
+        });
+        cont = 0;
+        timeGame = time;
+        minutes();
+        break;
+      case "falling":
+        puenteTurn = puenteTurn + 1;
+        if (puenteTurn >= ipUsersCalamar.length) {
+          puenteTurn = 0;
+          nowInjail = [];
+        }
+        socket.emit("calamar", {
+          actionTodo: "fallingin",
+          dataIn: puenteTurn,
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "fallingin",
+          dataIn: puenteTurn,
+        });
+        socket.emit("calamar", {
+          actionTodo: "vastu",
+          dataIn: ipUsersCalamar[puenteTurn].ip,
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "vastu",
+          dataIn: ipUsersCalamar[puenteTurn].ip,
+        });
+        setTimeout(() => {
+          sendJail(ip);
+        }, 6500);
+        break;
+      case "passing":
+        levelInActual = levelIn;
+        puenteActual = puente;
+        puenteActive = true;
+        socket.emit("calamar", {
+          actionTodo: "newPass",
+          dataIn: {
+            array: puenteActual,
+            levelIn: levelIn,
+          },
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "newPass",
+          dataIn: {
+            array: puenteActual,
+            levelIn: levelIn,
+          },
+        });
+        break;
+      case "playerSend":
+        let findit = false;
+        ipUsersCalamar.map((key, i) => {
+          if (key.ip === ip) {
+            findit = true;
+          }
+        });
+        if (findit) {
+          socket.emit("calamar", {
+            actionTodo: "playerList",
+            dataIn: ipUsersCalamar,
+          });
+        } else {
+          ipUsersCalamar.push(dataIn);
+        }
+        socket.emit("calamar", {
+          actionTodo: "playerList",
+          dataIn: ipUsersCalamar,
+        });
+
+        socket.broadcast.emit("calamar", {
+          actionTodo: "playerList",
+          dataIn: ipUsersCalamar,
+        });
+        break;
+      /*   case 'estoyEnJail':
                   jailArray.push(ip)
                   break; */
 
-            case 'ipSend':
-                if (user !== '') {
+      case "ipSend":
+        if (user !== "") {
+          let finds = false;
+          if (ipArraw.length > 0) {
+            ipArraw.map((key, i) => {
+              if (key.ip === ip) {
+                finds = true;
+                return;
+              }
+            });
+          }
+          if (finds) {
+            let finded = false;
+            ipUsers.map((key, i) => {
+              if (key.user === user) {
+                finded = true;
+                return;
+              }
+            });
+            if (!finded) {
+              ipUsers.push({
+                ip: ip,
+                hora: hora,
+                user: user,
+              });
+              socket.broadcast.emit("Secure", {
+                actionTodo: "userNew",
+                dataIn: ipUsers,
+              });
+            }
 
-                    let finds = false
-                    if (ipArraw.length > 0) {
-                        ipArraw.map((key, i) => {
-                            if (key.ip === ip) {
-                                finds = true
-                                return
-                            }
-                        })
-                    }
-                    if (finds) {
-                        let finded = false
-                        ipUsers.map((key, i) => {
-                            if (key.user === user) {
-                                finded = true
-                                return
-                            }
-                        })
-                        if (!finded) {
-                            ipUsers.push({
-                                ip: ip,
-                                hora: hora,
-                                user: user,
-                            })
-                            socket.broadcast.emit(
-                                'Secure', {
-                                'actionTodo': 'userNew',
-                                'dataIn': ipUsers
-                            })
-                        }
-
-                        ipArraw.push({
-                            ip: ip,
-                            hora: hora,
-                            page: pageFrom,
-                            mensaje: 'in Again'
-                        })
-                        socket.broadcast.emit(
-                            'Secure', {
-                            'actionTodo': 'userinzabby',
-                            'dataIn': ipArraw
-                        })
-                    } else {
-                        if (user !== '') {
-                            ipUsers.push({
-                                ip: ip,
-                                hora: hora,
-                                user: user,
-                            })
-                            socket.broadcast.emit(
-                                'Secure', {
-                                'actionTodo': 'userNew',
-                                'dataIn': ipUsers
-                            })
-                        }
-                        ipArraw.push({
-                            ip: ip,
-                            hora: hora,
-                            page: pageFrom,
-                            mensaje: 'first Time'
-                        })
-                        socket.broadcast.emit(
-                            'Secure', {
-                            'actionTodo': 'userinzabby',
-                            'dataIn': ipArraw
-                        })
-                    }
-                }
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'playerList',
-                    'dataIn': ipUsersCalamar
-                })
-                if (win) {
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'TimeReloj',
-                        'dataIn': timeGame
-                    })
-                }
-                if (puenteActive) {
-                    if (!win) {
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'TimeReloj',
-                            'dataIn': timeGame
-                        })
-                        /*   socket.emit(
+            ipArraw.push({
+              ip: ip,
+              hora: hora,
+              page: pageFrom,
+              mensaje: "in Again",
+            });
+            socket.broadcast.emit("Secure", {
+              actionTodo: "userinzabby",
+              dataIn: ipArraw,
+            });
+          } else {
+            if (user !== "") {
+              ipUsers.push({
+                ip: ip,
+                hora: hora,
+                user: user,
+              });
+              socket.broadcast.emit("Secure", {
+                actionTodo: "userNew",
+                dataIn: ipUsers,
+              });
+            }
+            ipArraw.push({
+              ip: ip,
+              hora: hora,
+              page: pageFrom,
+              mensaje: "first Time",
+            });
+            socket.broadcast.emit("Secure", {
+              actionTodo: "userinzabby",
+              dataIn: ipArraw,
+            });
+          }
+        }
+        socket.emit("calamar", {
+          actionTodo: "playerList",
+          dataIn: ipUsersCalamar,
+        });
+        if (win) {
+          socket.emit("calamar", {
+            actionTodo: "TimeReloj",
+            dataIn: timeGame,
+          });
+        }
+        if (puenteActive) {
+          if (!win) {
+            socket.emit("calamar", {
+              actionTodo: "TimeReloj",
+              dataIn: timeGame,
+            });
+            /*   socket.emit(
                               'calamar', {
                               'actionTodo': 'estasEnJail',
                               'dataIn': {
@@ -1889,142 +1732,123 @@ io.on("connection", (socket) => {
                                   puenteTurn
                               }
                           }) */
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'playerListReady',
-                            'dataIn': ipUsersCalamar
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'vastu',
-                            'dataIn': ipUsersCalamar[puenteTurn].ip
-                        })
-                        socket.broadcast.emit(
-                            'calamar', {
-                            'actionTodo': 'vastu',
-                            'dataIn': ipUsersCalamar[puenteTurn].ip
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'fallingin',
-                            'dataIn': puenteTurn
-                        })
-                        socket.broadcast.emit(
-                            'calamar', {
-                            'actionTodo': 'fallingin',
-                            'dataIn': puenteTurn
-                        })
-                    }
-                    if (win) {
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'TimeReloj',
-                            'dataIn': timeGame
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'actionTodo': 'playerListReady',
-                            'dataIn': ipUsersCalamar
-                        })
-                        socket.emit(
-                            'calamar', {
-                            'dataIn': posFor,
-                            'actionTodo': 'theWinner',
-                        })
-                    }
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'TimeReloj',
-                        'dataIn': timeGame
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'createdOne',
-                        'dataIn': {
-                            array: puenteActual,
-                            levelIn: levelInActual,
-                            participants: ipUsersCalamar,
-                            winIp
+            socket.emit("calamar", {
+              actionTodo: "playerListReady",
+              dataIn: ipUsersCalamar,
+            });
+            socket.emit("calamar", {
+              actionTodo: "vastu",
+              dataIn: ipUsersCalamar[puenteTurn].ip,
+            });
+            socket.broadcast.emit("calamar", {
+              actionTodo: "vastu",
+              dataIn: ipUsersCalamar[puenteTurn].ip,
+            });
+            socket.emit("calamar", {
+              actionTodo: "fallingin",
+              dataIn: puenteTurn,
+            });
+            socket.broadcast.emit("calamar", {
+              actionTodo: "fallingin",
+              dataIn: puenteTurn,
+            });
+          }
+          if (win) {
+            socket.emit("calamar", {
+              actionTodo: "TimeReloj",
+              dataIn: timeGame,
+            });
+            socket.emit("calamar", {
+              actionTodo: "playerListReady",
+              dataIn: ipUsersCalamar,
+            });
+            socket.emit("calamar", {
+              dataIn: posFor,
+              actionTodo: "theWinner",
+            });
+          }
+          socket.emit("calamar", {
+            actionTodo: "TimeReloj",
+            dataIn: timeGame,
+          });
+          socket.emit("calamar", {
+            actionTodo: "createdOne",
+            dataIn: {
+              array: puenteActual,
+              levelIn: levelInActual,
+              participants: ipUsersCalamar,
+              winIp,
+            },
+          });
+        }
 
-                        }
-                    })
+        break;
+      case "crearUserRandom":
+        if (ipUsersCalamar.length > 0) {
+          randomNew = ipUsersCalamar.sort(function (a, b) {
+            return Math.random() - 0.5;
+          });
+          ipUsersCalamar = randomNew;
+          socket.broadcast.emit("calamar", {
+            actionTodo: "playerListReady",
+            dataIn: ipUsersCalamar,
+          });
+          socket.emit("calamar", {
+            actionTodo: "playerListReady",
+            dataIn: ipUsersCalamar,
+          });
+        }
 
-                }
+        break;
 
-                break;
-            case 'crearUserRandom':
-                if (ipUsersCalamar.length > 0) {
-                    randomNew = ipUsersCalamar.sort(function (a, b) { return (Math.random() - 0.5) });
-                    ipUsersCalamar = randomNew
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'actionTodo': 'playerListReady',
-                        'dataIn': ipUsersCalamar
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'playerListReady',
-                        'dataIn': ipUsersCalamar
-                    })
-                }
+      case "endPuente":
+        let findWinner = false;
+        ipUsersCalamar.map((key, i) => {
+          if (key.ip === ip) {
+            findWinner = true;
+            posFor = i;
+          }
+        });
 
-                break;
+        cont = 10;
+        if (findWinner) {
+          socket.broadcast.emit("calamar", {
+            actionTodo: "llegoPlayer",
+          });
+          socket.emit("calamar", {
+            actionTodo: "llegoPlayer",
+          });
+          socket.broadcast.emit("calamar", {
+            dataIn: posFor,
 
-            case 'endPuente':
-                let findWinner = false
-                ipUsersCalamar.map((key, i) => {
-                    if (key.ip === ip) {
-                        findWinner = true
-                        posFor = i
-                    }
-                })
+            actionTodo: "theWinner",
+          });
+          socket.emit("calamar", {
+            dataIn: posFor,
+            actionTodo: "theWinner",
+          });
+          winIp = "";
+          finalDone = true;
+          win = true;
+        }
+        break;
+      case "passingFinal":
+        finalDone = true;
+        win = false;
+        winIp = ip;
+        socket.broadcast.emit("calamar", {
+          dataIn: ip,
+          actionTodo: "passingFinalReady",
+        });
+        socket.emit("calamar", {
+          dataIn: ip,
+          actionTodo: "passingFinalReady",
+        });
+        break;
 
-                cont = 10
-                if (findWinner) {
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'actionTodo': 'llegoPlayer',
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'actionTodo': 'llegoPlayer',
-                    })
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'dataIn': posFor,
-
-                        'actionTodo': 'theWinner',
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'dataIn': posFor,
-                        'actionTodo': 'theWinner',
-                    })
-                    winIp = ""
-                    finalDone = true
-                    win = true
-                }
-                break
-            case 'passingFinal':
-                finalDone = true
-                win = false
-                winIp = ip
-                socket.broadcast.emit(
-                    'calamar', {
-                    'dataIn': ip,
-                    'actionTodo': 'passingFinalReady',
-                })
-                socket.emit(
-                    'calamar', {
-                    'dataIn': ip,
-                    'actionTodo': 'passingFinalReady',
-                })
-                break;
-
-
-            case 'metaPlace':
-                if (finalDone && win) {
-                    /*  socket.broadcast.emit(
+      case "metaPlace":
+        if (finalDone && win) {
+          /*  socket.broadcast.emit(
                          'calamar', {
                          'actionTodo': 'passingFinalReadyRes',
                      })
@@ -2032,2883 +1856,3266 @@ io.on("connection", (socket) => {
                          'calamar', {
                          'actionTodo': 'passingFinalReadyRes',
                      }) */
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'dataIn': posFor,
+          socket.broadcast.emit("calamar", {
+            dataIn: posFor,
 
-                        'actionTodo': 'theWinner',
-                    })
-                    socket.emit(
-                        'calamar', {
-                        'dataIn': posFor,
-                        'actionTodo': 'theWinner',
-                    })
-                }
-                if (!win && finalDone) {
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'dataIn': winIp,
-                        'actionTodo': 'passingFinalReady',
-                    })
-                    socket.broadcast.emit(
-                        'calamar', {
-                        'dataIn': winIp,
-                        'actionTodo': 'passingFinalReady',
-                    })
-                }
-                break;
-            case 'resetPuente':
-                winIp = ''
-                ipUsersCalamar = []
-                finalDone = false
-                win = false
-                posFor = -1
-                cont = 10
-                nowInjail = []
-                puenteActual = []
-                levelInActual = 0
-                userInActual = ''
-                puenteActive = false
-                socket.emit(
-                    'calamar', {
-                    'actionTodo': 'noPuente',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: levelInActual
-                    }
-                })
-                socket.broadcast.emit(
-                    'calamar', {
-                    'actionTodo': 'noPuente',
-                    'dataIn': {
-                        array: puenteActual,
-                        levelIn: levelInActual
-                    }
-                })
-                break;
+            actionTodo: "theWinner",
+          });
+          socket.emit("calamar", {
+            dataIn: posFor,
+            actionTodo: "theWinner",
+          });
         }
-    })
-    socket.on("disconnect", (e) => {
-        console.log("User Disconnect", e, ' socket ', socket.id, 'array', millonarioParticipants)
-        checkUsers(socket.id)
-    })
-    socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
-    });
+        if (!win && finalDone) {
+          socket.broadcast.emit("calamar", {
+            dataIn: winIp,
+            actionTodo: "passingFinalReady",
+          });
+          socket.broadcast.emit("calamar", {
+            dataIn: winIp,
+            actionTodo: "passingFinalReady",
+          });
+        }
+        break;
+      case "resetPuente":
+        winIp = "";
+        ipUsersCalamar = [];
+        finalDone = false;
+        win = false;
+        posFor = -1;
+        cont = 10;
+        nowInjail = [];
+        puenteActual = [];
+        levelInActual = 0;
+        userInActual = "";
+        puenteActive = false;
+        socket.emit("calamar", {
+          actionTodo: "noPuente",
+          dataIn: {
+            array: puenteActual,
+            levelIn: levelInActual,
+          },
+        });
+        socket.broadcast.emit("calamar", {
+          actionTodo: "noPuente",
+          dataIn: {
+            array: puenteActual,
+            levelIn: levelInActual,
+          },
+        });
+        break;
+    }
+  });
+  socket.on("disconnect", (e) => {
+    console.log(
+      "User Disconnect",
+      e,
+      " socket ",
+      socket.id,
+      "array",
+      millonarioParticipants
+    );
+    checkUsers(socket.id);
+  });
+  socket.on("chat message", (msg) => {
+    console.log("message: " + msg);
+  });
 
-    socket.on('video', (data) => {
-        socket.broadcast.emit('url', data)
+  socket.on("video", (data) => {
+    socket.broadcast.emit("url", data);
+  });
+  socket.on("test message", () => {
+    console.log("message: ");
+  });
+  socket.on("onVideo", (Data) => {
+    let state = Data.state || false;
+    if (state) {
+      inVideo = true;
+    } else {
+      inVideo = false;
+      socket.broadcast.emit("BINGO", {
+        actionTodo: "createdGame",
+        dataIn: Data,
+        pageFrom: Data.pageFrom,
+      });
+    }
+  });
+  socket.on("onVideoTime", (data) => {
+    if (data.streamer) {
+      theTime = data.time;
+      theUrl = data.url;
+      socket.broadcast.emit("inVideoTime", { time: theTime, url: theUrl });
+    }
+  });
+  const minutesHelp = () => {
+    helpTime = helpTime - 1;
+    if (contTime === 10) {
+      contTime = 0;
+    } else {
+      if (helpTime < -1) {
+        socket.broadcast.emit("millonario", {
+          actionTodo: "helpTime",
+        });
+        socket.emit("millonario", {
+          actionTodo: "helpTime",
+        });
+        helpTime = 30;
+        contTime = 0;
+      } else {
+        socket.broadcast.emit("millonario", {
+          actionTodo: "helpTimeNumber",
+          dataIn: helpTime,
+        });
+        socket.emit("millonario", {
+          actionTodo: "helpTimeNumber",
+          dataIn: helpTime,
+        });
+        /*                 setTimeout(minutesHelp, 1000)
+         */
+      }
+    }
+  };
+  const cleanArrays = () => {
+    let millonariosPublicG = [];
+    millonariosPublicGames.array.map((key, i) => {
+      if (key.state) {
+        millonariosPublicG.push(key);
+      }
     });
-    socket.on('test message', () => {
-        console.log('message: ');
+    let millonariosGa = [];
+    millonariosGames.array.map((key, i) => {
+      if (key.state) {
+        millonariosGa.push(key);
+      }
     });
-    socket.on('onVideo', (Data) => {
-        let state = Data.state || false
-        if (state) {
-            inVideo = true
+    millonariosPublicGames.array =
+      millonariosPublicG.length > 0
+        ? millonariosPublicG
+        : [
+            {
+              roomName: "",
+              administrator: {
+                name: "",
+                ip: "",
+              },
+              state: false,
+              helpArray: [],
+              clasification: false,
+              preliminarResults: [],
+              preliminarArray: [],
+              inGame: false,
+              helpUsed: 0,
+              ipPlaying: {
+                ip: {
+                  ip: "",
+                  name: "",
+                },
+                name: "",
+              },
+              level: 0,
+              array: [],
+              helpNumber: 0,
+              category: "random",
+              playerData: [
+                {
+                  ip: "",
+                  name: "",
+                  type: "",
+                },
+              ],
+              helps: {
+                help1: true,
+                help2: true,
+                help3: true,
+                help4: true,
+              },
+            },
+          ];
+    millonariosPublicGames.games = millonariosPublicG.length;
+    millonariosGames.array =
+      millonariosGa.length > 0
+        ? millonariosGa
+        : [
+            {
+              state: false,
+              level: 0,
+              array: [],
+              helpNumber: 0,
+              category: "random",
+              playerData: {
+                ip: "",
+                name: "",
+              },
+              helps: {
+                help1: true,
+                help2: false,
+                help3: false,
+                help4: true,
+              },
+            },
+          ];
+    millonariosGames.games = millonariosGa.length;
+    socket.broadcast.emit("millonario", {
+      actionTodo: "rooms",
+      dataIn: {
+        rooms: millonariosPublicGames.array,
+      },
+    });
+    socket.emit("millonario", {
+      actionTodo: "rooms",
+      dataIn: {
+        rooms: millonariosPublicGames.array,
+      },
+    });
+  };
+
+  socket.on("millonario", (msg) => {
+    let min = 0;
+    let max = 4;
+    let actionTodo = msg.actionTodo;
+    let dataIn = msg.dataIn;
+    let roomName = msg.roomName || "sinSala";
+    let gameType = msg.gameType || "";
+    switch (actionTodo) {
+      case "iAmAlive":
+        let isIn = false;
+        aliverUser.map((key, i) => {
+          if (
+            key === dataIn ||
+            dataIn.ip == null ||
+            dataIn.ip == "null" ||
+            !dataIn.ip ||
+            parseInt(key.ip) == parseInt(dataIn.ip)
+          ) {
+            isIn = true;
+          }
+        });
+        if (!isIn && dataIn.ip !== null && dataIn.ip !== "null" && dataIn.ip) {
+          aliverUser.push(dataIn);
+        }
+        break;
+      case "logInMillonario":
+        let loginCorrect = false;
+        millonarioUsersDb.map((key, i) => {
+          if (key.name === dataIn.name && key.password == dataIn.password) {
+            loginCorrect = true;
+          }
+        });
+        if (loginCorrect) {
+          socket.emit("millonario", {
+            actionTodo: "nameGood",
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          millonarioUsersDb.map((key, i) => {
+            if (key.name === dataIn.name) {
+              let finding = false;
+              let findingAgain = false;
+              millonarioParticipants.map((naming, i) => {
+                if (naming.name === dataIn.name) {
+                  finding = true;
+                }
+              });
+              fullMillonarioUsers.map((named, i) => {
+                if (named.name === dataIn.name) {
+                  findingAgain = true;
+                }
+              });
+              if (!finding) {
+                millonarioParticipants.push({
+                  name: key.name,
+                  ip: parseInt(key.ip),
+                  type: "register",
+                  socketId: socket.id,
+                });
+              }
+              if (!findingAgain) {
+                fullMillonarioUsers.push({
+                  name: key.name,
+                  ip: parseInt(key.ip),
+                  type: "register",
+                  socketId: socket.id,
+                });
+              }
+              socket.emit("millonario", {
+                actionTodo: "correctLogIn",
+                dataIn: key,
+              });
+            }
+          });
+          setTimeout(() => {
+            socket.emit("millonario", {
+              actionTodo: "playerDataRes",
+              dataIn: millonarioParticipants,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "playerDataRes",
+              dataIn: millonarioParticipants,
+            });
+          }, 3500);
         } else {
-            inVideo = false
-            socket.broadcast.emit(
-                'BINGO', {
-                'actionTodo': 'createdGame',
-                'dataIn': Data,
-                'pageFrom': Data.pageFrom
-            })
+          socket.emit("millonario", {
+            actionTodo: "nameOcuped",
+          });
         }
-    });
-    socket.on('onVideoTime', (data) => {
-        if (data.streamer) {
-            theTime = data.time
-            theUrl = data.url
-            socket.broadcast.emit('inVideoTime', { time: theTime, url: theUrl })
+        break;
+      case "playerDataSendRegister":
+        let nameEmpty2 = true;
+        millonarioUsersDb.map((key, i) => {
+          if (key.name === dataIn.playerData.name) {
+            nameEmpty2 = false;
+          }
+        });
+        if (fullMillonarioUsers.length > 0) {
+          fullMillonarioUsers.map((anotherKey, x) => {
+            if (anotherKey.name === dataIn.playerData.name) {
+              nameEmpty2 = false;
+            }
+          });
         }
-
-    });
-    const minutesHelp = () => {
-        helpTime = helpTime - 1
-        if (contTime === 10) {
-            contTime = 0
+        if (nameEmpty2) {
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          millonarioParticipants.push(dataIn.playerData);
+          fullMillonarioUsers.push({
+            name: dataIn.playerData.name,
+            ip: dataIn.playerData.ip,
+            type: "register",
+            socketId: socket.id,
+          });
+          socket.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          reqUsers(
+            dataIn.playerData.name,
+            dataIn.playerData.password,
+            parseInt(dataIn.playerData.ip)
+          );
+        } else {
+          socket.emit("millonario", {
+            actionTodo: "millonarioNameUsed",
+          });
         }
-        else {
-            if (helpTime < -1) {
-                socket.broadcast.emit(
-                    'millonario', {
-                    'actionTodo': 'helpTime',
-                })
-                socket.emit(
-                    'millonario', {
-                    'actionTodo': 'helpTime',
-                })
-                helpTime = 30
-                contTime = 0
-            } else {
-                socket.broadcast.emit(
-                    'millonario', {
-                    'actionTodo': 'helpTimeNumber',
-                    'dataIn': helpTime
-                })
-                socket.emit(
-                    'millonario', {
-                    'actionTodo': 'helpTimeNumber',
-                    'dataIn': helpTime
-                })
-/*                 setTimeout(minutesHelp, 1000)
- */            }
+        break;
+
+      case "checkNameUser":
+        let nameEmptyuser = true;
+        millonarioUsersDb.map((key, i) => {
+          if (key.name === dataIn) {
+            nameEmptyuser = false;
+          }
+        });
+        if (fullMillonarioUsers.length > 0) {
+          fullMillonarioUsers.map((anotherKey, x) => {
+            if (anotherKey.name === dataIn) {
+              nameEmptyuser = false;
+            }
+          });
         }
-    }
-    const cleanArrays = () => {
-        let millonariosPublicG = []
-        millonariosPublicGames.array.map((key, i) => {
-            if (key.state) {
-                millonariosPublicG.push(key)
-            }
-        })
-        let millonariosGa = []
-        millonariosGames.array.map((key, i) => {
-            if (key.state) {
-                millonariosGa.push(key)
-            }
-        })
-        millonariosPublicGames.array = millonariosPublicG.length > 0 ? millonariosPublicG : [
-            {
-                roomName: '',
-                administrator: {
-                    name: '',
-                    ip: ''
-                },
-                state: false,
-                helpArray: [],
-                clasification: false,
-                preliminarResults: [],
-                preliminarArray: [],
-                inGame: false,
-                helpUsed: 0,
-                ipPlaying: {
-                    ip: {
-                        ip: '',
-                        name: ''
-                    },
-                    name: '',
-                },
-                level: 0,
-                array: [],
-                helpNumber: 0,
-                category: 'random',
-                playerData: [{
-                    ip: '',
-                    name: '',
-                    type: ''
-                }],
-                helps: {
-                    help1: true,
-                    help2: true,
-                    help3: true,
-                    help4: true,
-                }
-            }
-        ]
-        millonariosPublicGames.games = millonariosPublicG.length
-        millonariosGames.array = millonariosGa.length > 0 ? millonariosGa : [
-            {
-                state: false,
-                level: 0,
-                array: [],
-                helpNumber: 0,
-                category: 'random',
-                playerData: {
-                    ip: '',
-                    name: ''
-                },
-                helps: {
-                    help1: true,
-                    help2: false,
-                    help3: false,
-                    help4: true,
-                }
-            }
-        ]
-        millonariosGames.games = millonariosGa.length
-        socket.broadcast.emit(
-            'millonario', {
-            'actionTodo': 'rooms',
-            'dataIn': {
-                rooms: millonariosPublicGames.array,
-            }
-        })
-        socket.emit(
-            'millonario', {
-            'actionTodo': 'rooms',
-            'dataIn': {
-                rooms: millonariosPublicGames.array,
-            }
-        })
-    }
-
-
-    socket.on('millonario', (msg) => {
-        let min = 0
-        let max = 4
-        let actionTodo = msg.actionTodo
-        let dataIn = msg.dataIn
-        let roomName = msg.roomName || 'sinSala'
-        let gameType = msg.gameType || ''
-        switch (actionTodo) {
-            case 'iAmAlive':
-                let isIn = false
-                aliverUser.map((key, i) => {
-                    if (key === dataIn || dataIn.ip == null || dataIn.ip == 'null' || !dataIn.ip || parseInt(key.ip) == parseInt(dataIn.ip)) {
-                        isIn = true
-                    }
-                })
-                if (!isIn && dataIn.ip !== null && dataIn.ip !== 'null' && dataIn.ip) {
-                    aliverUser.push(dataIn)
-                }
-                break;
-            case 'logInMillonario':
-                let loginCorrect = false
-                millonarioUsersDb.map((key, i) => {
-                    if (key.name === dataIn.name && key.password == dataIn.password) {
-                        loginCorrect = true
-                    }
-                })
-                if (loginCorrect) {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'nameGood',
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                    millonarioUsersDb.map((key, i) => {
-                        if (key.name === dataIn.name) {
-                            let finding = false
-                            let findingAgain = false
-                            millonarioParticipants.map((naming, i) => {
-                                if (naming.name === dataIn.name) {
-                                    finding = true
-                                }
-                            })
-                            fullMillonarioUsers.map((named, i) => {
-                                if (named.name === dataIn.name) {
-                                    findingAgain = true
-                                }
-                            })
-                            if (!finding) {
-                                millonarioParticipants.push({
-                                    name: key.name,
-                                    ip: parseInt(key.ip),
-                                    type: 'register',
-                                    socketId: socket.id
-                                })
-
-                            }
-                            if (!findingAgain) {
-                                fullMillonarioUsers.push({
-                                    name: key.name,
-                                    ip: parseInt(key.ip),
-                                    type: 'register',
-                                    socketId: socket.id
-                                })
-                            }
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'correctLogIn',
-                                'dataIn': key,
-                            })
-                        }
-                    })
-                    setTimeout(() => {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'playerDataRes',
-                            'dataIn': millonarioParticipants,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'playerDataRes',
-                            'dataIn': millonarioParticipants,
-                        })
-                    }, 3500);
-
-                } else {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'nameOcuped',
-                    })
-                }
-                break;
-            case 'playerDataSendRegister':
-                let nameEmpty2 = true
-                millonarioUsersDb.map((key, i) => {
-                    if (key.name === dataIn.playerData.name) {
-                        nameEmpty2 = false
-                    }
-                })
-                if (fullMillonarioUsers.length > 0) {
-                    fullMillonarioUsers.map((anotherKey, x) => {
-                        if (anotherKey.name === dataIn.playerData.name) {
-                            nameEmpty2 = false
-                        }
-                    })
-                }
-                if (nameEmpty2) {
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                    millonarioParticipants.push(dataIn.playerData)
-                    fullMillonarioUsers.push({
-                        name: dataIn.playerData.name,
-                        ip: dataIn.playerData.ip,
-                        type: 'register',
-                        socketId: socket.id
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    reqUsers(dataIn.playerData.name, dataIn.playerData.password, parseInt(dataIn.playerData.ip))
-                } else {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'millonarioNameUsed',
-                    })
-                }
-                break;
-
-            case 'checkNameUser':
-                let nameEmptyuser = true
-                millonarioUsersDb.map((key, i) => {
-                    if (key.name === dataIn) {
-                        nameEmptyuser = false
-                    }
-                })
-                if (fullMillonarioUsers.length > 0) {
-                    fullMillonarioUsers.map((anotherKey, x) => {
-                        if (anotherKey.name === dataIn) {
-                            nameEmptyuser = false
-                        }
-                    })
-                }
-                if (!nameEmptyuser) {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'nameOcuped',
-                    })
-                } else {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'nameGood',
-                    })
-                }
-                break;
-            case 'playerDataSendAuth':
-                let isRegistered = false
-                let userRegister = false
-                millonarioUsersDb.map((key, i) => {
-                    if (key.name === dataIn.playerData.name) {
-                        isRegistered = true
-                        userRegister = key
-                    }
-                })
-                /* if (fullMillonarioUsers.length > 0) {
+        if (!nameEmptyuser) {
+          socket.emit("millonario", {
+            actionTodo: "nameOcuped",
+          });
+        } else {
+          socket.emit("millonario", {
+            actionTodo: "nameGood",
+          });
+        }
+        break;
+      case "playerDataSendAuth":
+        let isRegistered = false;
+        let userRegister = false;
+        millonarioUsersDb.map((key, i) => {
+          if (key.name === dataIn.playerData.name) {
+            isRegistered = true;
+            userRegister = key;
+          }
+        });
+        /* if (fullMillonarioUsers.length > 0) {
                     fullMillonarioUsers.map((anotherKey, x) => {
                         if (anotherKey.name === dataIn.playerData.name) {
                             nameEmpty = false
                         }
                     })
                 } */
-                if (isRegistered) {
-                    aliverUser.push(userRegister)
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-
-                    })
-                    millonarioParticipants.push({
-                        ...userRegister,
-                        name: userRegister.name,
-                        ip: parseInt(userRegister.ip),
-                        type: 'register',
-                        socketId: socket.id
-                    })
-                    fullMillonarioUsers.push({
-                        name: userRegister.name,
-                        ip: parseInt(userRegister.ip),
-                        type: 'register',
-                        socketId: socket.id
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataResAuth',
-                        'dataIn': userRegister,
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                } else {
-                    let nameEmpty2 = true
-                    millonarioUsersDb.map((key, i) => {
-                        if (key.name === dataIn.playerData.name) {
-                            nameEmpty2 = false
-                        }
-                    })
-                    if (fullMillonarioUsers.length > 0) {
-                        fullMillonarioUsers.map((anotherKey, x) => {
-                            if (anotherKey.name === dataIn.playerData.name) {
-                                nameEmpty2 = false
-                            }
-                        })
-                    }
-                    if (nameEmpty2) {
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'rooms',
-                            'dataIn': {
-                                rooms: millonariosPublicGames.array,
-                            }
-                        })
-                        millonarioParticipants.push(dataIn.playerData)
-                        fullMillonarioUsers.push({
-                            name: dataIn.playerData.name,
-                            ip: dataIn.playerData.ip,
-                            type: 'register',
-                            socketId: socket.id
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'playerDataRes',
-                            'dataIn': millonarioParticipants,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'playerDataRes',
-                            'dataIn': millonarioParticipants,
-                        })
-                        reqUsers(dataIn.playerData.name, dataIn.playerData.password, parseInt(dataIn.playerData.ip))
-                    } else {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioNameUsed',
-                        })
-                    }
-                }
-                break;
-
-            case 'playerDataSend':
-                let nameEmpty = true
-                millonarioUsersDb.map((key, i) => {
-                    if (key.name === dataIn.playerData.name) {
-                        nameEmpty = false
-                    }
-                })
-                if (fullMillonarioUsers.length > 0) {
-                    fullMillonarioUsers.map((anotherKey, x) => {
-                        if (anotherKey.name === dataIn.playerData.name) {
-                            nameEmpty = false
-                        }
-                    })
-                }
-                if (nameEmpty) {
-                    aliverUser.push(dataIn.playerData)
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-
-                    })
-                    millonarioParticipants.push({
-                        ...dataIn.playerData,
-                        name: dataIn.playerData.name,
-                        ip: parseInt(dataIn.playerData.ip),
-                        type: 'guest',
-                        socketId: socket.id
-                    })
-                    fullMillonarioUsers.push({
-                        name: dataIn.playerData.name,
-                        ip: parseInt(dataIn.playerData.ip),
-                        type: 'guest',
-                        socketId: socket.id
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                } else {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'millonarioNameUsed',
-                    })
-                }
-
-                break;
-
-            case 'enterRoom':
-                let thePos = 0
-                let roomAux = []
-                let findRoom = false
-                let findName = false
-                let inClasifThisRoom = false
-                let nameOfRoom = ''
-                millonariosPublicGames.array.map((key, i) => {
-                    if (key.roomName === roomName) {
-                        inClasifThisRoom = key.clasification
-                        key.playerData.map((value, x) => {
-                            if (value.name === msg.dataIn.playerData.name) {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'nameUserOcuped',
-                                })
-                                findName = true
-                            }
-                        })
-                        findRoom = true
-                        thePos = i
-                        roomAux = millonariosPublicGames.array[i].playerData
-                    }
-                })
-                if (findName) {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'nameOcuped',
-                    })
-                }
-                if (!findRoom) {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'roomLoose',
-                    })
-                }
-                if (findRoom && !findName) {
-                    millonariosPublicGames.array[thePos].playerData[millonariosPublicGames.array[thePos].playerData.length] = {
-                        ip: msg.dataIn.playerData.ip,
-                        name: msg.dataIn.playerData.name,
-                        type: 'player'
-                    }
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'usersInRoom',
-                        'dataIn': {
-                            array: millonariosPublicGames.array[thePos].playerData,
-                            roomName: roomName
-                        }
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'usersInRoom',
-                        'dataIn': {
-                            array: millonariosPublicGames.array[thePos].playerData,
-                            roomName: roomName
-                        }
-                    })
-                    if (inClasifThisRoom) {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'arrayClassificatorio',
-                            'dataIn': millonariosPublicGames.array[thePos].preliminarArray,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'inClasificationMultiPlayer',
-                            'dataIn': {
-                                roomName: roomName,
-                            },
-                        })
-                    }
-                }
-
-                break;
-
-            case 'ipSend':
-                let playingNow = false
-                socket.broadcast.emit(
-                    'millonario', {
-                    'actionTodo': 'rooms',
-                    'dataIn': {
-                        rooms: millonariosPublicGames.array,
-                    }
-
-                })
-                socket.emit(
-                    'millonario', {
-                    'actionTodo': 'rooms',
-                    'dataIn': {
-                        rooms: millonariosPublicGames.array,
-                    }
-                })
-                millonarioUsersDb.map((key, i) => {
-                    if (key.ip === dataIn.ip) {
-                        millonarioParticipants.push({
-                            name: key.name,
-                            ip: parseInt(key.ip),
-                            type: 'register',
-                            socketId: socket.id
-                        })
-                        fullMillonarioUsers.push({
-                            name: key.name,
-                            ip: parseInt(key.ip),
-                            type: 'register',
-                            socketId: socket.id
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'correctLogIn',
-                            'dataIn': {
-                                name: key.name,
-                                ip: parseInt(key.ip)
-                            },
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'playerDataRes',
-                            'dataIn': millonarioParticipants,
-                        })
-                    }
-
-
-                })
-                if (millonariosPublicGames.games > 0) {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                }
-                if (gameType === 'singlePlayer') {
-
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    millonariosGames.array.map((key, i) => {
-
-                        if (key.state) {
-
-                            if (key.playerData.ip == dataIn.ip || key.playerData.participante.ip == dataIn.ip) {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'retomSingle',
-                                    'dataIn': millonariosGames.array[i],
-                                })
-
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'millonarioActualTurn',
-                                    'dataIn': millonariosGames.array[i].level,
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'playerChoose',
-                                    'dataIn': { ip: key.playerData.ip, array: millonariosGames.array },
-
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsed',
-                                    'dataIn': millonariosGames.array[i].helps,
-                                })
-                                playingNow = true
-                                let aNewQuestion = key.array[(key.level)]
-                                setTimeout(() => {
-                                    socket.emit(
-                                        'millonario', {
-                                        'actionTodo': 'preguntaSiguiente',
-                                        'dataIn': aNewQuestion,
-                                    })
-                                }, 12000)
-                            }
-                        } else {
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'notStartSingle',
-                            })
-                        }
-                    })
-
-
-                }
-                if (gameType === 'multiPlayer') {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerDataRes',
-                        'dataIn': millonarioParticipants,
-                    })
-                    if (millonariosPublicGames.games > 0) {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.state) {
-                                millonariosPublicGames.array[i].playerData.map((laIp, n) => {
-                                    if (laIp.ip === dataIn.ip || parseInt(laIp.ip) === parseInt(dataIn.ip)) {
-                                        if (key.ipPlaying.ip == dataIn.ip || key.ipPlaying.ip.ip == dataIn.ip) {
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'youArePlaying',
-                                                'dataIn': {
-                                                    roomName: key.roomName
-                                                }
-                                            })
-
-                                        }
-                                        if (key.administrator.ip == dataIn.ip) {
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'youAreOwner',
-                                                'dataIn': {
-                                                    playerData: key.administrator,
-                                                    roomName: key.roomName
-                                                }
-                                            })
-                                        }
-
-                                        roomLive = true
-                                        socket.emit(
-                                            'millonario', {
-                                            'actionTodo': 'roomLive',
-                                            'dataIn': laIp.type
-                                        })
-                                        socket.emit(
-                                            'millonario', {
-                                            'actionTodo': 'usersInRoom',
-                                            'dataIn': {
-                                                array: key.playerData,
-                                                roomName: key.roomName
-                                            }
-                                        })
-
-                                    }
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'usersInRoom',
-                                    'dataIn': {
-                                        array: key.playerData,
-                                        roomName: key.roomName
-                                    }
-                                })
-
-
-                                key.preliminarArray.map((key2, x) => {
-                                    if (key2.ip === dataIn.ip || parseInt(key2.ip) === parseInt(dataIn.ip)) {
-                                        if (key.inGame) {
-
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                                'dataIn': {
-                                                    roomName: key.roomName,
-                                                    level: key.level
-                                                },
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'playerChooseMultiPlayer',
-                                                'dataIn': { ip: key.ipPlaying, array: key.preliminarResults, roomName: roomName },
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                                'dataIn': {
-                                                    roomName: roomName,
-                                                    pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                                },
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'helpsUsedMultiPlayer',
-                                                'dataIn': {
-                                                    roomName: roomName,
-                                                    helps: key.helps,
-                                                },
-                                            })
-                                        }
-                                        if (key.clasification) {
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'inpuntuacionMultiPlayer',
-                                                'dataIn': {
-                                                    roomName: key.roomName,
-                                                    array: key.preliminarResults
-                                                },
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'arrayClassificatorio',
-                                                'dataIn': {
-                                                    roomName: roomName,
-                                                    newclasif: key.preliminarArray,
-                                                }
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'inClasificationMultiPlayer',
-                                                'dataIn': {
-                                                    roomName: key.roomName,
-                                                },
-                                            })
-                                        }
-                                    }
-
-                                })
-
-                            }
-                        })
-                    }
-                }
-                fullMillonarioUsers.map((key, i) => {
-                    if (key.ip === dataIn.ip || gameType === 'millonario' || gameType === 'off' || gameType === 'singlePlayer' || gameType === 'nultiPlayer') {
-                        if (gameType === 'millonario' || gameType === 'off') {
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'playerDataRes',
-                                'dataIn': millonarioParticipants,
-                            })
-                        }
-                        if (gameType === 'millonario') {
-
-                            if (nowInMillonario) {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'millonarioActualTurn',
-                                    'dataIn': millonarioActualTurn,
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'millonarioActualTurn',
-                                    'dataIn': millonarioActualTurn,
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'playerChoose',
-                                    'dataIn': { ip: ipInPlay, array: millonarioParticipantsPunt },
-
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'preguntaSiguiente',
-                                    'dataIn': newQuestion,
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsed',
-                                    'dataIn': helpsUsed,
-                                })
-                            }
-                            if (nowClasific) {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'inpuntuacion',
-                                    'dataIn': millonarioParticipantsPunt,
-
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'arrayClassificatorio',
-                                    'dataIn': newclasif,
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'inClasification',
-                                })
-                            }
-                        } else {
-                            if (gameType === 'singlePlayer') {
-                                millonariosGames.array.map((key, i) => {
-                                    if (key.state) {
-                                        if (key.playerData.ip === dataIn.ip) {
-
-                                            setTimeout(() => {
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'retomSingle',
-                                                    'dataIn': millonariosGames.array[i],
-                                                })
-                                            }, 5000)
-                                        }
-                                    } else {
-                                        socket.emit(
-                                            'millonario', {
-                                            'actionTodo': 'notStartSingle',
-                                        })
-                                    }
-                                })
-
-
-                            }
-                            if (gameType === 'multiPlayer') {
-                                if (millonariosPublicGames.games > 0) {
-                                    millonariosPublicGames.array.map((key, i) => {
-                                        if (key.state) {
-                                            if (key.playerData.ip === dataIn.ip || parseInt(key.playerData.ip) === parseInt(dataIn.ip)) {
-                                                if (key.ipPlaying.ip == dataIn.ip) {
-                                                    socket.emit(
-                                                        'millonario', {
-                                                        'actionTodo': 'youArePlaying',
-                                                        'dataIn': {
-                                                            roomName: key.roomName
-                                                        }
-                                                    })
-                                                }
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'usersInRoom',
-                                                    'dataIn': {
-                                                        array: key.playerData,
-                                                        roomName: key.roomName
-                                                    }
-                                                })
-                                            }
-                                            if (key.inGame) {
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                                    'dataIn': {
-                                                        roomName: key.roomName,
-                                                        level: key.level
-                                                    },
-                                                })
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'playerChooseMultiPlayer',
-                                                    'dataIn': { ip: key.ipPlaying, array: key.preliminarResults, roomName: roomName },
-
-                                                })
-
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                                    'dataIn': {
-                                                        roomName: roomName,
-                                                        pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                                    },
-                                                })
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                                    'dataIn': {
-                                                        roomName: roomName,
-                                                        helps: key.helps,
-                                                    },
-                                                })
-                                            }
-                                            if (key.clasification) {
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'arrayClassificatorioMultiplayer',
-                                                    'dataIn': {
-                                                        roomName: roomName,
-                                                        newclasif: key.preliminarArray,
-                                                    }
-                                                })
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'inClasificationMultiPlayer',
-                                                    'dataIn': {
-                                                        roomName: key.roomName,
-                                                    },
-                                                })
-                                                socket.emit(
-                                                    'millonario', {
-                                                    'actionTodo': 'inpuntuacionMultiPlayer',
-                                                    'dataIn': {
-                                                        roomName: key.roomName,
-                                                        array: key.preliminarResults
-                                                    },
-
-                                                })
-                                            }
-                                        }
-                                    })
-                                }
-                            }
-                        }
-
-                    } else {
-                    }
-                })
-
-
-                break;
-            case 'checkName':
-                let nameUsed = false
-                millonariosPublicGames.array.map((key, i) => {
-                    if (key.roomName === msg.dataIn) {
-                        nameUsed = true
-                    }
-                    if (nameUsed) {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'nameOcuped',
-                        })
-                    } else {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'nameGood',
-                        })
-                    }
-                })
-
-                break;
-            case 'createRoom':
-                if (millonariosPublicGames.games === 0) {
-                    millonariosPublicGames.games = millonariosPublicGames.games + 1
-                    millonariosPublicGames.array[0] = {
-                        roomName: msg.dataIn.roomWillName,
-                        administrator: msg.dataIn.playerData,
-                        state: true,
-                        clasification: false,
-                        preliminarResults: [],
-                        preliminarArray: [],
-                        inGame: false,
-                        ipPlaying: {
-                            ip: {
-                                ip: '',
-                                name: ''
-                            },
-                            name: '',
-                        },
-                        level: 0,
-                        array: [],
-                        helpNumber: 0,
-                        category: 'random',
-                        playerData: [{
-                            ip: msg.dataIn.ip,
-                            name: msg.dataIn.playerData.name,
-                            type: 'admin'
-                        }],
-                        helps: {
-                            help1: true,
-                            help2: true,
-                            help3: true,
-                            help4: true,
-                        }
-                    }
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'roomCreated',
-                        'dataIn': {
-                            roomName: roomName,
-                        }
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'usersInRoom',
-                        'dataIn': {
-                            array: [{
-                                ip: msg.dataIn.playerData.ip,
-                                name: msg.dataIn.playerData.name,
-                                type: 'admin'
-                            }],
-                            roomName: roomName
-                        }
-                    })
-                } else {
-                    millonariosPublicGames.games = millonariosPublicGames.games + 1
-                    millonariosPublicGames.array.push({
-                        roomName: msg.dataIn.roomWillName,
-                        administrator: msg.dataIn.playerData,
-                        state: true,
-                        clasification: false,
-                        preliminarResults: [],
-                        preliminarArray: [],
-                        inGame: false,
-                        ipPlaying: {
-                            ip: {
-                                ip: '',
-                                name: ''
-                            },
-                            name: '',
-                        },
-                        level: 0,
-                        array: [],
-                        helpNumber: 0,
-                        category: 'random',
-                        playerData: [{
-                            ip: msg.dataIn.ip,
-                            name: msg.dataIn.playerData.name,
-                            type: 'admin'
-                        }],
-                        helps: {
-                            help1: true,
-                            help2: true,
-                            help3: true,
-                            help4: true,
-                        }
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'roomCreated',
-                        'dataIn': {
-                            roomName: roomName,
-                        }
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'rooms',
-                        'dataIn': {
-                            rooms: millonariosPublicGames.array,
-                        }
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'usersInRoom',
-                        'dataIn': {
-                            array: [{
-                                ip: msg.dataIn.playerData.ip,
-                                name: msg.dataIn.playerData.name,
-                                type: 'admin'
-                            }],
-                            roomName: roomName
-                        }
-                    })
-                }
-
-                break;
-            case 'createClassification':
-                if (gameType === 'multiPlayer') {
-                    let aNewClasif = []
-                    let aNewMultiArray = PreguntsMillonario.sort(function (a, b) { return (Math.random() - 0.5) });
-                    for (let index = 0; index < 5; index++) {
-                        const element = aNewMultiArray[index];
-                        let resp = [element.respuesta1, element.respuesta2, element.respuesta3, element.respuesta4]
-                        aNewClasif.push({
-                            pregunta: element.pregunta,
-                            correcta: parseInt(element.correcta),
-                            respuestas: resp,
-                        })
-                    }
-                    let aCopy = millonariosPublicGames
-                    millonariosPublicGames.array.map((key, i) => {
-                        if (key.roomName === roomName) {
-                            millonariosPublicGames.array[i].clasification = true
-                            millonariosPublicGames.array[i].preliminarArray = aNewClasif
-                            aCopy.array[i].clasification = true
-                            aCopy.array[i].preliminarArray = aNewClasif
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'rooms',
-                                'dataIn': {
-                                    rooms: millonariosPublicGames.array,
-                                }
-
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'arrayClassificatorioMultiplayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    newclasif: aNewClasif,
-                                }
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'arrayClassificatorioMultiplayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    newclasif: aNewClasif,
-                                },
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'inClasificationMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                },
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'inClasificationMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                },
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacionMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    array: key.preliminarResults
-                                },
-
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacionMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    array: key.preliminarResults
-                                },
-                            })
-                        }
-                    })
-                } else {
-                    newArray = PreguntsMillonario.sort(function (a, b) { return (Math.random() - 0.5) });
-                    newclasif = []
-                    for (let index = 0; index < 5; index++) {
-                        const element = newArray[index];
-                        let resp = [element.respuesta1, element.respuesta2, element.respuesta3, element.respuesta4]
-                        newclasif.push({
-                            pregunta: element.pregunta,
-                            correcta: parseInt(element.correcta),
-                            respuestas: resp,
-                        })
-                    }
-                    nowClasific = true
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'arrayClassificatorio',
-                        'dataIn': newclasif,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'arrayClassificatorio',
-                        'dataIn': newclasif,
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'inClasification',
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'inClasification',
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-                    })
-                }
-
-                break;
-            case 'puntuacion':
-                if (gameType === 'millonario') {
-                    millonarioParticipantsPunt.push(dataIn)
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-                    })
-                } else {
-                    millonariosPublicGames.array.map((key, i) => {
-                        if (key.roomName === roomName) {
-                            millonariosPublicGames.array[i].preliminarResults.push(dataIn)
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacionMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    array: millonariosPublicGames.array[i].preliminarResults
-                                },
-
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacionMultiPlayer',
-                                'dataIn': {
-                                    roomName: roomName,
-                                    array: millonariosPublicGames.array[i].preliminarResults
-                                },
-                            })
-                        }
-                    })
-                }
-                break;
-
-            case 'createMillonario':
-                min = 0
-                max = 4
-                let anotherNewArray = []
-                for (let index = 1; index < 7; index++) {
-                    if (index === 1) {
-                        const element = array.level1.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level1.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level1.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level1.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level1.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level1.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-                    }
-                    if (index === 2) {
-                        const element = array.level2.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level2.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level2.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level2.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level2.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level2.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 3) {
-                        const element = array.level3.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level3.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level3.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level3.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level3.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level3.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 4) {
-                        const element = array.level4.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level4.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level4.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level4.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level4.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level4.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 5) {
-                        const element = array.level5.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level5.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level5.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level5.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level5.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level5.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 6) {
-                        const element = array.level6.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level6.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level6.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level6.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level6.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level6.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        anotherNewArray.push(element, element2, element3, element4, element5, element6)
-
-                    }
-
-
-                }
-                if (gameType === 'millonario') {
-                    for (let index = 1; index < 7; index++) {
-                        if (index === 1) {
-                            const element = array.level1.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level1.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level1.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level1.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level1.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level1.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-                        }
-                        if (index === 2) {
-                            const element = array.level2.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level2.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level2.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level2.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level2.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level2.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 3) {
-                            const element = array.level3.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level3.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level3.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level3.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level3.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level3.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 4) {
-                            const element = array.level4.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level4.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level4.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level4.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level4.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level4.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 5) {
-                            const element = array.level5.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level5.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level5.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level5.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level5.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level5.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 6) {
-                            const element = array.level6.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level6.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level6.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level6.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level6.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level6.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArray.push(element, element2, element3, element4, element5, element6)
-
-                        }
-
-
-                    }
-                    newArray = []
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'playerChoose',
-                        'dataIn': { ip: msg.dataIn.participante, array: millonarioParticipantsPunt },
-                    })
-                    ArrayDePreguntas = newArray
-                    setTimeout(() => {
-                        millonarioActualTurn = 1
-                        nowInMillonario = true
-                        ipInPlay = msg.dataIn.participante
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'playerChoose',
-                            'dataIn': { ip: msg.dataIn.participante, array: millonarioParticipantsPunt },
-
-                        })
-
-                        helpArray = []
-
-
-
-                        newQuestion = newArray[millonarioActualTurn - 1 + contHelp]
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'newArray',
-                            'dataIn': newQuestion,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'newArray',
-                            'dataIn': newQuestion,
-                        })
-                    }, 12500)
-                }
-                if (gameType === 'singlePlayer') {
-                    let theNewQuestion = {}
-                    let newArraySingle = []
-                    for (let index = 1; index < 7; index++) {
-                        if (index === 1) {
-                            const element = array.level1.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level1.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level1.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level1.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level1.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level1.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-                        }
-                        if (index === 2) {
-                            const element = array.level2.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level2.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level2.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level2.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level2.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level2.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 3) {
-                            const element = array.level3.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level3.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level3.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level3.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level3.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level3.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 4) {
-                            const element = array.level4.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level4.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level4.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level4.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level4.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level4.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 5) {
-                            const element = array.level5.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level5.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level5.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level5.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level5.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level5.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                        }
-                        if (index === 6) {
-                            const element = array.level6.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                            const element2 = array.level6.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                            const element3 = array.level6.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                            const element4 = array.level6.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                            const element5 = array.level6.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                            const element6 = array.level6.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                            newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                        }
-
-
-                    }
-                    millonariosGames.array.map((key, i) => {
-                        if (!key.state) {
-                            theNewQuestion = newArraySingle
-                            millonariosGames.array[i] = {
-                                state: true,
-                                level: 0,
-                                array: newArraySingle,
-                                helpNumber: 0,
-                                category: 'random',
-                                playerData: dataIn,
-                                helps: {
-                                    help1: true,
-                                    help2: false,
-                                    help3: false,
-                                    help4: true,
-                                }
-                            }
-                        } else {
-                            millonariosGames.array.push({
-                                state: true,
-                                level: 0,
-                                array: newArraySingle,
-                                helpNumber: 0,
-                                category: 'random',
-                                playerData: dataIn,
-                                helps: {
-                                    help1: true,
-                                    help2: false,
-                                    help3: false,
-                                    help4: true,
-                                }
-                            })
-                        }
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'playerChoose',
-                        'dataIn': { ip: dataIn.ip, array: [] },
-                    })
-                    setTimeout(() => {
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'juegoSolitario',
-                            'dataIn': theNewQuestion,
-                        })
-                    }, 12000)
-                }
-                if (gameType === 'multiPlayer') {
-
-                    millonariosPublicGames.array.map((key, i) => {
-
-                        if (key.roomName === roomName) {
-                            millonariosPublicGames.array[i].state = true
-                            millonariosPublicGames.array[i].inGame = true
-                            millonariosPublicGames.array[i].level = 1
-                            millonariosPublicGames.array[i].ipPlaying = msg.dataIn.participante
-                            millonariosPublicGames.array[i].array = anotherNewArray
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'rooms',
-                                'dataIn': {
-                                    rooms: millonariosPublicGames.array,
-                                }
-
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'playerChooseMultiPlayer',
-                                'dataIn': { ip: msg.dataIn.participante, array: key.preliminarResults, roomName: roomName },
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'playerChooseMultiPlayer',
-                                'dataIn': { ip: msg.dataIn.participante, array: key.preliminarResults, roomName: roomName },
-                            })
-                            setTimeout(() => {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        level: key.level,
-                                    },
-
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        level: key.level,
-                                    },
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        helps: key.helps,
-                                    },
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        helps: key.helps,
-                                    },
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                    },
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName,
-                                        pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                    },
-                                })
-                            }, 12500)
-                        }
-                    })
-                }
-                break;
-            case 'nuevaPregunta':
-                millonariosPublicGames.array.map((key, i) => {
-                    if (key.roomName === roomName) { }
-                })
-                helpArray = []
-                newQuestion = msg.dataIn.pregunta
-                socket.broadcast.emit(
-                    'millonario', {
-                    'actionTodo': 'preguntaSiguiente',
-                    'dataIn': msg.dataIn.pregunta,
-                })
-                socket.emit(
-                    'millonario', {
-                    'actionTodo': 'preguntaSiguiente',
-                    'dataIn': msg.dataIn.pregunta,
-                })
-                break;
-            case 'sendRespuesta':
-
-                if (gameType === 'millonario') {
-                    if (msg.dataIn.respuesta == newQuestion.correcta) {
-                        millonarioActualTurn = millonarioActualTurn + 1
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'sendRespuestaResOk',
-                            'dataIn': newQuestion.correcta,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'sendRespuestaResOk',
-                            'dataIn': newQuestion.correcta,
-                        })
-                        newQuestion = newArray[millonarioActualTurn - 1 + contHelp]
-                        setTimeout(() => {
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'preguntaSiguiente',
-                                'dataIn': newQuestion,
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'preguntaSiguiente',
-                                'dataIn': newQuestion,
-                            })
-                        }, 5000)
-
-                    } else {
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'sendRespuestaResNo',
-                            'dataIn': newQuestion.correcta,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'sendRespuestaResNo',
-                            'dataIn': newQuestion.correcta,
-                        })
-                        contHelp = 0
-                        nowInMillonario = false
-                        nowClasific = false
-                        helpArray = []
-                        newArray = []
-                        millonarioParticipantsPunt = []
-                        helpsUsed = {
-                            help1: true,
-                            help2: true,
-                            help3: true,
-                            help4: true,
-                        }
-                        millonarioActualTurn = 0
-                        ipInPlay = ''
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'millonarioActualTurn',
-                            'dataIn': millonarioActualTurn,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'inpuntuacion',
-                            'dataIn': millonarioParticipantsPunt,
-
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'inpuntuacion',
-                            'dataIn': millonarioParticipantsPunt,
-
-                        })
-                    }
-                } else {
-                    if (gameType === 'singlePlayer') {
-                        if (msg.dataIn.respuesta == newQuestion.correcta) {
-                            millonarioActualTurn = millonarioActualTurn + 1
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'millonarioActualTurn',
-                                'dataIn': millonarioActualTurn,
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'millonarioActualTurn',
-                                'dataIn': millonarioActualTurn,
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'sendRespuestaResOk',
-                                'dataIn': newQuestion.correcta,
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'sendRespuestaResOk',
-                                'dataIn': newQuestion.correcta,
-                            })
-                            newQuestion = newArray[millonarioActualTurn - 1 + contHelp]
-                            setTimeout(() => {
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'preguntaSiguiente',
-                                    'dataIn': newQuestion,
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'preguntaSiguiente',
-                                    'dataIn': newQuestion,
-                                })
-                            }, 5000)
-
-                        } else {
-
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'sendRespuestaResNo',
-                                'dataIn': newQuestion.correcta,
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'sendRespuestaResNo',
-                                'dataIn': newQuestion.correcta,
-                            })
-                            contHelp = 0
-                            nowInMillonario = false
-                            nowClasific = false
-                            helpArray = []
-                            newArray = []
-                            millonarioParticipantsPunt = []
-                            helpsUsed = {
-                                help1: true,
-                                help2: true,
-                                help3: true,
-                                help4: true,
-                            }
-                            millonarioActualTurn = 0
-                            ipInPlay = ''
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'millonarioActualTurn',
-                                'dataIn': millonarioActualTurn,
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'millonarioActualTurn',
-                                'dataIn': millonarioActualTurn,
-                            })
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacion',
-                                'dataIn': millonarioParticipantsPunt,
-
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'inpuntuacion',
-                                'dataIn': millonarioParticipantsPunt,
-
-                            })
-                        }
-                    }
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-
-                            if (key.roomName === roomName) {
-                                if (msg.dataIn.respuesta == key.array[key.level === 0 ? key.level : key.level - 1 + key.helpNumber].correcta) {
-                                    millonariosPublicGames.array[i].level = millonariosPublicGames.array[i].level + 1
-                                    socket.emit(
-                                        'millonario', {
-                                        'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                        'dataIn': {
-                                            level: millonariosPublicGames.array[i].level,
-                                            roomName: roomName
-                                        }
-                                    })
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'millonarioActualTurnMultiPlayer',
-                                        'dataIn': {
-                                            level: millonariosPublicGames.array[i].level,
-                                            roomName: roomName
-                                        }
-                                    })
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'sendRespuestaResOkMultiplayer',
-                                        'dataIn': {
-                                            correcta: key.array[(key.level - 2) + key.helpNumber].correcta,
-                                            roomName: roomName
-                                        }
-                                    })
-                                    socket.emit(
-                                        'millonario', {
-                                        'actionTodo': 'sendRespuestaResOkMultiplayer',
-                                        'dataIn': {
-                                            correcta: key.array[(key.level - 2) + key.helpNumber].correcta,
-                                            roomName: roomName
-                                        }
-                                    })
-
-                                    setTimeout(() => {
-                                        socket.broadcast.emit(
-                                            'millonario', {
-                                            'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                            'dataIn': {
-                                                roomName: roomName,
-                                                pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                            },
-                                        })
-                                        socket.emit(
-                                            'millonario', {
-                                            'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                            'dataIn': {
-                                                roomName: roomName,
-                                                pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                            },
-                                        })
-                                    }, 5000)
-
-                                } else {
-                                    millonariosPublicGames.array.map((key, i) => {
-                                        if (key.roomName === roomName) {
-                                            socket.broadcast.emit(
-                                                'millonario', {
-                                                'actionTodo': 'sendRespuestaResNoMultiPlayer',
-                                                'dataIn': {
-                                                    correcta: key.array[(key.level - 1) + key.helpNumber].correcta,
-                                                    roomName: roomName
-                                                }
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'sendRespuestaResNoMultiPlayer',
-                                                'dataIn': {
-                                                    correcta: key.array[(key.level - 1) + key.helpNumber].correcta,
-                                                    roomName: roomName
-                                                }
-                                            })
-                                            millonariosPublicGames.array[i].helpNumber
-                                            millonariosPublicGames.array[i].clasification = false
-                                            millonariosPublicGames.array[i].helps = []
-                                            millonariosPublicGames.array[i].array = []
-                                            millonariosPublicGames.array[i].arrayClassificatorio = []
-                                            millonariosPublicGames.array[i].level = 0
-                                            millonariosPublicGames.array[i].ipPlaying = ''
-                                            millonariosPublicGames.array[i].state = false
-                                            socket.broadcast.emit(
-                                                'millonario', {
-                                                'actionTodo': 'rooms',
-                                                'dataIn': {
-                                                    rooms: millonariosPublicGames.array,
-                                                }
-                                            })
-                                            socket.emit(
-                                                'millonario', {
-                                                'actionTodo': 'rooms',
-                                                'dataIn': {
-                                                    rooms: millonariosPublicGames.array,
-                                                }
-                                            })
-                                            cleanArrays()
-                                        }
-
-                                    })
-
-
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'offRoom',
-                                        'dataIn': roomName,
-                                    })
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'offRoom',
-                                        'dataIn': roomName,
-                                    })
-                                }
-                            }
-                        })
-
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'rooms',
-                            'dataIn': {
-                                rooms: millonariosPublicGames.array,
-                            }
-
-                        })
-                    }
-
-                }
-
-                break;
-            case 'logout':
-                checkUsers(socket.id)
-                break;
-            case 'inChoosing':
-                if (gameType === 'multiPlayer') {
-                    millonariosPublicGames.array.map((key, i) => {
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'inChoosedMultiPlayer',
-                            'dataIn': {
-                                choosed: msg.dataIn,
-                                roomName: roomName
-                            }
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'inChoosedMultiPlayer',
-                            'dataIn': {
-                                choosed: msg.dataIn,
-                                roomName: roomName
-                            }
-                        })
-                    })
-                } else {
-                    lastChoose = msg.dataIn
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'inChoosed',
-                        'dataIn': msg.dataIn,
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'inChoosed',
-                        'dataIn': msg.dataIn,
-                    })
-                }
-
-                break;
-            case 'goodAnwser':
-                millonariosGames.array.map((key, i) => {
-                    if (key.state) {
-
-                        if (key.playerData.ip == dataIn.ip || key.playerData.participante.ip == dataIn.ip) {
-                            millonariosGames.array[i].level = millonariosGames.array[i].level + 1
-                        }
-                    }
-                })
-                break;
-            case 'gameOver':
-                millonariosGames.array.map((key, i) => {
-                    if (key.state) {
-                        if (parseInt(key.playerData.ip) == parseInt(dataIn.ip) || parseInt(key.playerData.participante.ip) == parseInt(dataIn.ip)) {
-                            millonariosGames.array[i].state = false
-                        }
-                    }
-                })
-                cleanArrays()
-                break;
-
-            case 'help1':
-                if (gameType === 'millonario') {
-                    helpsUsed.help1 = false
-
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'stopReloj',
-                    })
-
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    setTimeout(() => {
-
-                        let haveTobeen = newQuestion.correcta
-                        let preguntasNew = []
-                        min = 0
-                        max = 3
-                        let theRandom = () => {
-                            let resNow = Math.floor(Math.random() * (max - min)) + min
-                            if (resNow === parseInt(haveTobeen)) {
-                                if (resNow + 1 === 4) {
-                                    resNow = resNow - 1
-                                } else {
-                                    resNow = resNow + 1
-                                }
-                            }
-
-                            return resNow
-                        }
-                        let getRandom = theRandom()
-
-                        if (getRandom === 0 || parseInt(haveTobeen) === 0) {
-                            console.log
-                        } else {
-                            newQuestion.respuesta1 = ''
-
-                        }
-                        if (getRandom === 1 || parseInt(haveTobeen) === 1) {
-                            console.log
-                        } else {
-                            newQuestion.respuesta2 = ''
-                        }
-                        if (getRandom === 2 || parseInt(haveTobeen) === 2) {
-                            console.log
-                        } else {
-                            newQuestion.respuesta3 = ''
-                        }
-                        if (getRandom === 3 || parseInt(haveTobeen) === 3) {
-                            console.log
-                        } else {
-                            newQuestion.respuesta4 = ''
-                        }
-
-
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-
-                        contHelp = 0
-                    }, 3500)
-                } else {
-                    if (gameType === 'singlePlayer') {
-                        millonariosGames.array.map((key, i) => {
-                            if (key.state) {
-                                if (parseInt(key.playerData.ip) == parseInt(dataIn.ip) || key.playerData.participante.ip == parseInt(dataIn.ip)) {
-                                    millonariosGames.array[i].helps.help1 = false
-                                }
-                            }
-                        })
-                    }
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName && key.state) {
-                                let helpAux = millonariosPublicGames.array[i].helps
-                                millonariosPublicGames.array[i].helps.help1 = false
-                                helpAux.help1 = false
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: helpAux,
-                                        roomName: roomName
-                                    },
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: helpAux,
-                                        roomName: roomName
-                                    },
-                                })
-                                millonariosPublicGames.array[i].helps = helpAux
-                                setTimeout(() => {
-                                    let haveTobeen = key.array[key.level - 1].correcta
-
-                                    min = 0
-                                    max = 3
-                                    let theRandom = () => {
-                                        let resNow = Math.floor(Math.random() * (max - min)) + min
-                                        if (resNow === parseInt(haveTobeen)) {
-                                            if (resNow + 1 === 4) {
-                                                resNow = resNow - 1
-                                            } else {
-                                                resNow = resNow + 1
-                                            }
-                                        }
-                                        return resNow
-                                    }
-                                    let getRandom = theRandom()
-
-                                    if (getRandom === 0 || parseInt(haveTobeen) === 0) {
-                                        console.log
-                                    } else {
-                                        millonariosPublicGames.array[i].array[key.level - 1].respuesta1 = ''
-                                    }
-                                    if (getRandom === 1 || parseInt(haveTobeen) === 1) {
-                                        console.log
-                                    } else {
-                                        millonariosPublicGames.array[i].array[key.level - 1].respuesta2 = ''
-                                    }
-                                    if (getRandom === 2 || parseInt(haveTobeen) === 2) {
-                                        console.log
-                                    } else {
-                                        millonariosPublicGames.array[i].array[key.level - 1].respuesta3 = ''
-                                    }
-                                    if (getRandom === 3 || parseInt(haveTobeen) === 3) {
-                                        console.log
-                                    } else {
-                                        millonariosPublicGames.array[i].array[key.level - 1].respuesta4 = ''
-                                    }
-
-                                    socket.emit(
-                                        'millonario', {
-                                        'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                        'dataIn': {
-                                            roomName: roomName,
-                                            pregunta: millonariosPublicGames.array[i].array[key.level - 1],
-                                        },
-                                    })
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                        'dataIn': {
-                                            roomName: roomName,
-                                            pregunta: millonariosPublicGames.array[i].array[key.level - 1],
-                                        },
-                                    })
-                                }, 3500)
-                            }
-                        })
-                    }
-
-
-                }
-
-
-                break;
-            case 'help2':
-
-                if (gameType === 'millonario') {
-                    key.help2 = false
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'stopReloj',
-                    })
-
-                    setTimeout(() => {
-                        helpsUsed.help2 = false
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'dataIn': dataIn,
-                            'actionTodo': 'helpRequiredOne',
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        contHelp = 0
-                    }, 3500)
-
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                let usinHelp = millonariosPublicGames.array[i].helps
-                                usinHelp.help2 = false
-                                millonariosPublicGames.array[i].helps.help2 = false
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    }
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    }
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-
-                                setTimeout(() => {
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'dataIn': {
-                                            'roomName': roomName,
-                                            'user': dataIn
-                                        },
-                                        'actionTodo': 'helpRequiredOneMultiplayer',
-                                    })
-
-                                    contHelp = 0
-                                }, 3500)
-                            }
-                        })
-
-                    }
-                }
-
-                break;
-            case 'help3':
-                if (gameType === 'millonario') {
-
-                    helpsUsed.help3 = false
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpsUsed',
-                        'dataIn': helpsUsed,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'stopReloj',
-                    })
-                    setTimeout(() => {
-                        helpArray = []
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'helpRequired',
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        contHelp = 0
-                    }, 3500)
-
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                let usinHelp = millonariosPublicGames.array[i].helps
-                                millonariosPublicGames.array[i].helps.help3 = false
-
-                                usinHelp.help3 = false
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    }
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    }
-                                })
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                helpArray = []
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpRequiredMultiplayer',
-                                    'dataIn': roomName
-                                })
-
-
-                            }
-                        })
-                    }
-                }
-                break;
-
-            case 'help4':
-                if (gameType === 'millonario') {
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'stopReloj',
-                    })
-                    setTimeout(() => {
-                        contHelp = 1
-
-                        helpsUsed.help4 = false
-                        newQuestion = newArray[millonarioActualTurn - 1 + contHelp]
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'preguntaSiguiente',
-                            'dataIn': newQuestion,
-                        })
-                        socket.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                        socket.broadcast.emit(
-                            'millonario', {
-                            'actionTodo': 'helpsUsed',
-                            'dataIn': helpsUsed,
-                        })
-                    }, 3500)
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'stopRelojMultiPlayer',
-                                    'dataIn': roomName
-                                })
-                                millonariosPublicGames.array[i].helpNumber = 1
-                                let usinHelp = millonariosPublicGames.array[i].helps
-                                usinHelp.help4 = false
-                                millonariosPublicGames.array[i].helps.help4 = false
-
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    },
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpsUsedMultiPlayer',
-                                    'dataIn': {
-                                        helps: usinHelp,
-                                        roomName: roomName
-                                    },
-                                })
-                                setTimeout(() => {
-                                    socket.broadcast.emit(
-                                        'millonario', {
-                                        'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                        'dataIn': {
-                                            roomName: roomName,
-                                            pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                        },
-                                    })
-                                    socket.emit(
-                                        'millonario', {
-                                        'actionTodo': 'preguntaSiguienteMultiPlayer',
-                                        'dataIn': {
-                                            roomName: roomName,
-                                            pregunta: key.array[(key.level - 1) + key.helpNumber],
-                                        },
-                                    })
-
-                                }, 3500)
-                            }
-                        })
-                    }
-                    if (gameType === 'singlePlayer') {
-                        millonariosGames.array.map((key, i) => {
-                            if (key.state) {
-                                if (parseInt(key.playerData.ip) == parseInt(dataIn.ip) || key.playerData.participante.ip == parseInt(dataIn.ip)) {
-                                    millonariosGames.array[i].helps.help4 = false
-                                    let newwArray = []
-                                    for (let index = 1; index < key.array.length; index++) {
-                                        const element = key.array[index];
-                                        newwArray.push(element)
-                                    }
-                                    millonariosGames.array[i].array = newwArray
-                                }
-                            }
-                        })
-                    }
-                }
-                break;
-            case 'helping':
-
-                if (gameType === 'millonario') {
-                    helpArray.push(msg.dataIn)
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'helpingRes',
-                        'dataIn': helpArray,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpingRes',
-                        'dataIn': helpArray,
-                    })
-                }
-                if (gameType === 'multiPlayer') {
-                    millonariosPublicGames.array.map((key, i) => {
-                        if (key.roomName === roomName) {
-                            let helpArrayAux = []
-                            helpArrayAux.push(msg.dataIn)
-                            millonariosPublicGames.array[i].helpArray = helpArrayAux
-                            socket.emit(
-                                'millonario', {
-                                'actionTodo': 'helpingResMultiPlayer',
-                                'dataIn': {
-                                    helpArray: millonariosPublicGames.array[i].helpArray,
-                                    roomName: roomName
-                                },
-                            })
-                            socket.broadcast.emit(
-                                'millonario', {
-                                'actionTodo': 'helpingResMultiPlayer',
-                                'dataIn': {
-                                    helpArray: millonariosPublicGames.array[i].helpArray,
-                                    roomName: roomName
-                                },
-                            })
-                        }
-                    })
-                }
-
-                break;
-            case 'EndMillonario':
-                if (gameType === 'millonario') {
-                    millonarioParticipants = []
-                    contHelp = 0
-                    nowInMillonario = false
-                    nowClasific = false
-                    helpArray = []
-                    millonarioParticipantsPunt = []
-                    helpsUsed = {
-                        help1: true,
-                        help2: true,
-                        help3: true,
-                        help4: true,
-                    }
-                    newArray = []
-                    millonarioActualTurn = 0
-                    ipInPlay = ''
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'millonarioActualTurn',
-                        'dataIn': millonarioActualTurn,
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'millonarioActualTurn',
-                        'dataIn': millonarioActualTurn,
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'inpuntuacion',
-                        'dataIn': millonarioParticipantsPunt,
-
-                    })
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'offGame',
-                    })
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'offGame',
-                    })
-
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                millonariosPublicGames.array[i].state = false
-                                socket.emit(
-                                    'millonario', {
-                                    'actionTodo': 'offGameMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName
-                                    }
-                                })
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'offGameMultiPlayer',
-                                    'dataIn': {
-                                        roomName: roomName
-                                    }
-                                })
-                            }
-
-                        })
-                    }
-                }
-
-                break;
-            case 'giveHelp':
-                if (gameType === 'millonario') {
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpingResYes',
-                        'dataIn': dataIn,
-                    })
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpingResYesMultiPlayer',
-                                    'dataIn': {
-                                        'roomName': roomName,
-                                        'res': dataIn
-                                    }
-                                })
-
-                            }
-                        })
-                    }
-                }
-
-                break;
-            case 'noHelp':
-                if (gameType === 'millonario') {
-                    socket.broadcast.emit(
-                        'millonario', {
-                        'actionTodo': 'helpingResNo',
-                        'dataIn': dataIn,
-                    })
-                } else {
-                    if (gameType === 'multiPlayer') {
-                        millonariosPublicGames.array.map((key, i) => {
-                            if (key.roomName === roomName) {
-                                socket.broadcast.emit(
-                                    'millonario', {
-                                    'actionTodo': 'helpingResNoMultiPlayer',
-                                    'dataIn': {
-                                        'roomName': roomName,
-                                    }
-                                })
-
-                            }
-                        })
-                    }
-                }
-
-                break;
-            case 'singlePlay':
-
-                min = 0
-                max = 4
-                let theNewQuestionSingle = {}
-                let newArraySingle = []
-                for (let index = 1; index < 7; index++) {
-                    if (index === 1) {
-                        const element = array.level1.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level1.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level1.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level1.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level1.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level1.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-                    }
-                    if (index === 2) {
-                        const element = array.level2.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level2.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level2.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level2.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level2.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level2.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 3) {
-                        const element = array.level3.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level3.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level3.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level3.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level3.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level3.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 4) {
-                        const element = array.level4.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level4.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level4.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level4.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level4.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level4.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 5) {
-                        const element = array.level5.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level5.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level5.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level5.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level5.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level5.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                    }
-                    if (index === 6) {
-                        const element = array.level6.categoria1[Math.floor(Math.random() * (max - min)) + min];
-                        const element2 = array.level6.categoria2[Math.floor(Math.random() * (max - min)) + min];
-                        const element3 = array.level6.categoria3[Math.floor(Math.random() * (max - min)) + min];
-                        const element4 = array.level6.categoria4[Math.floor(Math.random() * (max - min)) + min];
-                        const element5 = array.level6.categoria5[Math.floor(Math.random() * (max - min)) + min];
-                        const element6 = array.level6.categoria6[Math.floor(Math.random() * (max - min)) + min];
-                        newArraySingle.push(element, element2, element3, element4, element5, element6)
-
-                    }
-
-
-                }
-                if (millonariosGames.games === 0) {
-                    millonariosGames.games = 1
-                    theNewQuestionSingle = newArraySingle[0]
-                    millonariosGames.array = [{
-
-                        state: true,
-                        level: 0,
-                        array: newArraySingle,
-                        helpNumber: 0,
-                        category: 'random',
-                        playerData: dataIn,
-                        helps: {
-                            help1: true,
-                            help2: false,
-                            help3: false,
-                            help4: true,
-                        }
-                    }
-                    ]
-                } else {
-
-                    theNewQuestionSingle = newArraySingle
-                    millonariosGames.array[millonariosGames.length] = {
-                        state: true,
-                        level: 0,
-                        array: newArraySingle,
-                        helpNumber: 0,
-                        category: 'random',
-                        playerData: dataIn,
-                        helps: {
-                            help1: true,
-                            help2: false,
-                            help3: false,
-                            help4: true,
-                        }
-                    }
-                }
-                socket.emit(
-                    'millonario', {
-                    'actionTodo': 'playerChooseSingle',
-                    'dataIn': { ip: dataIn.participante.ip, array: [] },
-                })
-                setTimeout(() => {
-                    socket.emit(
-                        'millonario', {
-                        'actionTodo': 'juegoSolitario',
-                        'dataIn': newArraySingle,
-                    })
-                }, 7000)
-                break;
+        if (isRegistered) {
+          aliverUser.push(userRegister);
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          millonarioParticipants.push({
+            ...userRegister,
+            name: userRegister.name,
+            ip: parseInt(userRegister.ip),
+            type: "register",
+            socketId: socket.id,
+          });
+          fullMillonarioUsers.push({
+            name: userRegister.name,
+            ip: parseInt(userRegister.ip),
+            type: "register",
+            socketId: socket.id,
+          });
+          socket.emit("millonario", {
+            actionTodo: "playerDataResAuth",
+            dataIn: userRegister,
+          });
+          socket.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+        } else {
+          let nameEmpty2 = true;
+          millonarioUsersDb.map((key, i) => {
+            if (key.name === dataIn.playerData.name) {
+              nameEmpty2 = false;
+            }
+          });
+          if (fullMillonarioUsers.length > 0) {
+            fullMillonarioUsers.map((anotherKey, x) => {
+              if (anotherKey.name === dataIn.playerData.name) {
+                nameEmpty2 = false;
+              }
+            });
+          }
+          if (nameEmpty2) {
+            socket.broadcast.emit("millonario", {
+              actionTodo: "rooms",
+              dataIn: {
+                rooms: millonariosPublicGames.array,
+              },
+            });
+            millonarioParticipants.push(dataIn.playerData);
+            fullMillonarioUsers.push({
+              name: dataIn.playerData.name,
+              ip: dataIn.playerData.ip,
+              type: "register",
+              socketId: socket.id,
+            });
+            socket.emit("millonario", {
+              actionTodo: "playerDataRes",
+              dataIn: millonarioParticipants,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "playerDataRes",
+              dataIn: millonarioParticipants,
+            });
+            reqUsers(
+              dataIn.playerData.name,
+              dataIn.playerData.password,
+              parseInt(dataIn.playerData.ip)
+            );
+          } else {
+            socket.emit("millonario", {
+              actionTodo: "millonarioNameUsed",
+            });
+          }
         }
-    })
-    if (inVideo === false) {
-        console.log
-    }
+        break;
 
-    if (inGame === true) {
-        socket.emit('createdGame', true)
+      case "playerDataSend":
+        let nameEmpty = true;
+        millonarioUsersDb.map((key, i) => {
+          if (key.name === dataIn.playerData.name) {
+            nameEmpty = false;
+          }
+        });
+        if (fullMillonarioUsers.length > 0) {
+          fullMillonarioUsers.map((anotherKey, x) => {
+            if (anotherKey.name === dataIn.playerData.name) {
+              nameEmpty = false;
+            }
+          });
+        }
+        if (nameEmpty) {
+          aliverUser.push(dataIn.playerData);
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          millonarioParticipants.push({
+            ...dataIn.playerData,
+            name: dataIn.playerData.name,
+            ip: parseInt(dataIn.playerData.ip),
+            type: "guest",
+            socketId: socket.id,
+          });
+          fullMillonarioUsers.push({
+            name: dataIn.playerData.name,
+            ip: parseInt(dataIn.playerData.ip),
+            type: "guest",
+            socketId: socket.id,
+          });
+          socket.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+        } else {
+          socket.emit("millonario", {
+            actionTodo: "millonarioNameUsed",
+          });
+        }
+
+        break;
+
+      case "enterRoom":
+        let thePos = 0;
+        let roomAux = [];
+        let findRoom = false;
+        let findName = false;
+        let inClasifThisRoom = false;
+        let nameOfRoom = "";
+        millonariosPublicGames.array.map((key, i) => {
+          if (key.roomName === roomName) {
+            inClasifThisRoom = key.clasification;
+            key.playerData.map((value, x) => {
+              if (value.name === msg.dataIn.playerData.name) {
+                socket.emit("millonario", {
+                  actionTodo: "nameUserOcuped",
+                });
+                findName = true;
+              }
+            });
+            findRoom = true;
+            thePos = i;
+            roomAux = millonariosPublicGames.array[i].playerData;
+          }
+        });
+        if (findName) {
+          socket.emit("millonario", {
+            actionTodo: "nameOcuped",
+          });
+        }
+        if (!findRoom) {
+          socket.emit("millonario", {
+            actionTodo: "roomLoose",
+          });
+        }
+        if (findRoom && !findName) {
+          millonariosPublicGames.array[thePos].playerData[
+            millonariosPublicGames.array[thePos].playerData.length
+          ] = {
+            ip: msg.dataIn.playerData.ip,
+            name: msg.dataIn.playerData.name,
+            type: "player",
+          };
+          socket.emit("millonario", {
+            actionTodo: "usersInRoom",
+            dataIn: {
+              array: millonariosPublicGames.array[thePos].playerData,
+              roomName: roomName,
+            },
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "usersInRoom",
+            dataIn: {
+              array: millonariosPublicGames.array[thePos].playerData,
+              roomName: roomName,
+            },
+          });
+          if (inClasifThisRoom) {
+            socket.emit("millonario", {
+              actionTodo: "arrayClassificatorio",
+              dataIn: millonariosPublicGames.array[thePos].preliminarArray,
+            });
+            socket.emit("millonario", {
+              actionTodo: "inClasificationMultiPlayer",
+              dataIn: {
+                roomName: roomName,
+              },
+            });
+          }
+        }
+
+        break;
+
+      case "ipSend":
+        let playingNow = false;
+        socket.broadcast.emit("millonario", {
+          actionTodo: "rooms",
+          dataIn: {
+            rooms: millonariosPublicGames.array,
+          },
+        });
+        socket.emit("millonario", {
+          actionTodo: "rooms",
+          dataIn: {
+            rooms: millonariosPublicGames.array,
+          },
+        });
+        millonarioUsersDb.map((key, i) => {
+          if (key.ip === dataIn.ip) {
+            millonarioParticipants.push({
+              name: key.name,
+              ip: parseInt(key.ip),
+              type: "register",
+              socketId: socket.id,
+            });
+            fullMillonarioUsers.push({
+              name: key.name,
+              ip: parseInt(key.ip),
+              type: "register",
+              socketId: socket.id,
+            });
+            socket.emit("millonario", {
+              actionTodo: "correctLogIn",
+              dataIn: {
+                name: key.name,
+                ip: parseInt(key.ip),
+              },
+            });
+            socket.emit("millonario", {
+              actionTodo: "playerDataRes",
+              dataIn: millonarioParticipants,
+            });
+          }
+        });
+        if (millonariosPublicGames.games > 0) {
+          socket.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+        }
+        if (gameType === "singlePlayer") {
+          socket.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          millonariosGames.array.map((key, i) => {
+            if (key.state) {
+              if (
+                key.playerData.ip == dataIn.ip ||
+                key.playerData.participante.ip == dataIn.ip
+              ) {
+                socket.emit("millonario", {
+                  actionTodo: "retomSingle",
+                  dataIn: millonariosGames.array[i],
+                });
+
+                socket.emit("millonario", {
+                  actionTodo: "millonarioActualTurn",
+                  dataIn: millonariosGames.array[i].level,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "playerChoose",
+                  dataIn: {
+                    ip: key.playerData.ip,
+                    array: millonariosGames.array,
+                  },
+                });
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsed",
+                  dataIn: millonariosGames.array[i].helps,
+                });
+                playingNow = true;
+                let aNewQuestion = key.array[key.level];
+                setTimeout(() => {
+                  socket.emit("millonario", {
+                    actionTodo: "preguntaSiguiente",
+                    dataIn: aNewQuestion,
+                  });
+                }, 12000);
+              }
+            } else {
+              socket.emit("millonario", {
+                actionTodo: "notStartSingle",
+              });
+            }
+          });
+        }
+        if (gameType === "multiPlayer") {
+          socket.emit("millonario", {
+            actionTodo: "playerDataRes",
+            dataIn: millonarioParticipants,
+          });
+          if (millonariosPublicGames.games > 0) {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.state) {
+                millonariosPublicGames.array[i].playerData.map((laIp, n) => {
+                  if (
+                    laIp.ip === dataIn.ip ||
+                    parseInt(laIp.ip) === parseInt(dataIn.ip)
+                  ) {
+                    if (
+                      key.ipPlaying.ip == dataIn.ip ||
+                      key.ipPlaying.ip.ip == dataIn.ip
+                    ) {
+                      socket.emit("millonario", {
+                        actionTodo: "youArePlaying",
+                        dataIn: {
+                          roomName: key.roomName,
+                        },
+                      });
+                    }
+                    if (key.administrator.ip == dataIn.ip) {
+                      socket.emit("millonario", {
+                        actionTodo: "youAreOwner",
+                        dataIn: {
+                          playerData: key.administrator,
+                          roomName: key.roomName,
+                        },
+                      });
+                    }
+
+                    roomLive = true;
+                    socket.emit("millonario", {
+                      actionTodo: "roomLive",
+                      dataIn: laIp.type,
+                    });
+                    socket.emit("millonario", {
+                      actionTodo: "usersInRoom",
+                      dataIn: {
+                        array: key.playerData,
+                        roomName: key.roomName,
+                      },
+                    });
+                  }
+                });
+                socket.emit("millonario", {
+                  actionTodo: "usersInRoom",
+                  dataIn: {
+                    array: key.playerData,
+                    roomName: key.roomName,
+                  },
+                });
+
+                key.preliminarArray.map((key2, x) => {
+                  if (
+                    key2.ip === dataIn.ip ||
+                    parseInt(key2.ip) === parseInt(dataIn.ip)
+                  ) {
+                    if (key.inGame) {
+                      socket.emit("millonario", {
+                        actionTodo: "millonarioActualTurnMultiPlayer",
+                        dataIn: {
+                          roomName: key.roomName,
+                          level: key.level,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "playerChooseMultiPlayer",
+                        dataIn: {
+                          ip: key.ipPlaying,
+                          array: key.preliminarResults,
+                          roomName: roomName,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "preguntaSiguienteMultiPlayer",
+                        dataIn: {
+                          roomName: roomName,
+                          pregunta: key.array[key.level - 1 + key.helpNumber],
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "helpsUsedMultiPlayer",
+                        dataIn: {
+                          roomName: roomName,
+                          helps: key.helps,
+                        },
+                      });
+                    }
+                    if (key.clasification) {
+                      socket.emit("millonario", {
+                        actionTodo: "inpuntuacionMultiPlayer",
+                        dataIn: {
+                          roomName: key.roomName,
+                          array: key.preliminarResults,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "arrayClassificatorio",
+                        dataIn: {
+                          roomName: roomName,
+                          newclasif: key.preliminarArray,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "inClasificationMultiPlayer",
+                        dataIn: {
+                          roomName: key.roomName,
+                        },
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          }
+        }
+        fullMillonarioUsers.map((key, i) => {
+          if (
+            key.ip === dataIn.ip ||
+            gameType === "millonario" ||
+            gameType === "off" ||
+            gameType === "singlePlayer" ||
+            gameType === "nultiPlayer"
+          ) {
+            if (gameType === "millonario" || gameType === "off") {
+              socket.emit("millonario", {
+                actionTodo: "playerDataRes",
+                dataIn: millonarioParticipants,
+              });
+            }
+            if (gameType === "millonario") {
+              if (nowInMillonario) {
+                socket.emit("millonario", {
+                  actionTodo: "millonarioActualTurn",
+                  dataIn: millonarioActualTurn,
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "millonarioActualTurn",
+                  dataIn: millonarioActualTurn,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "playerChoose",
+                  dataIn: { ip: ipInPlay, array: millonarioParticipantsPunt },
+                });
+                socket.emit("millonario", {
+                  actionTodo: "preguntaSiguiente",
+                  dataIn: newQuestion,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsed",
+                  dataIn: helpsUsed,
+                });
+              }
+              if (nowClasific) {
+                socket.emit("millonario", {
+                  actionTodo: "inpuntuacion",
+                  dataIn: millonarioParticipantsPunt,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "arrayClassificatorio",
+                  dataIn: newclasif,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "inClasification",
+                });
+              }
+            } else {
+              if (gameType === "singlePlayer") {
+                millonariosGames.array.map((key, i) => {
+                  if (key.state) {
+                    if (key.playerData.ip === dataIn.ip) {
+                      setTimeout(() => {
+                        socket.emit("millonario", {
+                          actionTodo: "retomSingle",
+                          dataIn: millonariosGames.array[i],
+                        });
+                      }, 5000);
+                    }
+                  } else {
+                    socket.emit("millonario", {
+                      actionTodo: "notStartSingle",
+                    });
+                  }
+                });
+              }
+              if (gameType === "multiPlayer") {
+                if (millonariosPublicGames.games > 0) {
+                  millonariosPublicGames.array.map((key, i) => {
+                    if (key.state) {
+                      if (
+                        key.playerData.ip === dataIn.ip ||
+                        parseInt(key.playerData.ip) === parseInt(dataIn.ip)
+                      ) {
+                        if (key.ipPlaying.ip == dataIn.ip) {
+                          socket.emit("millonario", {
+                            actionTodo: "youArePlaying",
+                            dataIn: {
+                              roomName: key.roomName,
+                            },
+                          });
+                        }
+                        socket.emit("millonario", {
+                          actionTodo: "usersInRoom",
+                          dataIn: {
+                            array: key.playerData,
+                            roomName: key.roomName,
+                          },
+                        });
+                      }
+                      if (key.inGame) {
+                        socket.emit("millonario", {
+                          actionTodo: "millonarioActualTurnMultiPlayer",
+                          dataIn: {
+                            roomName: key.roomName,
+                            level: key.level,
+                          },
+                        });
+                        socket.emit("millonario", {
+                          actionTodo: "playerChooseMultiPlayer",
+                          dataIn: {
+                            ip: key.ipPlaying,
+                            array: key.preliminarResults,
+                            roomName: roomName,
+                          },
+                        });
+
+                        socket.emit("millonario", {
+                          actionTodo: "preguntaSiguienteMultiPlayer",
+                          dataIn: {
+                            roomName: roomName,
+                            pregunta: key.array[key.level - 1 + key.helpNumber],
+                          },
+                        });
+                        socket.emit("millonario", {
+                          actionTodo: "helpsUsedMultiPlayer",
+                          dataIn: {
+                            roomName: roomName,
+                            helps: key.helps,
+                          },
+                        });
+                      }
+                      if (key.clasification) {
+                        socket.emit("millonario", {
+                          actionTodo: "arrayClassificatorioMultiplayer",
+                          dataIn: {
+                            roomName: roomName,
+                            newclasif: key.preliminarArray,
+                          },
+                        });
+                        socket.emit("millonario", {
+                          actionTodo: "inClasificationMultiPlayer",
+                          dataIn: {
+                            roomName: key.roomName,
+                          },
+                        });
+                        socket.emit("millonario", {
+                          actionTodo: "inpuntuacionMultiPlayer",
+                          dataIn: {
+                            roomName: key.roomName,
+                            array: key.preliminarResults,
+                          },
+                        });
+                      }
+                    }
+                  });
+                }
+              }
+            }
+          } else {
+          }
+        });
+
+        break;
+      case "checkName":
+        let nameUsed = false;
+        millonariosPublicGames.array.map((key, i) => {
+          if (key.roomName === msg.dataIn) {
+            nameUsed = true;
+          }
+          if (nameUsed) {
+            socket.emit("millonario", {
+              actionTodo: "nameOcuped",
+            });
+          } else {
+            socket.emit("millonario", {
+              actionTodo: "nameGood",
+            });
+          }
+        });
+
+        break;
+      case "createRoom":
+        if (millonariosPublicGames.games === 0) {
+          millonariosPublicGames.games = millonariosPublicGames.games + 1;
+          millonariosPublicGames.array[0] = {
+            roomName: msg.dataIn.roomWillName,
+            administrator: msg.dataIn.playerData,
+            state: true,
+            clasification: false,
+            preliminarResults: [],
+            preliminarArray: [],
+            inGame: false,
+            ipPlaying: {
+              ip: {
+                ip: "",
+                name: "",
+              },
+              name: "",
+            },
+            level: 0,
+            array: [],
+            helpNumber: 0,
+            category: "random",
+            playerData: [
+              {
+                ip: msg.dataIn.ip,
+                name: msg.dataIn.playerData.name,
+                type: "admin",
+              },
+            ],
+            helps: {
+              help1: true,
+              help2: true,
+              help3: true,
+              help4: true,
+            },
+          };
+          socket.emit("millonario", {
+            actionTodo: "roomCreated",
+            dataIn: {
+              roomName: roomName,
+            },
+          });
+          socket.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          socket.emit("millonario", {
+            actionTodo: "usersInRoom",
+            dataIn: {
+              array: [
+                {
+                  ip: msg.dataIn.playerData.ip,
+                  name: msg.dataIn.playerData.name,
+                  type: "admin",
+                },
+              ],
+              roomName: roomName,
+            },
+          });
+        } else {
+          millonariosPublicGames.games = millonariosPublicGames.games + 1;
+          millonariosPublicGames.array.push({
+            roomName: msg.dataIn.roomWillName,
+            administrator: msg.dataIn.playerData,
+            state: true,
+            clasification: false,
+            preliminarResults: [],
+            preliminarArray: [],
+            inGame: false,
+            ipPlaying: {
+              ip: {
+                ip: "",
+                name: "",
+              },
+              name: "",
+            },
+            level: 0,
+            array: [],
+            helpNumber: 0,
+            category: "random",
+            playerData: [
+              {
+                ip: msg.dataIn.ip,
+                name: msg.dataIn.playerData.name,
+                type: "admin",
+              },
+            ],
+            helps: {
+              help1: true,
+              help2: true,
+              help3: true,
+              help4: true,
+            },
+          });
+          socket.emit("millonario", {
+            actionTodo: "roomCreated",
+            dataIn: {
+              roomName: roomName,
+            },
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "rooms",
+            dataIn: {
+              rooms: millonariosPublicGames.array,
+            },
+          });
+          socket.emit("millonario", {
+            actionTodo: "usersInRoom",
+            dataIn: {
+              array: [
+                {
+                  ip: msg.dataIn.playerData.ip,
+                  name: msg.dataIn.playerData.name,
+                  type: "admin",
+                },
+              ],
+              roomName: roomName,
+            },
+          });
+        }
+
+        break;
+      case "createClassification":
+        if (gameType === "multiPlayer") {
+          let aNewClasif = [];
+          let aNewMultiArray = PreguntsMillonario.sort(function (a, b) {
+            return Math.random() - 0.5;
+          });
+          for (let index = 0; index < 5; index++) {
+            const element = aNewMultiArray[index];
+            let resp = [
+              element.respuesta1,
+              element.respuesta2,
+              element.respuesta3,
+              element.respuesta4,
+            ];
+            aNewClasif.push({
+              pregunta: element.pregunta,
+              correcta: parseInt(element.correcta),
+              respuestas: resp,
+            });
+          }
+          let aCopy = millonariosPublicGames;
+          millonariosPublicGames.array.map((key, i) => {
+            if (key.roomName === roomName) {
+              millonariosPublicGames.array[i].clasification = true;
+              millonariosPublicGames.array[i].preliminarArray = aNewClasif;
+              aCopy.array[i].clasification = true;
+              aCopy.array[i].preliminarArray = aNewClasif;
+              socket.broadcast.emit("millonario", {
+                actionTodo: "rooms",
+                dataIn: {
+                  rooms: millonariosPublicGames.array,
+                },
+              });
+              socket.emit("millonario", {
+                actionTodo: "arrayClassificatorioMultiplayer",
+                dataIn: {
+                  roomName: roomName,
+                  newclasif: aNewClasif,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "arrayClassificatorioMultiplayer",
+                dataIn: {
+                  roomName: roomName,
+                  newclasif: aNewClasif,
+                },
+              });
+              socket.emit("millonario", {
+                actionTodo: "inClasificationMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "inClasificationMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                },
+              });
+              socket.emit("millonario", {
+                actionTodo: "inpuntuacionMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                  array: key.preliminarResults,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "inpuntuacionMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                  array: key.preliminarResults,
+                },
+              });
+            }
+          });
+        } else {
+          newArray = PreguntsMillonario.sort(function (a, b) {
+            return Math.random() - 0.5;
+          });
+          newclasif = [];
+          for (let index = 0; index < 5; index++) {
+            const element = newArray[index];
+            let resp = [
+              element.respuesta1,
+              element.respuesta2,
+              element.respuesta3,
+              element.respuesta4,
+            ];
+            newclasif.push({
+              pregunta: element.pregunta,
+              correcta: parseInt(element.correcta),
+              respuestas: resp,
+            });
+          }
+          nowClasific = true;
+          socket.emit("millonario", {
+            actionTodo: "arrayClassificatorio",
+            dataIn: newclasif,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "arrayClassificatorio",
+            dataIn: newclasif,
+          });
+          socket.emit("millonario", {
+            actionTodo: "inClasification",
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "inClasification",
+          });
+          socket.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+        }
+
+        break;
+      case "puntuacion":
+        if (gameType === "millonario") {
+          millonarioParticipantsPunt.push(dataIn);
+          socket.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+        } else {
+          millonariosPublicGames.array.map((key, i) => {
+            if (key.roomName === roomName) {
+              millonariosPublicGames.array[i].preliminarResults.push(dataIn);
+              socket.emit("millonario", {
+                actionTodo: "inpuntuacionMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                  array: millonariosPublicGames.array[i].preliminarResults,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "inpuntuacionMultiPlayer",
+                dataIn: {
+                  roomName: roomName,
+                  array: millonariosPublicGames.array[i].preliminarResults,
+                },
+              });
+            }
+          });
+        }
+        break;
+
+      case "createMillonario":
+        min = 0;
+        max = 4;
+        let anotherNewArray = [];
+        for (let index = 1; index < 7; index++) {
+          if (index === 1) {
+            const element =
+              array.level1.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level1.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level1.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level1.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level1.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level1.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 2) {
+            const element =
+              array.level2.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level2.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level2.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level2.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level2.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level2.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 3) {
+            const element =
+              array.level3.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level3.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level3.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level3.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level3.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level3.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 4) {
+            const element =
+              array.level4.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level4.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level4.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level4.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level4.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level4.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 5) {
+            const element =
+              array.level5.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level5.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level5.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level5.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level5.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level5.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 6) {
+            const element =
+              array.level6.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level6.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level6.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level6.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level6.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level6.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            anotherNewArray.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+        }
+        if (gameType === "millonario") {
+          for (let index = 1; index < 7; index++) {
+            if (index === 1) {
+              const element =
+                array.level1.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level1.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level1.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level1.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level1.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level1.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 2) {
+              const element =
+                array.level2.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level2.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level2.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level2.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level2.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level2.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 3) {
+              const element =
+                array.level3.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level3.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level3.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level3.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level3.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level3.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 4) {
+              const element =
+                array.level4.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level4.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level4.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level4.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level4.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level4.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 5) {
+              const element =
+                array.level5.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level5.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level5.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level5.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level5.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level5.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 6) {
+              const element =
+                array.level6.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level6.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level6.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level6.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level6.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level6.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArray.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+          }
+          newArray = [];
+          socket.broadcast.emit("millonario", {
+            actionTodo: "playerChoose",
+            dataIn: {
+              ip: msg.dataIn.participante,
+              array: millonarioParticipantsPunt,
+            },
+          });
+          ArrayDePreguntas = newArray;
+          setTimeout(() => {
+            millonarioActualTurn = 1;
+            nowInMillonario = true;
+            ipInPlay = msg.dataIn.participante;
+            socket.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            socket.emit("millonario", {
+              actionTodo: "playerChoose",
+              dataIn: {
+                ip: msg.dataIn.participante,
+                array: millonarioParticipantsPunt,
+              },
+            });
+
+            helpArray = [];
+
+            newQuestion = newArray[millonarioActualTurn - 1 + contHelp];
+            socket.broadcast.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+            socket.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "newArray",
+              dataIn: newQuestion,
+            });
+            socket.emit("millonario", {
+              actionTodo: "newArray",
+              dataIn: newQuestion,
+            });
+          }, 12500);
+        }
+        if (gameType === "singlePlayer") {
+          let theNewQuestion = {};
+          let newArraySingle = [];
+          for (let index = 1; index < 7; index++) {
+            if (index === 1) {
+              const element =
+                array.level1.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level1.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level1.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level1.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level1.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level1.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 2) {
+              const element =
+                array.level2.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level2.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level2.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level2.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level2.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level2.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 3) {
+              const element =
+                array.level3.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level3.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level3.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level3.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level3.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level3.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 4) {
+              const element =
+                array.level4.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level4.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level4.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level4.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level4.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level4.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 5) {
+              const element =
+                array.level5.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level5.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level5.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level5.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level5.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level5.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+            if (index === 6) {
+              const element =
+                array.level6.categoria1[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element2 =
+                array.level6.categoria2[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element3 =
+                array.level6.categoria3[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element4 =
+                array.level6.categoria4[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element5 =
+                array.level6.categoria5[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              const element6 =
+                array.level6.categoria6[
+                  Math.floor(Math.random() * (max - min)) + min
+                ];
+              newArraySingle.push(
+                element,
+                element2,
+                element3,
+                element4,
+                element5,
+                element6
+              );
+            }
+          }
+          millonariosGames.array.map((key, i) => {
+            if (!key.state) {
+              theNewQuestion = newArraySingle;
+              millonariosGames.array[i] = {
+                state: true,
+                level: 0,
+                array: newArraySingle,
+                helpNumber: 0,
+                category: "random",
+                playerData: dataIn,
+                helps: {
+                  help1: true,
+                  help2: false,
+                  help3: false,
+                  help4: true,
+                },
+              };
+            } else {
+              millonariosGames.array.push({
+                state: true,
+                level: 0,
+                array: newArraySingle,
+                helpNumber: 0,
+                category: "random",
+                playerData: dataIn,
+                helps: {
+                  help1: true,
+                  help2: false,
+                  help3: false,
+                  help4: true,
+                },
+              });
+            }
+          });
+          socket.emit("millonario", {
+            actionTodo: "playerChoose",
+            dataIn: { ip: dataIn.ip, array: [] },
+          });
+          setTimeout(() => {
+            socket.emit("millonario", {
+              actionTodo: "juegoSolitario",
+              dataIn: theNewQuestion,
+            });
+          }, 12000);
+        }
+        if (gameType === "multiPlayer") {
+          millonariosPublicGames.array.map((key, i) => {
+            if (key.roomName === roomName) {
+              millonariosPublicGames.array[i].state = true;
+              millonariosPublicGames.array[i].inGame = true;
+              millonariosPublicGames.array[i].level = 1;
+              millonariosPublicGames.array[i].ipPlaying =
+                msg.dataIn.participante;
+              millonariosPublicGames.array[i].array = anotherNewArray;
+              socket.broadcast.emit("millonario", {
+                actionTodo: "rooms",
+                dataIn: {
+                  rooms: millonariosPublicGames.array,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "playerChooseMultiPlayer",
+                dataIn: {
+                  ip: msg.dataIn.participante,
+                  array: key.preliminarResults,
+                  roomName: roomName,
+                },
+              });
+              socket.emit("millonario", {
+                actionTodo: "playerChooseMultiPlayer",
+                dataIn: {
+                  ip: msg.dataIn.participante,
+                  array: key.preliminarResults,
+                  roomName: roomName,
+                },
+              });
+              setTimeout(() => {
+                socket.emit("millonario", {
+                  actionTodo: "millonarioActualTurnMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    level: key.level,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "millonarioActualTurnMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    level: key.level,
+                  },
+                });
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    helps: key.helps,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    helps: key.helps,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "preguntaSiguienteMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    pregunta: key.array[key.level - 1 + key.helpNumber],
+                  },
+                });
+                socket.emit("millonario", {
+                  actionTodo: "preguntaSiguienteMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    pregunta: key.array[key.level - 1 + key.helpNumber],
+                  },
+                });
+              }, 12500);
+            }
+          });
+        }
+        break;
+      case "nuevaPregunta":
+        millonariosPublicGames.array.map((key, i) => {
+          if (key.roomName === roomName) {
+          }
+        });
+        helpArray = [];
+        newQuestion = msg.dataIn.pregunta;
+        socket.broadcast.emit("millonario", {
+          actionTodo: "preguntaSiguiente",
+          dataIn: msg.dataIn.pregunta,
+        });
+        socket.emit("millonario", {
+          actionTodo: "preguntaSiguiente",
+          dataIn: msg.dataIn.pregunta,
+        });
+        break;
+      case "sendRespuesta":
+        if (gameType === "millonario") {
+          if (msg.dataIn.respuesta == newQuestion.correcta) {
+            millonarioActualTurn = millonarioActualTurn + 1;
+            socket.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "sendRespuestaResOk",
+              dataIn: newQuestion.correcta,
+            });
+            socket.emit("millonario", {
+              actionTodo: "sendRespuestaResOk",
+              dataIn: newQuestion.correcta,
+            });
+            newQuestion = newArray[millonarioActualTurn - 1 + contHelp];
+            setTimeout(() => {
+              socket.broadcast.emit("millonario", {
+                actionTodo: "preguntaSiguiente",
+                dataIn: newQuestion,
+              });
+              socket.emit("millonario", {
+                actionTodo: "preguntaSiguiente",
+                dataIn: newQuestion,
+              });
+            }, 5000);
+          } else {
+            socket.broadcast.emit("millonario", {
+              actionTodo: "sendRespuestaResNo",
+              dataIn: newQuestion.correcta,
+            });
+            socket.emit("millonario", {
+              actionTodo: "sendRespuestaResNo",
+              dataIn: newQuestion.correcta,
+            });
+            contHelp = 0;
+            nowInMillonario = false;
+            nowClasific = false;
+            helpArray = [];
+            newArray = [];
+            millonarioParticipantsPunt = [];
+            helpsUsed = {
+              help1: true,
+              help2: true,
+              help3: true,
+              help4: true,
+            };
+            millonarioActualTurn = 0;
+            ipInPlay = "";
+            socket.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "millonarioActualTurn",
+              dataIn: millonarioActualTurn,
+            });
+            socket.emit("millonario", {
+              actionTodo: "inpuntuacion",
+              dataIn: millonarioParticipantsPunt,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "inpuntuacion",
+              dataIn: millonarioParticipantsPunt,
+            });
+          }
+        } else {
+          if (gameType === "singlePlayer") {
+            if (msg.dataIn.respuesta == newQuestion.correcta) {
+              millonarioActualTurn = millonarioActualTurn + 1;
+              socket.emit("millonario", {
+                actionTodo: "millonarioActualTurn",
+                dataIn: millonarioActualTurn,
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "millonarioActualTurn",
+                dataIn: millonarioActualTurn,
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "sendRespuestaResOk",
+                dataIn: newQuestion.correcta,
+              });
+              socket.emit("millonario", {
+                actionTodo: "sendRespuestaResOk",
+                dataIn: newQuestion.correcta,
+              });
+              newQuestion = newArray[millonarioActualTurn - 1 + contHelp];
+              setTimeout(() => {
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "preguntaSiguiente",
+                  dataIn: newQuestion,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "preguntaSiguiente",
+                  dataIn: newQuestion,
+                });
+              }, 5000);
+            } else {
+              socket.broadcast.emit("millonario", {
+                actionTodo: "sendRespuestaResNo",
+                dataIn: newQuestion.correcta,
+              });
+              socket.emit("millonario", {
+                actionTodo: "sendRespuestaResNo",
+                dataIn: newQuestion.correcta,
+              });
+              contHelp = 0;
+              nowInMillonario = false;
+              nowClasific = false;
+              helpArray = [];
+              newArray = [];
+              millonarioParticipantsPunt = [];
+              helpsUsed = {
+                help1: true,
+                help2: true,
+                help3: true,
+                help4: true,
+              };
+              millonarioActualTurn = 0;
+              ipInPlay = "";
+              socket.emit("millonario", {
+                actionTodo: "millonarioActualTurn",
+                dataIn: millonarioActualTurn,
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "millonarioActualTurn",
+                dataIn: millonarioActualTurn,
+              });
+              socket.emit("millonario", {
+                actionTodo: "inpuntuacion",
+                dataIn: millonarioParticipantsPunt,
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "inpuntuacion",
+                dataIn: millonarioParticipantsPunt,
+              });
+            }
+          }
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                if (
+                  msg.dataIn.respuesta ==
+                  key.array[
+                    key.level === 0 ? key.level : key.level - 1 + key.helpNumber
+                  ].correcta
+                ) {
+                  millonariosPublicGames.array[i].level =
+                    millonariosPublicGames.array[i].level + 1;
+                  socket.emit("millonario", {
+                    actionTodo: "millonarioActualTurnMultiPlayer",
+                    dataIn: {
+                      level: millonariosPublicGames.array[i].level,
+                      roomName: roomName,
+                    },
+                  });
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "millonarioActualTurnMultiPlayer",
+                    dataIn: {
+                      level: millonariosPublicGames.array[i].level,
+                      roomName: roomName,
+                    },
+                  });
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "sendRespuestaResOkMultiplayer",
+                    dataIn: {
+                      correcta:
+                        key.array[key.level - 2 + key.helpNumber].correcta,
+                      roomName: roomName,
+                    },
+                  });
+                  socket.emit("millonario", {
+                    actionTodo: "sendRespuestaResOkMultiplayer",
+                    dataIn: {
+                      correcta:
+                        key.array[key.level - 2 + key.helpNumber].correcta,
+                      roomName: roomName,
+                    },
+                  });
+
+                  setTimeout(() => {
+                    socket.broadcast.emit("millonario", {
+                      actionTodo: "preguntaSiguienteMultiPlayer",
+                      dataIn: {
+                        roomName: roomName,
+                        pregunta: key.array[key.level - 1 + key.helpNumber],
+                      },
+                    });
+                    socket.emit("millonario", {
+                      actionTodo: "preguntaSiguienteMultiPlayer",
+                      dataIn: {
+                        roomName: roomName,
+                        pregunta: key.array[key.level - 1 + key.helpNumber],
+                      },
+                    });
+                  }, 5000);
+                } else {
+                  millonariosPublicGames.array.map((key, i) => {
+                    if (key.roomName === roomName) {
+                      socket.broadcast.emit("millonario", {
+                        actionTodo: "sendRespuestaResNoMultiPlayer",
+                        dataIn: {
+                          correcta:
+                            key.array[key.level - 1 + key.helpNumber].correcta,
+                          roomName: roomName,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "sendRespuestaResNoMultiPlayer",
+                        dataIn: {
+                          correcta:
+                            key.array[key.level - 1 + key.helpNumber].correcta,
+                          roomName: roomName,
+                        },
+                      });
+                      millonariosPublicGames.array[i].helpNumber;
+                      millonariosPublicGames.array[i].clasification = false;
+                      millonariosPublicGames.array[i].helps = [];
+                      millonariosPublicGames.array[i].array = [];
+                      millonariosPublicGames.array[i].arrayClassificatorio = [];
+                      millonariosPublicGames.array[i].level = 0;
+                      millonariosPublicGames.array[i].ipPlaying = "";
+                      millonariosPublicGames.array[i].state = false;
+                      socket.broadcast.emit("millonario", {
+                        actionTodo: "rooms",
+                        dataIn: {
+                          rooms: millonariosPublicGames.array,
+                        },
+                      });
+                      socket.emit("millonario", {
+                        actionTodo: "rooms",
+                        dataIn: {
+                          rooms: millonariosPublicGames.array,
+                        },
+                      });
+                      cleanArrays();
+                    }
+                  });
+
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "offRoom",
+                    dataIn: roomName,
+                  });
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "offRoom",
+                    dataIn: roomName,
+                  });
+                }
+              }
+            });
+
+            socket.broadcast.emit("millonario", {
+              actionTodo: "rooms",
+              dataIn: {
+                rooms: millonariosPublicGames.array,
+              },
+            });
+          }
+        }
+
+        break;
+      case "logout":
+        checkUsers(socket.id);
+        break;
+      case "inChoosing":
+        if (gameType === "multiPlayer") {
+          millonariosPublicGames.array.map((key, i) => {
+            socket.broadcast.emit("millonario", {
+              actionTodo: "inChoosedMultiPlayer",
+              dataIn: {
+                choosed: msg.dataIn,
+                roomName: roomName,
+              },
+            });
+            socket.emit("millonario", {
+              actionTodo: "inChoosedMultiPlayer",
+              dataIn: {
+                choosed: msg.dataIn,
+                roomName: roomName,
+              },
+            });
+          });
+        } else {
+          lastChoose = msg.dataIn;
+          socket.broadcast.emit("millonario", {
+            actionTodo: "inChoosed",
+            dataIn: msg.dataIn,
+          });
+          socket.emit("millonario", {
+            actionTodo: "inChoosed",
+            dataIn: msg.dataIn,
+          });
+        }
+
+        break;
+      case "goodAnwser":
+        millonariosGames.array.map((key, i) => {
+          if (key.state) {
+            if (
+              key.playerData.ip == dataIn.ip ||
+              key.playerData.participante.ip == dataIn.ip
+            ) {
+              millonariosGames.array[i].level =
+                millonariosGames.array[i].level + 1;
+            }
+          }
+        });
+        break;
+      case "gameOver":
+        millonariosGames.array.map((key, i) => {
+          if (key.state) {
+            if (
+              parseInt(key.playerData.ip) == parseInt(dataIn.ip) ||
+              parseInt(key.playerData.participante.ip) == parseInt(dataIn.ip)
+            ) {
+              millonariosGames.array[i].state = false;
+            }
+          }
+        });
+        cleanArrays();
+        break;
+
+      case "help1":
+        if (gameType === "millonario") {
+          helpsUsed.help1 = false;
+
+          socket.broadcast.emit("millonario", {
+            actionTodo: "stopReloj",
+          });
+
+          socket.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          setTimeout(() => {
+            let haveTobeen = newQuestion.correcta;
+            let preguntasNew = [];
+            min = 0;
+            max = 3;
+            let theRandom = () => {
+              let resNow = Math.floor(Math.random() * (max - min)) + min;
+              if (resNow === parseInt(haveTobeen)) {
+                if (resNow + 1 === 4) {
+                  resNow = resNow - 1;
+                } else {
+                  resNow = resNow + 1;
+                }
+              }
+
+              return resNow;
+            };
+            let getRandom = theRandom();
+
+            if (getRandom === 0 || parseInt(haveTobeen) === 0) {
+              console.log;
+            } else {
+              newQuestion.respuesta1 = "";
+            }
+            if (getRandom === 1 || parseInt(haveTobeen) === 1) {
+              console.log;
+            } else {
+              newQuestion.respuesta2 = "";
+            }
+            if (getRandom === 2 || parseInt(haveTobeen) === 2) {
+              console.log;
+            } else {
+              newQuestion.respuesta3 = "";
+            }
+            if (getRandom === 3 || parseInt(haveTobeen) === 3) {
+              console.log;
+            } else {
+              newQuestion.respuesta4 = "";
+            }
+
+            socket.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+
+            contHelp = 0;
+          }, 3500);
+        } else {
+          if (gameType === "singlePlayer") {
+            millonariosGames.array.map((key, i) => {
+              if (key.state) {
+                if (
+                  parseInt(key.playerData.ip) == parseInt(dataIn.ip) ||
+                  key.playerData.participante.ip == parseInt(dataIn.ip)
+                ) {
+                  millonariosGames.array[i].helps.help1 = false;
+                }
+              }
+            });
+          }
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName && key.state) {
+                let helpAux = millonariosPublicGames.array[i].helps;
+                millonariosPublicGames.array[i].helps.help1 = false;
+                helpAux.help1 = false;
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: helpAux,
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: helpAux,
+                    roomName: roomName,
+                  },
+                });
+                millonariosPublicGames.array[i].helps = helpAux;
+                setTimeout(() => {
+                  let haveTobeen = key.array[key.level - 1].correcta;
+
+                  min = 0;
+                  max = 3;
+                  let theRandom = () => {
+                    let resNow = Math.floor(Math.random() * (max - min)) + min;
+                    if (resNow === parseInt(haveTobeen)) {
+                      if (resNow + 1 === 4) {
+                        resNow = resNow - 1;
+                      } else {
+                        resNow = resNow + 1;
+                      }
+                    }
+                    return resNow;
+                  };
+                  let getRandom = theRandom();
+
+                  if (getRandom === 0 || parseInt(haveTobeen) === 0) {
+                    console.log;
+                  } else {
+                    millonariosPublicGames.array[i].array[
+                      key.level - 1
+                    ].respuesta1 = "";
+                  }
+                  if (getRandom === 1 || parseInt(haveTobeen) === 1) {
+                    console.log;
+                  } else {
+                    millonariosPublicGames.array[i].array[
+                      key.level - 1
+                    ].respuesta2 = "";
+                  }
+                  if (getRandom === 2 || parseInt(haveTobeen) === 2) {
+                    console.log;
+                  } else {
+                    millonariosPublicGames.array[i].array[
+                      key.level - 1
+                    ].respuesta3 = "";
+                  }
+                  if (getRandom === 3 || parseInt(haveTobeen) === 3) {
+                    console.log;
+                  } else {
+                    millonariosPublicGames.array[i].array[
+                      key.level - 1
+                    ].respuesta4 = "";
+                  }
+
+                  socket.emit("millonario", {
+                    actionTodo: "preguntaSiguienteMultiPlayer",
+                    dataIn: {
+                      roomName: roomName,
+                      pregunta:
+                        millonariosPublicGames.array[i].array[key.level - 1],
+                    },
+                  });
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "preguntaSiguienteMultiPlayer",
+                    dataIn: {
+                      roomName: roomName,
+                      pregunta:
+                        millonariosPublicGames.array[i].array[key.level - 1],
+                    },
+                  });
+                }, 3500);
+              }
+            });
+          }
+        }
+
+        break;
+      case "help2":
+        if (gameType === "millonario") {
+          key.help2 = false;
+          socket.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "stopReloj",
+          });
+
+          setTimeout(() => {
+            helpsUsed.help2 = false;
+            socket.broadcast.emit("millonario", {
+              dataIn: dataIn,
+              actionTodo: "helpRequiredOne",
+            });
+            socket.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            contHelp = 0;
+          }, 3500);
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                let usinHelp = millonariosPublicGames.array[i].helps;
+                usinHelp.help2 = false;
+                millonariosPublicGames.array[i].helps.help2 = false;
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                socket.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+
+                setTimeout(() => {
+                  socket.broadcast.emit("millonario", {
+                    dataIn: {
+                      roomName: roomName,
+                      user: dataIn,
+                    },
+                    actionTodo: "helpRequiredOneMultiplayer",
+                  });
+
+                  contHelp = 0;
+                }, 3500);
+              }
+            });
+          }
+        }
+
+        break;
+      case "help3":
+        if (gameType === "millonario") {
+          helpsUsed.help3 = false;
+          socket.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpsUsed",
+            dataIn: helpsUsed,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "stopReloj",
+          });
+          setTimeout(() => {
+            helpArray = [];
+            socket.broadcast.emit("millonario", {
+              actionTodo: "helpRequired",
+            });
+            socket.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            contHelp = 0;
+          }, 3500);
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                let usinHelp = millonariosPublicGames.array[i].helps;
+                millonariosPublicGames.array[i].helps.help3 = false;
+
+                usinHelp.help3 = false;
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                socket.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                helpArray = [];
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpRequiredMultiplayer",
+                  dataIn: roomName,
+                });
+              }
+            });
+          }
+        }
+        break;
+
+      case "help4":
+        if (gameType === "millonario") {
+          socket.broadcast.emit("millonario", {
+            actionTodo: "stopReloj",
+          });
+          setTimeout(() => {
+            contHelp = 1;
+
+            helpsUsed.help4 = false;
+            newQuestion = newArray[millonarioActualTurn - 1 + contHelp];
+            socket.broadcast.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+            socket.emit("millonario", {
+              actionTodo: "preguntaSiguiente",
+              dataIn: newQuestion,
+            });
+            socket.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+            socket.broadcast.emit("millonario", {
+              actionTodo: "helpsUsed",
+              dataIn: helpsUsed,
+            });
+          }, 3500);
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                socket.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "stopRelojMultiPlayer",
+                  dataIn: roomName,
+                });
+                millonariosPublicGames.array[i].helpNumber = 1;
+                let usinHelp = millonariosPublicGames.array[i].helps;
+                usinHelp.help4 = false;
+                millonariosPublicGames.array[i].helps.help4 = false;
+
+                socket.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpsUsedMultiPlayer",
+                  dataIn: {
+                    helps: usinHelp,
+                    roomName: roomName,
+                  },
+                });
+                setTimeout(() => {
+                  socket.broadcast.emit("millonario", {
+                    actionTodo: "preguntaSiguienteMultiPlayer",
+                    dataIn: {
+                      roomName: roomName,
+                      pregunta: key.array[key.level - 1 + key.helpNumber],
+                    },
+                  });
+                  socket.emit("millonario", {
+                    actionTodo: "preguntaSiguienteMultiPlayer",
+                    dataIn: {
+                      roomName: roomName,
+                      pregunta: key.array[key.level - 1 + key.helpNumber],
+                    },
+                  });
+                }, 3500);
+              }
+            });
+          }
+          if (gameType === "singlePlayer") {
+            millonariosGames.array.map((key, i) => {
+              if (key.state) {
+                if (
+                  parseInt(key.playerData.ip) == parseInt(dataIn.ip) ||
+                  key.playerData.participante.ip == parseInt(dataIn.ip)
+                ) {
+                  millonariosGames.array[i].helps.help4 = false;
+                  let newwArray = [];
+                  for (let index = 1; index < key.array.length; index++) {
+                    const element = key.array[index];
+                    newwArray.push(element);
+                  }
+                  millonariosGames.array[i].array = newwArray;
+                }
+              }
+            });
+          }
+        }
+        break;
+      case "helping":
+        if (gameType === "millonario") {
+          helpArray.push(msg.dataIn);
+          socket.emit("millonario", {
+            actionTodo: "helpingRes",
+            dataIn: helpArray,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpingRes",
+            dataIn: helpArray,
+          });
+        }
+        if (gameType === "multiPlayer") {
+          millonariosPublicGames.array.map((key, i) => {
+            if (key.roomName === roomName) {
+              let helpArrayAux = [];
+              helpArrayAux.push(msg.dataIn);
+              millonariosPublicGames.array[i].helpArray = helpArrayAux;
+              socket.emit("millonario", {
+                actionTodo: "helpingResMultiPlayer",
+                dataIn: {
+                  helpArray: millonariosPublicGames.array[i].helpArray,
+                  roomName: roomName,
+                },
+              });
+              socket.broadcast.emit("millonario", {
+                actionTodo: "helpingResMultiPlayer",
+                dataIn: {
+                  helpArray: millonariosPublicGames.array[i].helpArray,
+                  roomName: roomName,
+                },
+              });
+            }
+          });
+        }
+
+        break;
+      case "EndMillonario":
+        if (gameType === "millonario") {
+          millonarioParticipants = [];
+          contHelp = 0;
+          nowInMillonario = false;
+          nowClasific = false;
+          helpArray = [];
+          millonarioParticipantsPunt = [];
+          helpsUsed = {
+            help1: true,
+            help2: true,
+            help3: true,
+            help4: true,
+          };
+          newArray = [];
+          millonarioActualTurn = 0;
+          ipInPlay = "";
+          socket.emit("millonario", {
+            actionTodo: "millonarioActualTurn",
+            dataIn: millonarioActualTurn,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "millonarioActualTurn",
+            dataIn: millonarioActualTurn,
+          });
+          socket.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "inpuntuacion",
+            dataIn: millonarioParticipantsPunt,
+          });
+          socket.emit("millonario", {
+            actionTodo: "offGame",
+          });
+          socket.broadcast.emit("millonario", {
+            actionTodo: "offGame",
+          });
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                millonariosPublicGames.array[i].state = false;
+                socket.emit("millonario", {
+                  actionTodo: "offGameMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                  },
+                });
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "offGameMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                  },
+                });
+              }
+            });
+          }
+        }
+
+        break;
+      case "giveHelp":
+        if (gameType === "millonario") {
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpingResYes",
+            dataIn: dataIn,
+          });
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpingResYesMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                    res: dataIn,
+                  },
+                });
+              }
+            });
+          }
+        }
+
+        break;
+      case "noHelp":
+        if (gameType === "millonario") {
+          socket.broadcast.emit("millonario", {
+            actionTodo: "helpingResNo",
+            dataIn: dataIn,
+          });
+        } else {
+          if (gameType === "multiPlayer") {
+            millonariosPublicGames.array.map((key, i) => {
+              if (key.roomName === roomName) {
+                socket.broadcast.emit("millonario", {
+                  actionTodo: "helpingResNoMultiPlayer",
+                  dataIn: {
+                    roomName: roomName,
+                  },
+                });
+              }
+            });
+          }
+        }
+
+        break;
+      case "singlePlay":
+        min = 0;
+        max = 4;
+        let theNewQuestionSingle = {};
+        let newArraySingle = [];
+        for (let index = 1; index < 7; index++) {
+          if (index === 1) {
+            const element =
+              array.level1.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level1.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level1.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level1.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level1.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level1.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 2) {
+            const element =
+              array.level2.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level2.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level2.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level2.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level2.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level2.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 3) {
+            const element =
+              array.level3.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level3.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level3.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level3.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level3.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level3.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 4) {
+            const element =
+              array.level4.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level4.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level4.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level4.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level4.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level4.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 5) {
+            const element =
+              array.level5.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level5.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level5.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level5.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level5.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level5.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+          if (index === 6) {
+            const element =
+              array.level6.categoria1[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element2 =
+              array.level6.categoria2[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element3 =
+              array.level6.categoria3[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element4 =
+              array.level6.categoria4[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element5 =
+              array.level6.categoria5[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            const element6 =
+              array.level6.categoria6[
+                Math.floor(Math.random() * (max - min)) + min
+              ];
+            newArraySingle.push(
+              element,
+              element2,
+              element3,
+              element4,
+              element5,
+              element6
+            );
+          }
+        }
+        if (millonariosGames.games === 0) {
+          millonariosGames.games = 1;
+          theNewQuestionSingle = newArraySingle[0];
+          millonariosGames.array = [
+            {
+              state: true,
+              level: 0,
+              array: newArraySingle,
+              helpNumber: 0,
+              category: "random",
+              playerData: dataIn,
+              helps: {
+                help1: true,
+                help2: false,
+                help3: false,
+                help4: true,
+              },
+            },
+          ];
+        } else {
+          theNewQuestionSingle = newArraySingle;
+          millonariosGames.array[millonariosGames.length] = {
+            state: true,
+            level: 0,
+            array: newArraySingle,
+            helpNumber: 0,
+            category: "random",
+            playerData: dataIn,
+            helps: {
+              help1: true,
+              help2: false,
+              help3: false,
+              help4: true,
+            },
+          };
+        }
+        socket.emit("millonario", {
+          actionTodo: "playerChooseSingle",
+          dataIn: { ip: dataIn.participante.ip, array: [] },
+        });
+        setTimeout(() => {
+          socket.emit("millonario", {
+            actionTodo: "juegoSolitario",
+            dataIn: newArraySingle,
+          });
+        }, 7000);
+        break;
     }
-}) 
+  });
+  if (inVideo === false) {
+    console.log;
+  }
+
+  if (inGame === true) {
+    socket.emit("createdGame", true);
+  }
+});
