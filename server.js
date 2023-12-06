@@ -3,20 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const http = require("http").Server(app)
-/* const { MongoClient } = require('mongodb');
- */
-/* const mongoose = require('mongoose'); */
-const emailjs = require('emailjs-com')
-
-const preguntsMillonario = require("./preguntas/preguntas").Preguntas();
-const PreguntasClasif = require("./preguntas/clasificatorias").PreguntasClasif();
-const Objetos = require("./prototipos/objetos").Objetos();
-const modeloFullUserApp = require("./prototipos/usuariosApp").ModeloUsuarioApp();
-const modeloEmpresa = require("./prototipos/empresasApp").ModeloEmpresa();
-const modeloObjObras = require("./prototipos/obras").ModeloObjObras();
-const ModeloServicios = require("./prototipos/servicios").ModeloServicio();
-const CredencialesCorreo = require("./credenciales/email").CredencialCorreo();
-
+const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
+const preguntsMillonario = require("./src/preguntas/preguntas").Preguntas();
+const PreguntasClasif = require("./src/preguntas/clasificatorias").PreguntasClasif();
+const Objetos = require("./src/prototipos/objetos").Objetos();
 const PreguntsMillonario = PreguntasClasif
 const array = preguntsMillonario
 let ArrayDePreguntas = [];
@@ -25,210 +16,8 @@ let helpTime = 30
 let fullMillonarioUsers = []
 let PORT = process.env.PORT || 3002;
 let millonarioUsersDb = []
-let newHistorial = []
 let entregasUsersDb = []
-let reqArray = []
-let modeloBiosepticos = {
-    users: [],
-    historial: [],
-    novedades: [],
-    rutas: [],
-    rutasIndividuales: [],
-    calendario: { ano: [] }
-}
-const appPermisions = {
-    inicio: false,
-    clientes: false,
-    servicios: false,
-    vehiculos: false,
-    personalLogistico: false,
-    rutas: false,
-    calendario: false,
-    novedades: false,
-    historial: false,
-    requerimientos: false,
-    vendedores: false,
-}
-const avatar = {
-    withPhoto: false,
-    url: ''
-}
-let obras = []
-let rutas = []
-let servicios = []
-let empresas = []
-let appUsers = [{
-    id: '1234567890',
-    appType: 'operativo',
-    token: '',
-    type: 'adminUser',
-    nombre: 'moet',
-    password: '1234', passwordChange: false,
-    permisions: {
-        console: true,
-        logistica: true,
-        empresas: true,
-        vendedores: true,
-        bioseptico: true
-    },
-    appPermisions: {
-        inicio: true,
-        clientes: true,
-        servicios: true,
-        vehiculos: true,
-        personalLogistico: true,
-        calendario: true,
-        rutas: true,
-        novedades: true,
-        historial: true,
-        requerimientos: true,
-        vendedores: true,
-    },
-    companyPermisions: {
-        inicio: true,
-        empresa: true,
-        obras: true,
-        servicios: true,
-        personalLogistico: true,
-        rutas: true,
-        novedades: true,
-        historial: true,
-        requerimientos: true,
-        vendedores: true,
-    },
-    sellPermisions: {
-        inicio: true,
-        clientes: true,
-        servicios: true,
-        rutas: true,
-        novedades: true,
-        ventas: true,
-        novedades: true,
-        historial: true,
-        requerimientos: true,
-    }, avatar: {
-        withPhoto: false,
-        url: ''
-    },
-    dataRequired: false,
-    emailConfirmation: false
-}, {
-    id: '9876543210',
-    token: '',
-    appType: 'conductores',
-    nombre: 'oscar', password: '1234', passwordChange: false,
-    permisions: {
-        console: false,
-        logistica: true,
-        empresas: true,
-        vendedores: true,
-        bioseptico: true
-    },
-    appPermisions: {
-        inicio: true,
-        clientes: true,
-        servicios: true,
-        vehiculos: true,
-        personalLogistico: true,
-        rutas: false,
-        calendario: false,
-        novedades: false,
-        historial: false,
-        requerimientos: false,
-        vendedores: false,
-    },
-    companyPermisions: {
-        inicio: true,
-        empresa: true,
-        obras: true,
-        servicios: true,
-        personalLogistico: true,
-        rutas: false,
-        novedades: false,
-        historial: false,
-        requerimientos: false,
-        vendedores: false,
-    },
-    sellPermisions: {
-        inicio: true,
-        clientes: false,
-        servicios: false,
-        rutas: false,
-        novedades: false,
-        ventas: false,
-        novedades: false,
-        historial: false,
-        requerimientos: false,
-    },
-    avatar: {
-        withPhoto: true,
-        url: '/image/oscar.png'
-    },
-    dataRequired: true,
-    emailConfirmation: false
 
-
-}]
-let vehiculos = []
-let fullAppUser = [{
-    ...modeloFullUserApp,
-    id: appUsers[0].id,
-    userObj: appUsers[0],
-    app: {
-        ...modeloFullUserApp.app,
-        email: 'elmozapate@gmail.com',
-        creadoPor: 'ADMINMASTER',
-        password: '1234',
-        user: 'moet',
-        permisions: appUsers[0].permisions,
-        dataRequired: false,
-        type: 'operativo',
-
-    },
-    datosPersonales: {
-        ...modeloFullUserApp.datosPersonales,
-        nombre: 'moet',
-        apellido: 'zapata atehortua',
-        genero: 'm',
-        fechaDeNacimiento: '05/04/1987',
-        nacionalidad: 'mexico',
-        tipoDeDocumento: 'cedula',
-        numeroDeDocumento: 1128395070,
-    },
-    datosContacto: {
-        ...modeloFullUserApp.datosContacto,
-        correoElectronico: 'elmozapate@gmail.com',
-        telefonoPrincipal: '+57 3015802730',
-        telefonoSecundario: '+57 3146619902',
-        direccion: {
-            ...modeloFullUserApp.datosContacto.direccion,
-            departamento: 'antioquia',
-            ciudad: 'medellín',
-            barrio: 'centro'
-        }
-    },
-}, {
-    ...modeloFullUserApp,
-    id: appUsers[1].id,
-    userObj: appUsers[1],
-    datosPersonales: {
-        ...modeloFullUserApp.datosPersonales,
-        nombre: 'oscar',
-        apellido: 'valencia hurtado',
-        genero: 'm',
-        fechaDeNacimiento: '02/12/1968',
-        nacionalidad: 'colombia',
-        tipoDeDocumento: 'cedula',
-        numeroDeDocumento: 71696460,
-    },
-    app: {
-        ...modeloFullUserApp.app,
-        type: 'conductores',
-        permisions: appUsers[1].permisions,
-        dataRequired: false,
-
-    },
-},]
 const io = require("socket.io")(http, {
     cors: { origin: "*" },
 })
@@ -280,8 +69,6 @@ let posFor = -1
 let theUrl = ''
 let newServer = true
 const bodyParser = require('body-parser');
-const { ModeloUsuarioApp } = require('./prototipos/usuariosApp');
-const { ModeloEmpresa } = require('./prototipos/empresasApp');
 const router = express.Router();
 const Page = {
     'nombre': '',
@@ -309,14 +96,14 @@ let userInActual = ""
 let positionUser = 0
 let timeGame = 300
 const usuario = "moet"
-const password = "moetzapata"
+const password = "nuevaclave"
 const dbName = "users"
-/* const uri = `mongodb+srv://${usuario}:${password}@cluster0.o52gvk2.mongodb.net/${dbName}?retryWrites=true&w=majority`;
- *//* mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+const uri = `mongodb+srv://${usuario}:${password}@cluster0.pby86pv.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('conectado a mongodb'))
     .catch(e => console.log('error de conexión', e))
 async function main(socket) {
-    const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         let miAux = []
@@ -328,6 +115,8 @@ async function main(socket) {
         dbUsersMillonario = dbUsers.collection('millonario')
         dbUserEntregas = dbUsersLog.collection('users')
         dbCargues = dbUsersLog.collection('cargues')
+        // Make the appropriate DB calls
+
         let resUsers = await dbUsersMillonario.find({}).project({})
         let resArrayUsers = await resUsers.toArray()
         resArrayUsers.map((key, i) => {
@@ -343,6 +132,15 @@ async function main(socket) {
         let resCarguesLog = await dbCargues.find({}).project({})
         let resArrayUsersLog = await resUsersLog.toArray()
         let resArrayCarguesLog = await resCarguesLog.toArray()
+        /*  resArrayUsersLog.map((key, i) => {
+             miAux2.push({
+                 userName: key['_userName']['$userName'],
+                 ip: key['_ip']['$ip'],
+                 password: key['_password']['$password'],
+                 tipo: key['tipo']['$tipo'],
+             })
+ 
+         }) */
         carguesDb = resArrayCarguesLog
         entregasUsersDb = resArrayUsersLog;
         await listDatabases(client);
@@ -369,16 +167,16 @@ async function main(socket) {
     } finally {
         await client.close();
     }
-} */
-/* main().catch(console.error);
- */const listDatabases = async (client) => {
-  /*   databasesList = await client.db().admin().listDatabases();
+}
+main().catch(console.error);
+const listDatabases = async (client) => {
+    databasesList = await client.db().admin().listDatabases();
     let db = databasesList.databases
     let dbRes = []
-    databasesList.databases.forEach(db => { dbRes.push(db); }); */
+    databasesList.databases.forEach(db => { dbRes.push(db); });
 };
 const reqUsers = async (Name, pass, ownIp) => {
-  /*   const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         let miAux = []
@@ -396,6 +194,7 @@ const reqUsers = async (Name, pass, ownIp) => {
                 '$ip': ownIp,
             }
         })
+        // Make the appropriate DB calls
         let resUsers = await dbUsersMillonario.find({}).project({})
         let resArrayUsers = await resUsers.toArray()
         resArrayUsers.map((key, i) => {
@@ -414,10 +213,10 @@ const reqUsers = async (Name, pass, ownIp) => {
     } finally {
         await client.close();
     }
- */
+
 }
 const reqUsersLog = async (socket, userName, pass, tipo) => {
-  /*   const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         let miAux = []
@@ -456,6 +255,7 @@ const reqUsersLog = async (socket, userName, pass, tipo) => {
             'asignados': 0,
             'restantes': 0
         })
+        // Make the appropriate DB calls
         let resUsersLog = await dbUserslog.find({}).project({})
         let resArrayUsersLog = await resUsersLog.toArray()
         entregasUsersDb = resArrayUsersLog;
@@ -481,10 +281,10 @@ const reqUsersLog = async (socket, userName, pass, tipo) => {
         console.error(e);
     } finally {
         await client.close();
-    } */
+    }
 }
 const updateEntregadoresLog = async (socket, user, datos, add) => {
-   /*  const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         await client.connect()
@@ -515,6 +315,7 @@ const updateEntregadoresLog = async (socket, user, datos, add) => {
             'db': entregasUsersDb
         }
         )
+        // Make the appropriate DB calls
     } catch (e) {
         console.error(e);
     } finally {
@@ -528,6 +329,7 @@ const updateEntregadoresLog = async (socket, user, datos, add) => {
         let dbcargueslog = dbCargues.collection('cargues')
         carguesDb.map((key, i) => {
             if (parseInt(key.numero) === parseInt(datos)) {
+                console.log(key, 'ESO');
                 miAux = key.planilla
                 miAux.entregadores.push(user)
             }
@@ -536,6 +338,7 @@ const updateEntregadoresLog = async (socket, user, datos, add) => {
             {
                 $set: { planilla: miAux }
             })
+        // Make the appropriate DB calls
         let resCarguesLog = await dbcargueslog.find({}).project({})
         let resArrayCarguesLog = await resCarguesLog.toArray()
 
@@ -558,16 +361,16 @@ const updateEntregadoresLog = async (socket, user, datos, add) => {
 
         }
         )
-
+       
     } catch (e) {
         console.error(e);
     } finally {
         await client2.close();
-    } */
+    }
 
 }
 const actualizeEntregador = async (socket, datos) => {
-    /* const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         let miAux = []
@@ -607,11 +410,11 @@ const actualizeEntregador = async (socket, datos) => {
         await client.close();
     }
 
- */
+
 
 }
 const updateUsersLog = async (socket, user, datos, add, many) => {
-  /*   const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
 
@@ -683,6 +486,7 @@ const updateUsersLog = async (socket, user, datos, add, many) => {
         let dbcargueslog = dbCargues.collection('cargues')
         carguesDb.map((key, i) => {
             if (parseInt(key.numero) === parseInt(datos)) {
+                console.log(key, 'ESO');
                 miAux = key.planilla
                 miAux.entregadores.push(user)
             }
@@ -721,51 +525,12 @@ const updateUsersLog = async (socket, user, datos, add, many) => {
     } finally {
         await client2.close();
     }
- */
-
-}
-let transs = []
-const putHistory = (value) => {
-    /*   let userPosition = -1
-      let founded = false
-      let done = false
-      let already = false
-  
-      console.log('entro');
-      transs.map((key, i) => {
-          if (key === value.idTransaction) {
-              already = true
-          }
-      })
-      if (!already) {
-          transs.push(value.idTransaction)
-          fullAppUser.map((key, i) => {
-              if (key.id === value.id && !founded) {
-                  console.log('hallo', key.id);
-                  userPosition = i
-                  founded = true
-                  key.historial.map((keyHist, iHist) => {
-                      if (keyHist.idTransaction === value.idTransaction) {
-                          done = true
-                          console.log('repetido');
-  
-                      }
-                  })
-  
-              }
-          })
-  
-          if (founded && !done && userPosition !== -1 && userPosition < fullAppUser.length) {
-              fullAppUser[userPosition].historial.push(value)
-              console.log('grabo', value);
-              
-          }
-      } */
 
 
 }
+
 const reqCarguesLog = async (socket, numero, planilla) => {
-  /*   const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         let miAux = []
@@ -835,23 +600,24 @@ const reqCarguesLog = async (socket, numero, planilla) => {
         'db': entregasUsersDb
 
     }
-    ) */
+    )
 }
 const entregaCorrecta = async (socket, numero, entregador) => {
-   /*  socket.emit(
+    socket.emit(
         'logistica', {
         'sector': 'confirmEntrega',
         'actionTodo': 'confirmEntrega',
-        'data': [numero, entregador]
+        'data': [numero,entregador]
     }
     )
     socket.broadcast.emit(
         'logistica', {
         'sector': 'confirmEntrega',
         'actionTodo': 'confirmEntrega',
-        'data': [numero, entregador]
+        'data': [numero,entregador]
     }
     )
+    console.log('numero  ', numero, '  entregador  ', entregador);
     entregasUsersDb.map((key, i) => {
         if (key.tipo === "entregador") {
             key.planillas.map((keyPlan, iPlan) => {
@@ -860,11 +626,11 @@ const entregaCorrecta = async (socket, numero, entregador) => {
                 }
             })
         }
-    }) */
-
+    })
+    
 }
 const entregarUno = async (socket, entregador, faltantes) => {
-    /* const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         await client.connect()
@@ -899,13 +665,13 @@ const entregarUno = async (socket, entregador, faltantes) => {
     } finally {
         await client.close();
     }
- */
+
 
 }
 /*
 
 const sumarUno = async (socket, entregador, entregas) => {
-    const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
     const client = new MongoClient(uri);
     try {
         await client.connect()
@@ -943,8 +709,8 @@ const sumarUno = async (socket, entregador, entregas) => {
 
 } */
 const updateCarguesLog = async (socket, numero, planilla) => {
-   /*  if (!planilla !== true) {
-        const uri = "mongodb+srv://moet:moetzapata@cluster0.o52gvk2.mongodb.net/?retryWrites=true&w=majority";
+    if (!planilla !== true) {
+        const uri = "mongodb+srv://moet:nuevaclave@cluster0.pby86pv.mongodb.net/test?retryWrites=true&w=majority";
         const client = new MongoClient(uri);
         try {
             let miAux = []
@@ -1000,133 +766,13 @@ const updateCarguesLog = async (socket, numero, planilla) => {
 
         }
         )
-    } */
+    }
 
-}
-
-let mapUsers = []
-let visorUsers = []
-let inAsk = 0
-const inicioMap = (socket) => {
-    inAsk = inAsk + 1
-
-    setInterval(() => {
-        console.log('envios');
-        socket.broadcast.emit(
-            'bioSepticosMapObj', {
-            'actionTodo': 'dataAsk-userObj',
-            'inAsk': inAsk
-        })
-        inAsk = inAsk + 1
-
-    }, 20000);
-}
-const checkMapsUsers = (socket) => {
-    let newUser = []
-    mapUsers.map((key, i) => {
-        if (key.socket !== socket.id) {
-            newUser.push(key)
-        }
-    })
-    mapUsers = newUser
-    socket.broadcast.emit(
-        'bioSepticosMapAdmin', {
-        'dataIn': {
-            usersMap: mapUsers
-        },
-        'actionTodo': 'dataRes-visorObjNew',
-        'inAsk': inAsk
-    })
-    inAsk = inAsk + 1
 }
 app.use(express.static("public"));
 io.on("connection", (socket) => {
 
     socket.handshake.address != '::ffff:127.0.0.1' ? console.log("User connection", socket.id) : console.log
-
-    socket.on('bioSepticosMap', (data) => {
-
-        const dataIn = data.dataIn
-        const actionTodo = data.actionTodo
-        const ip = (data.dataIn.ip || data.ip)
-        const id = (data.dataIn.id || data.id)
-        const type = data.type
-        const reqId = data.reqId
-        if (mapUsers.length === 0 && visorUsers.length === 0 && (type === 'obj' || type === 'visor')) {
-            inicioMap(socket)
-        }
-        console.log(data);
-        switch (actionTodo) {
-            case 'userObj':
-                let stateOfUser = false
-                mapUsers.map((key, i) => {
-                    if (key.id === id) {
-                        stateOfUser = true
-                    }
-                })
-                !stateOfUser && mapUsers.push({ ...dataIn, socket: socket.id })
-
-                socket.emit(
-                    'bioSepticosMap', {
-                    'actionTodo': 'dataRes-userObj',
-                    'resId': reqId,
-                    'inAsk': inAsk
-                })
-                socket.broadcast.emit(
-                    'bioSepticosMapAdmin', {
-                    'dataIn': {
-                        usersMap: mapUsers
-                    },
-                    'actionTodo': 'dataRes-visorObjs',
-                    'inAsk': inAsk
-                })
-                inAsk = inAsk + 1
-
-                break;
-            case 'userObjLocationMove':
-                console.log('mueve');
-
-                socket.broadcast.emit(
-                    'bioSepticosMapAdminGet', {
-                    'sala': id,
-                    'dataIn': dataIn,
-                    'actionTodo': 'dataRes-visorObjLocation',
-                    'inAsk': inAsk
-                })
-                inAsk = inAsk + 1
-                break
-            case 'userObjLocation':
-                console.log('miubicacion');
-
-                socket.broadcast.emit(
-                    'bioSepticosMapAdminGet', {
-                    'sala': id,
-                    'dataIn': dataIn,
-                    'actionTodo': 'dataRes-visorObjLocation',
-                    'inAsk': inAsk
-                })
-                inAsk = inAsk + 1
-                break;
-            case 'visorObj':
-                console.log('entra visor');
-
-                socket.emit(
-                    'bioSepticosMapAdmin', {
-                    'dataIn': {
-                        usersMap: mapUsers
-                    },
-                    'resId': reqId,
-                    'actionTodo': 'dataRes-visorObj',
-                    'inAsk': inAsk
-                })
-                inAsk = inAsk + 1
-                break;
-            default:
-                break;
-        }
-    })
-
-
     const checkingUsers = () => {
         let aliveUsers = []
         let aliveUsersB = []
@@ -1279,6 +925,7 @@ io.on("connection", (socket) => {
             updateEntregadoresLog(socket, paqueteObj.id, paqueteObj.data)
         }
         if (paquete.actionTodo === 'updateEntregadorAdd') {
+            console.log(paquete);
             updateUsersLog(socket, paqueteObj.userName, parseInt(paqueteObj.numero), true, paqueteObj.asignados)
         }
         if (paquete.actionTodo === 'entregaCorrecta') {
@@ -1289,9 +936,6 @@ io.on("connection", (socket) => {
 
         }
     });
-
-
-
     socket.on('chat', (chat) => {
         const adress = chat.dataIn.adress
 
@@ -2444,1338 +2088,9 @@ io.on("connection", (socket) => {
                 break;
         }
     })
-
-
-    const enviarEmail = (data = {
-        type: '', to_email: 'elmozapate@gmail.com',
-        to_name: 'Moet',
-        message: 'Check this out!',
-        from_name: 'BIOSEPTICOS DEVELOPER',
-        reply_to: '',
-        link: ''
-    }) => {
-        const emailParams = {
-            ...data
-        };
-        data.type === 'verificacion' && emailjs.send(CredencialesCorreo.id, CredencialesCorreo.templates.verificacion, emailParams, CredencialesCorreo.publicKey)
-            .then(function (response) {
-                console.log('SUCCESS!', response.status, response.text);
-            }, function (error) {
-                console.log('FAILED...', error);
-            });
-        data.type === 'passwordTemporal' && emailjs.send(CredencialesCorreo.id, CredencialesCorreo.templates.passwordTemporal, emailParams, CredencialesCorreo.publicKey)
-            .then(function (response) {
-                console.log('SUCCESS!', response.status, response.text);
-            }, function (error) {
-                console.log('FAILED...', error);
-            });
-    }
-
-    socket.on("bioSepticos", (data) => {
-        switch (data.actionTodo) {
-            case 'login':
-                let biosepticosToSendNew = []
-                fullAppUser.map((key, i) => {
-                    if (key.userObj.permisions.bioseptico) {
-                        biosepticosToSendNew.push(key)
-                    }
-                })
-                modeloBiosepticos.users = biosepticosToSendNew
-                let findLogin = false
-                let doneUser = {}
-                let fullUser = {}
-                appUsers.map((key, i) => {
-                    if (key.nombre === data.dataIn.nombre && key.password === data.dataIn.password && !findLogin) {
-                        findLogin = true
-                        let founded = false
-                        doneUser = key
-                        fullAppUser.map((keyId, iId) => {
-                            if (parseInt(keyId.id) === parseInt(doneUser.id) && !founded) {
-                                const userPosition = iId
-                                const theDate = { numDate: new Date(), extraDate: Date() }
-                                const theDate2 = theDate.numDate.toLocaleDateString()
-                                const theDateCuted = theDate.extraDate.split(' ')
-                                const appDate = {
-                                    dia: theDateCuted[2],
-                                    mes: theDateCuted[1],
-                                    año: theDateCuted[3],
-                                    hora: theDateCuted[4].split(':').slice(0, -1).toString().replace(',', ':'),
-                                    diaSemana: theDateCuted[0],
-                                    zonaHoraria: theDateCuted[5],
-                                    pais: theDateCuted[theDateCuted.length - 1]
-                                }
-                                founded = true
-                                newHistorial = []
-                                fullUser = keyId
-                                fullAppUser[userPosition].historial.push({
-                                    action: 'Login',
-                                    date: theDate2,
-                                    appDate: appDate,
-                                    id: doneUser.id,
-                                    data: data,
-                                    idTransaction: data.reqId,
-                                })
-                            }
-                        })
-                    }
-                })
-                if (findLogin) {
-
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'loginRes',
-                        'resId': data.reqId,
-                        'body': doneUser,
-                        'res': 'ok',
-                        'users': appUsers,
-                        'fullUser': fullUser,
-                        'usersAll': fullAppUser,
-                    })
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'calendarioRes',
-                        'calendario': modeloBiosepticos.calendario,
-                        'res': 'ok'
-                    })
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'obras': obras,
-                        'empresas': empresas,
-                        'res': 'ok'
-                    })
-                    socket.broadcast.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'obras': obras,
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'empresas': empresas,
-                        'res': 'ok'
-                    })
-                } else {
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'loginRes',
-                        'resId': data.reqId,
-                        'body': {},
-                        'res': 'error'
-                    })
-                }
-
-                break;
-            case 'pedirEmpresas':
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'pedirEmpresasRes',
-                    'resId': data.reqId,
-                    'res': 'ok',
-                    'empresas': empresas
-                })
-                break;
-            case 'askBiosepticos':
-                let biosepticosToSend = []
-                fullAppUser.map((key, i) => {
-                    if (key.userObj.permisions.bioseptico) {
-                        biosepticosToSend.push(key)
-                    }
-                })
-                modeloBiosepticos.users = biosepticosToSend
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'askBiosepticosRes',
-                    'resId': data.reqId,
-                    'res': 'ok',
-                    'biosepticos': biosepticosToSend
-                })
-                break;
-            case 'askVendedores':
-                let vendedoresToSend = []
-                fullAppUser.map((key, i) => {
-                    if (key.userObj.permisions.vendedores) {
-                        vendedoresToSend.push(key)
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'askVendedoresRes',
-                    'resId': data.reqId,
-                    'res': 'ok',
-                    'vendedores': vendedoresToSend
-                })
-                break;
-            case 'changePasswordReq':
-                let inChange = false
-                let datas = {}
-                appUsers.map((key, i) => {
-                    if (key.nombre === data.dataIn.nombre && !inChange) {
-                        inChange = true
-                        appUsers[i].password = data.dataIn.password
-                        appUsers[i].passwordChange = false
-                        datas = key
-                    }
-                })
-                if (inChange) {
-
-
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'changePasswordRes',
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                }
-                break
-            case 'crearAno':
-                modeloBiosepticos.calendario.ano = data.dataIn
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'calendarioRes',
-                    'calendario': modeloBiosepticos.calendario,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'calendarioRes',
-                    'calendario': modeloBiosepticos.calendario,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                break
-
-            case 'newUser':
-                let find = false
-                appUsers.map((key, i) => {
-                    if (key.nombre === data.dataIn.nombre) {
-                        find = true
-                    }
-                })
-
-                if (!find) {
-                    console.log(data);
-                    const datas = (parseInt(Math.random() * 9999999999)).toString()
-                    const temporalPassword = parseInt(Math.random() * 999999).toString()
-                    const newUser = {
-                        nombre: data.dataIn.nombre,
-                        password: temporalPassword,
-                        permisions: data.dataIn.permisions,
-                        appPermisions: appPermisions,
-                        avatar: avatar,
-                        passwordChange: true,
-                        id: datas,
-                        creadorPor: data.id,
-                        appType: data.bioSepticos ? data.props.type : '',
-                    }
-                    fullAppUser.map((key, i) => {
-                        if (parseInt(key.id) === parseInt(data.id)) {
-                            newHistorial = []
-                            newHistorial = fullAppUser[i].historial
-                            newHistorial.push({
-                                action: `CREACION USUARIO ${data.bioSepticos ? ' BIOSEPTICO' : ''} ${datas}`,
-                                date: Date().split(' ').splice(1, 4),
-                                id: data.id,
-                                data: data,
-                                idTransaction: data.reqId,
-                            })
-                            fullAppUser[i] = {
-                                ...fullAppUser[i],
-                                type: data.bioSepticos ? data.dataIn.type : '',
-                                historial: newHistorial,
-                            }
-                        }
-                    })
-                    appUsers.push(newUser)
-                    if (data.bioSepticos) {
-                        modeloBiosepticos.users.push({ id: datas, persmision: data.dataIn.onlyAccess })
-                    }
-                    enviarEmail({
-                        type: 'passwordTemporal', to_email: 'elmozapate@gmail.com',
-                        to_name: 'Moet',
-                        message: `Usuario: ${newUser.nombre}, password:${temporalPassword}`,
-                        link: '',
-                        from_name: 'BIOSEPTICOS DEVELOPER',
-                        reply_to: ''
-                    })
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': data.bioSepticos ? 'newBioRes' : 'newEntryRes',
-                        'resId': data.reqId,
-                        'body': newUser,
-                        'res': 'ok'
-                    })
-                    socket.broadcast.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'empresas': empresas,
-                        'obras': obras,
-                        'res': 'ok'
-                    })
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'obras': obras,
-                        'empresas': empresas,
-                        'res': 'ok'
-                    })
-                } else {
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'newEntryRes',
-                        'resId': data.reqId,
-                        'body': {},
-                        'res': 'nameOcuped'
-                    })
-                }
-                break;
-            case 'contactData-first':
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-contactData',
-                    'body': data.dataIn,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                break
-            case 'personalData-first':
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-personalData',
-                    'body': data.dataIn,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                break
-            case 'allUserData':
-                const token = `${data.dataIn.id}-${(parseInt(Math.random() * 9999999999)).toString()}`
-                let newUserFull = {
-                    ...modeloFullUserApp,
-                    ...data.dataIn,
-                    userObj: {
-                        ...data.dataIn.userObj,
-                        emailConfirmation: true,
-                        token: token.split('-')[1]
-                    }
-                }
-                let founded = false
-                let userPosition = -1
-                appUsers.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(newUserFull.id)) {
-                        newUserFull = {
-                            ...newUserFull,
-                            app: { ...newUserFull.app, type: key.appType },
-                            token: token.split('-')[1]
-                        }
-                    }
-                })
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(newUserFull.id) && !founded) {
-                        userPosition = i
-                        founded = true
-                        newHistorial = []
-                        newHistorial = fullAppUser[userPosition].historial
-                        newHistorial.push({
-                            action: 'Actualizacion Datos Personales',
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        fullAppUser[userPosition] = {
-                            ...newUserFull,
-                            historial: newHistorial
-                        }
-                    }
-                })
-                enviarEmail({
-                    correoElectronico: 'elmozapate@gmail.com',
-                    type: 'verificacion', to_email: newUserFull.datosContacto.correoElectronico,
-                    to_name: newUserFull.userObj.nombre,
-                    message: `Para confirmar tu cuenta ingresa en el siguiente enlace`,
-                    link: `http://localhost:3000/verification?token=${token}`,
-                    from_name: 'BIOSEPTICOS DEVELOPER',
-                    reply_to: ''
-                })
-
-                if (founded && userPosition !== -1) {
-
-                } else {
-                    fullAppUser.push({
-                        ...newUserFull,
-                        historial: newHistorial
-                    })
-                }
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-allUserData',
-                    'body': newUserFull,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'obras': obras,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                break
-
-            case 'setNewEmpresa':
-                let datasInEmp = modeloFullUserApp
-                let newEmpresa = {
-                    ...modeloEmpresa,
-                    ...data.dataIn,
-                    id: `COMP-${(parseInt(Math.random() * 9999999999)).toString()}`,
-                    historial: [{
-                        action: `CREACION EMPRESA ${data.dataIn.contact.nombre || ''}`,
-                        date: Date().split(' ').splice(1, 4),
-                        id: data.dataIn.legal.representante.id,
-                        data: data,
-                        idTransaction: data.reqId,
-                    }]
-                }
-                empresas.push(newEmpresa)
-                let appsendUser = {}
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(newEmpresa.legal.representante.id)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: `CREACION EMPRESA ${newEmpresa.contact.nombre}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: newEmpresa.legal.representante.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        let oldValues = fullAppUser[i].app.relationed.empresas
-                        oldValues.push({ type: 'empresa', id: newEmpresa.id })
-                        fullAppUser[i] = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    empresas: oldValues
-                                }
-                            }
-                        }
-                        appsendUser = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    empresas: oldValues
-                                }
-                            }
-                        }
-                        datasInEmp = {
-                            ...data.dataIn,
-                            historial: newHistorial
-                        }
-
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-allEmpresaData',
-                    'body': newEmpresa,
-                    'user': appsendUser,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'obras': obras,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'res': 'ok'
-                })
-
-                break
-            case 'setNewObra':
-                let datasInObra = modeloFullUserApp
-                let newObra = {
-                    ...modeloObjObras,
-                    ...data.dataIn,
-                    id: `OBRA-${(parseInt(Math.random() * 9999999999)).toString()}-${data.dataIn.empresa.split('-')[1]}`,
-                    historial: [{
-                        action: `CREACION OBRA ${data.dataIn.nombre || ''}`,
-                        date: Date().split(' ').splice(1, 4),
-                        id: data.dataIn.idUser,
-                        data: data,
-                        idTransaction: data.reqId,
-                    }]
-                }
-                obras.push(newObra)
-                let appsendUserObra = {}
-                empresas.map((key, i) => {
-                    if (key.id === data.dataIn.empresa) {
-                        newHistorial = []
-                        let newObras = []
-                        newHistorial = empresas[i].historial
-                        newObras = empresas[i].obras
-                        newHistorial.push({
-                            action: `CREACION OBRA ${data.dataIn.obra}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        empresas[i] = {
-                            ...empresas[i],
-                            historial: newHistorial,
-                            obras: newObras
-                        }
-                    }
-                })
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.idUser)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: `CREACION OBRA ${newObra.nombre}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.idUser,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        let oldValues = fullAppUser[i].app.relationed.obras
-                        oldValues.push({ type: 'obra', id: newObra.id })
-                        fullAppUser[i] = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    obras: oldValues
-                                }
-                            }
-                        }
-                        appsendUserObra = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    obras: oldValues
-                                }
-                            }
-                        }
-                        datasInObra = {
-                            ...data.dataIn,
-                            historial: newHistorial
-                        }
-
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-allObrasData',
-                    'body': newObra,
-                    'user': datasInObra,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-
-                break
-            case 'setVehiculo':
-                vehiculos.map((key, i) => {
-                    console.log(key.id, data.dataIn);
-                    if (key.id === data.dataIn.vehiculo) {
-                        if (data.dataIn.accion === 'estado') {
-                            nuevoHist = vehiculos[i].historial
-                            nuevoHist.push({
-                                action: `ESTADO VEHICULO ${key.id}`,
-                                date: Date().split(' ').splice(1, 4),
-                                id: data.dataIn.id,
-                                data: data,
-                                idTransaction: data.reqId,
-                            })
-                            vehiculos[i].datosOperativos.activo = data.dataIn.valor
-                            vehiculos[i].historial = nuevoHist
-
-                        }
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-                break
-            case 'setNewServicio':
-                let datasInServicio = modeloFullUserApp
-                const servicioId = `SERVICIO-${(parseInt(Math.random() * 999999)).toString()}-${data.dataIn.servicio.empresa.split('-')[1]}-${data.dataIn.servicio.obra.split('-')[1]}`
-                const dateIn = data.dataIn.servicio.shedule.fechaDeInicio.toString().split('T')[0]
-                let dateOf = {
-                    dia: dateIn.toString().split('-')[2],
-                    mes: dateIn.toString().split('-')[1],
-                    ano: dateIn.toString().split('-')[0],
-                }
-                console.log(dateOf)
-                let newServicio = {
-                    ...ModeloServicios,
-                    ...data.dataIn.servicio,
-                    id: servicioId,
-                    historial: [{
-                        action: `CREACION OBRA ${data.dataIn.servicio.id || ''}`,
-                        date: Date().split(' ').splice(1, 4),
-                        id: data.dataIn.servicio.cliente,
-                        data: data,
-                        idTransaction: data.reqId,
-                    }]
-                }
-                let appsendUserServicio = {}
-                empresas.map((key, i) => {
-                    if (key.id === data.dataIn.servicio.empresa) {
-                        newHistorial = []
-                        let newServicios = []
-                        newHistorial = empresas[i].historial
-                        newServicios = empresas[i].servicios
-                        newHistorial.push({
-                            action: `CREACION SERVICIO ${data.dataIn.servicio.id}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.servicio.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-
-                        newServicios.push(newServicio.id)
-                        const valor = newServicio.tipoDeServicio.tipo.split(' ')[0] === 'Alquiler' ? parseInt(newServicio.tipoDeServicio.cantidad) * parseInt(newServicio.tipoDeServicio.valor) :
-                            parseInt((parseInt(newServicio.tipoDeServicio.cantidad) * parseInt(newServicio.tipoDeServicio.valor)) / 1000)
-                        const saldo = empresas[i].legal.cartera.cartera + valor
-                        console.log(data.dataIn.servicio, valor, empresas[i].legal.cartera, newServicio.tipoDeServicio);
-                        const maxSaldo = empresas[i].legal.cartera.maximo
-                        if (maxSaldo > saldo) {
-                            newServicio.shedule.activo = true
-                        }
-                        let oldHistorial = empresas[i].legal.cartera.historial
-                        oldHistorial.push(newServicio)
-                        empresas[i] = {
-                            ...empresas[i],
-                            historial: newHistorial,
-                            servicios: newServicios,
-                            legal: {
-                                ...empresas[i].legal,
-                                cartera: { ...empresas[i].legal.cartera, cartera: saldo, historial: oldHistorial },
-                            }
-                        }
-
-                    }
-                })
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.servicio.cliente)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: `CREACION SERVICIO ${newServicio.id}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.servicio.cliente,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        let oldValues = fullAppUser[i].app.relationed.servicios
-                        oldValues.push({ type: 'servicios', id: newServicio.id })
-                        fullAppUser[i] = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    servicios: oldValues
-                                }
-                            }
-                        }
-                        appsendUserServicio = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            app: {
-                                ...fullAppUser[i].app,
-                                relationed: {
-                                    ...fullAppUser[i].app.relationed,
-                                    servicios: oldValues
-                                }
-                            }
-                        }
-                        datasInServicio = {
-                            ...data.dataIn,
-                            historial: newHistorial
-                        }
-
-                    }
-                })
-                servicios.push(newServicio)
-                console.log(newServicio.shedule.fechaDeInicio.split('T')[0].toString().split('-'));
-                if (modeloBiosepticos.calendario.ano.length > 0) {
-
-                    const semanas = modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)].mesObj
-                    for (let index = 0; index < semanas.length; index++) {
-                        const element = semanas[index].dias;
-                        for (let indexIn = 0; indexIn < element.length; indexIn++) {
-                            const elementIn = element[indexIn].dia;
-                            if (parseInt(elementIn) === (parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[2])))) {
-                                let oldModelo = modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)]
-                                let oldM = oldModelo
-                                let oldServicios = oldM.servicios
-                                oldServicios.push(newServicio.id)
-                                oldM.servicios = oldServicios
-                                let oldHistorial = oldM.historial
-                                oldHistorial.push({
-                                    action: `CREACION SERVICIO ${newServicio.id}`,
-                                    date: Date().split(' ').splice(1, 4),
-                                    id: data.dataIn.servicio.cliente,
-                                    data: '',
-                                    idTransaction: data.reqId,
-                                })
-                                oldM.historial = oldHistorial
-                                oldM = {
-                                    ...oldM,
-                                    totalServicios: oldM.totalServicios + 1,
-                                    serviciosPendientes: oldM.serviciosPendientes + 1,
-                                }
-                                modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)] = oldM
-                                let oldD = oldModelo.mesObj[index]
-                                let oldServiciosD = oldD.servicios
-                                oldServiciosD.push(newServicio.id)
-                                oldD.servicios = oldServiciosD
-                                let oldHistorialD = oldD.historial
-                                oldHistorialD.push({
-                                    action: `CREACION SERVICIO ${newServicio.id}`,
-                                    date: Date().split(' ').splice(1, 4),
-                                    id: data.dataIn.servicio.cliente,
-                                    data: '',
-                                    idTransaction: data.reqId,
-                                })
-                                oldD.historial = oldHistorialD
-                                oldD = {
-                                    ...oldD,
-                                    totalServicios: oldD.totalServicios + 1,
-                                    serviciosPendientes: oldD.serviciosPendientes + 1,
-                                }
-                                modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)].mesObj[index] = oldD
-                                let oldC = oldModelo.mesObj[index].dias[indexIn]
-                                let oldServiciosC = oldC.servicios
-                                oldServiciosC.push(newServicio.id)
-                                oldC.servicios = oldServiciosC
-                                let oldHistorialC = oldC.historial
-                                oldHistorialC.push({
-                                    action: `CREACION SERVICIO ${newServicio.id}`,
-                                    date: Date().split(' ').splice(1, 4),
-                                    id: data.dataIn.servicio.cliente,
-                                    data: '',
-                                    idTransaction: data.reqId,
-                                })
-                                oldC.historial = oldHistorialC
-                                oldC = {
-                                    ...oldC,
-                                    totalServicios: oldC.totalServicios + 1,
-                                    serviciosPendientes: oldC.serviciosPendientes + 1,
-                                }
-                                modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)].mesObj[index].dias[indexIn] = oldC
-                                console.log(modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)], 'modelo', modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)].mesObj[index], 'semana', modeloBiosepticos.calendario.ano[(parseInt(parseInt((newServicio.shedule.fechaDeInicio.split('T')[0]).toString().split('-')[1])) - 1)].mesObj[index].dias[indexIn], 'dia');
-                                rutas.map((keyRutas, iRutas) => {
-                                    if ((keyRutas.fecha.split('T')[0].toString()) === ((newServicio.shedule.fechaDeInicio.split('T')[0]).toString())) {
-                                        let oldRutaServicioArray = rutas[iRutas].servicios
-                                        oldRutaServicioArray.push(newServicio.id)
-                                        rutas[iRutas].servicios = oldRutaServicioArray
-                                    }
-                                })
-                            }
-                        }
-                    }
-                    /*   modeloBiosepticos.calendario.ano[parseInt(newServicio.shedule.fechaDeInicio.split('T')[0].toString().split('-')[1])].mesObj.dias[iSemana] */
-                }
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-allServiciosData',
-                    'body': newServicio,
-                    'user': datasInServicio,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-
-                break
-            case 'userPosition':
-                console.log(data.dataIn);
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-userRastreado',
-                    'dataIn': data.dataIn,
-                    'res': 'ok'
-                })
-                break
-
-            case 'setNewVehiculoShedule':
-                let isReq = true
-                reqArray.map((key, i) => {
-                    if (key === data.reqId) {
-                        isReq = false
-                        console.log('nientra');
-
-                    }
-                })
-                if (isReq) {
-                    reqArray.push(data.reqId)
-                    let oldServicios = modeloBiosepticos.rutasIndividuales
-                    data.dataIn.rutas.map((key, i) => {
-                        oldServicios.push(key)
-                    })
-                    modeloBiosepticos = {
-                        ...modeloBiosepticos,
-                        rutasIndividuales: oldServicios
-                    }
-
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataRes-newVehiculoShedule',
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                    socket.broadcast.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataRes-newVehiculoShedule',
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'empresas': empresas,
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'obras': obras,
-                        'res': 'ok'
-                    })
-                    socket.broadcast.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataActualize',
-                        'rutas': rutas,
-                        'modeloBiosepticos': modeloBiosepticos,
-                        'vehiculos': vehiculos,
-                        'servicios': servicios,
-                        'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                        'empresas': empresas,
-                        'users': fullAppUser,
-                        'appUsers': appUsers,
-                        'obras': obras,
-                        'res': 'ok'
-                    })
-                }
-
-                break
-
-            case 'setNewVehiculo':
-                let datasInVehiculo = modeloFullUserApp
-                const vehiculoId = `VEH-${(parseInt(Math.random() * 999999)).toString()}`
-                let newVehiculo = {
-                    ...data.dataIn.vehiculo,
-                    id: vehiculoId,
-                    historial: [{
-                        action: `CREACION VEHICULO ${vehiculoId}`,
-                        date: Date().split(' ').splice(1, 4),
-                        id: data.dataIn.id,
-                        data: data,
-                        idTransaction: data.reqId,
-                    }]
-                }
-                vehiculos.push(newVehiculo)
-                let appsendUserVehiculo = {}
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.id)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: `CREACION VEHICULO ${vehiculoId}`,
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        fullAppUser[i] = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                        }
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-allVehiculoData',
-                    'body': newVehiculo,
-                    'user': datasInVehiculo,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'empresas': empresas,
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-
-                break
-            case 'askEmpresas':
-                let misEmpresas = []
-                empresas.map((key, i) => {
-                    data.dataIn.map((keyAso, iAso) => {
-                        if (key.id === keyAso.id) {
-                            misEmpresas.push(key)
-                        }
-                    })
-
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-askEmpresas',
-                    'empresas': misEmpresas,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                break
-            case 'askEmpresasVendedor':
-                let misEmpresasVendedor = []
-                empresas.map((key, i) => {
-                    if (key.legal.vendedor === data.dataIn) {
-                        misEmpresasVendedor.push(key)
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-askEmpresasVendedor',
-                    'empresas': misEmpresasVendedor,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                break
-            case 'askObras':
-                let misObras = []
-                obras.map((key, i) => {
-                    if (key.id.split('-')[2] === (data && data.dataIn && data.dataIn.id ? data.dataIn.id.split('-')[1] : -1)) {
-                        misObras.push(key)
-                    }
-                })
-                if ((data && data.dataIn && data.dataIn.id && data.dataIn.id.split('-')[1])) {
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataRes-askObras',
-                        'obras': misObras,
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                }
-
-                break
-            case 'emailCheck':
-                let emailCorrect = false
-                const tokenUse = data.dataIn.split('-')[1]
-                const idUse = data.dataIn.split('-')[0]
-                console.log(data);
-                fullAppUser.map((key, i) => {
-                    console.log(key.userObj.token);
-
-                    if (parseInt(key.id) === parseInt(idUse) && parseInt(key.userObj.token) === parseInt
-                        (tokenUse)) {
-                        console.log(key);
-                        fullAppUser[i].userObj.emailConfirmation = false
-                        emailCorrect = true
-                        appUsers.map((keyApp, iApp) => {
-                            if (parseInt(keyApp.id) === parseInt(idUse)) {
-                                appUsers[iApp].emailConfirmation = false
-
-                            }
-                        })
-                    }
-                })
-
-                if ((data && data.dataIn && data.dataIn !== '' && emailCorrect)) {
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataRes-emailCheck',
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                }
-
-                break
-            case 'askServicios':
-                let misServicios = []
-                servicios.map((key, i) => {
-                    if (key.empresa === (data.dataIn)) {
-                        misServicios.push(key)
-                    }
-                })
-                if ((data && data.dataIn && data.dataIn !== '')) {
-                    socket.emit(
-                        'bioApp', {
-                        'actionTodo': 'dataRes-askServicios',
-                        'servicios': misServicios,
-                        'resId': data.reqId,
-                        'res': 'ok'
-                    })
-                }
-                break
-            case 'editPermisionData':
-                let datasIn = { id: 0 }
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.id)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: 'cambio en permisos',
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        fullAppUser[i] = {
-                            ...data.dataIn,
-                            historial: newHistorial
-                        }
-                        datasIn = key
-
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-editPermisionData',
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'empresas': empresas,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'empresas': empresas,
-                    'obras': obras,
-                    'res': 'ok'
-                })
-                break
-            case 'editCompanyPermisionData':
-                let datasInEmpresas = { id: 0 }
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.id)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: 'cambio en permisos C',
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        fullAppUser[i] = {
-                            ...data.dataIn,
-                            historial: newHistorial
-                        }
-                        datasInEmpresas = key
-
-                    }
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataRes-editPermisionData',
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'resId': data.reqId,
-                    'res': 'ok'
-                })
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                break
-            case 'crearRutaDiaria':
-                rutas.push(data.dataIn)
-                modeloBiosepticos.rutas = rutas
-                socket.broadcast.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-                socket.emit(
-                    'bioApp', {
-                    'actionTodo': 'dataActualize',
-                    'rutas': rutas,
-                    'modeloBiosepticos': modeloBiosepticos,
-                    'vehiculos': vehiculos,
-                    'servicios': servicios,
-                    'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                    'users': fullAppUser,
-                    'appUsers': appUsers,
-                    'obras': obras,
-                    'empresas': empresas,
-                    'res': 'ok'
-                })
-
-                break
-            case 'sendNewPerms':
-                appUsers.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.id)) {
-                        appUsers[i] = {
-                            ...appUsers[i],
-                            ...appUsers[i],
-                            permisions: data.dataIn.permisions
-                        }
-                    }
-                })
-                fullAppUser.map((key, i) => {
-                    if (parseInt(key.id) === parseInt(data.dataIn.id)) {
-                        newHistorial = []
-                        newHistorial = fullAppUser[i].historial
-                        newHistorial.push({
-                            action: 'cambio en permisos generales',
-                            date: Date().split(' ').splice(1, 4),
-                            id: data.dataIn.id,
-                            data: data,
-                            idTransaction: data.reqId,
-                        })
-                        fullAppUser[i] = {
-                            ...fullAppUser[i],
-                            historial: newHistorial,
-                            userObj: {
-                                ...fullAppUser[i].userObj,
-                                permisions: data.dataIn.permisions
-                            }
-                        }
-                        socket.broadcast.emit(
-                            'bioApp', {
-                            'actionTodo': 'dataActualize',
-                            'rutas': rutas,
-                            'modeloBiosepticos': modeloBiosepticos,
-                            'vehiculos': vehiculos,
-                            'servicios': servicios,
-                            'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                            'users': fullAppUser,
-                            'appUsers': appUsers,
-                            'obras': obras,
-                            'empresas': empresas,
-                            'res': 'ok'
-                        })
-                        socket.emit(
-                            'bioApp', {
-                            'actionTodo': 'dataActualize',
-                            'rutas': rutas,
-                            'modeloBiosepticos': modeloBiosepticos,
-                            'vehiculos': vehiculos,
-                            'servicios': servicios,
-                            'resId': (parseInt(Math.random() * 9999999999)).toString(),
-                            'obras': obras,
-                            'users': fullAppUser,
-                            'appUsers': appUsers,
-                            'empresas': empresas,
-                            'res': 'ok'
-                        })
-                    }
-                })
-                break
-            default:
-                break;
-        }
-        /*  console.log("bioSepticos data", data)
-         socket.broadcast.emit(
-             'bioApp', {
-             'actionTodo': 'newEntryRes',
-             'resId': data.reqId,
-             'body': data
-         }) */
-    })
     socket.on("disconnect", (e) => {
         console.log("User Disconnect", e, ' socket ', socket.id, 'array', millonarioParticipants)
-        checkUsers()
-        checkMapsUsers(socket)
+        checkUsers(socket.id)
     })
     socket.on('chat message', (msg) => {
         console.log('message: ' + msg);

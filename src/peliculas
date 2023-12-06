@@ -1,0 +1,264 @@
+nivel1
+----------------------
+{
+    pregunta: '¿Quién protagonizó El Zorro?',
+    respuesta1: 'Antonio Banderas',
+    respuesta2: 'Javier Bardem',
+    respuesta3: 'Mario Casas',
+    respuesta4: 'Christopher Nolan',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuántos películas hay de Matrix?',
+    respuesta1: '1',
+    respuesta2: '5',
+    respuesta3: '3',
+    respuesta4: '4',
+    correcta: '3'
+},
+{
+    pregunta: 'El es HArry:',
+    respuesta1: 'Potter',
+    respuesta2: 'Dumbledor',
+    respuesta3: 'Malfus',
+    respuesta4: 'Navajas',
+    correcta: '0'
+},
+{
+    pregunta: 'Rosario en la pelicula le decian:',
+    respuesta1: 'Rosario Navajas',
+    respuesta2: 'Rosario tijeras' ,
+    respuesta3: 'Rosario la barrio',
+    respuesta4: 'Rosita',
+    correcta: '1'
+},
+{
+    pregunta: 'En cual de estas peliculas sale Leonardo Di´caprio',
+    respuesta1: 'La lista de Shdinler',
+    respuesta2: 'Titanic',
+    respuesta3: '300',
+    respuesta4: 'Pedro Navajas',
+    correcta: '1'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: '¿Cuántos Oscars consiguió Titanic?',
+    respuesta1: '9',
+    respuesta2: '4',
+    respuesta3: '7',
+    respuesta4: '11',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es el idioma original de El viaje de Chihiro?',
+    respuesta1: 'Chino',
+    respuesta2: 'Coreano',
+    respuesta3: 'Japonés',
+    respuesta4: 'Español',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuántas películas hay de Regreso al futuro?',
+    respuesta1: '3',
+    respuesta2: '2',
+    respuesta3: '4',
+    respuesta4: '5',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿En qué año se estrenó Harry Potter?',
+    respuesta1: '2001',
+    respuesta2: '2013',
+    respuesta3: '2021',
+    respuesta4: '1990',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuántas películas hay de Star Wars',
+    respuesta1: '7',
+    respuesta2: '1',
+    respuesta3: '5',
+    respuesta4: '9',
+    correcta: '3'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: '¿Por qué película recibió un premio Oscar Leonardo DiCaprio?',
+    respuesta1: 'Once Upon a Time... in Holliwood (2019)',
+    respuesta2: 'The revenant (2015)',
+    respuesta3: 'El Lobo de Wall Street (2013)',
+    respuesta4: 'Diamantes de sangre (2006)',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién dirigió Reservoir Dogs?',
+    respuesta1: 'Quentin Tarantino',
+    respuesta2: ' Christopher Nolan',
+    respuesta3: ' Dennis Villeneuve',
+    respuesta4: 'Stiven Spilverg',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién protagoniza El Paciente Inglés?',
+    respuesta1: 'Susan Sarandon',
+    respuesta2: 'Juliette Binoche',
+    respuesta3: 'Kim Basinger',
+    respuesta4: 'Dennis Villeneuve',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién dirigió El lobo de Wall Street?',
+    respuesta1: 'Martin Scorsese',
+    respuesta2: 'Brian de Palma',
+    respuesta3: 'Francis Ford Coppola',
+    respuesta4: 'Pedro Almodovar',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién dirigió Salvar al soldado Ryan?',
+    respuesta1: 'Martin Scorsese',
+    respuesta2: 'Steven Spielberg',
+    respuesta3: 'George Lucas',
+    respuesta4: 'Brian de Palma',
+    correcta: '1'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: '¿Cuál es el nombre de la artista mexicana conocida como «la Doña»?',
+    respuesta1: 'María Félix',
+    respuesta2: 'Paulina Rubio',
+    respuesta3: 'Frida Kahlo',
+    respuesta4: 'Ibertadnla MArquez',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién protagoniza Pretty Woman?',
+    respuesta1: 'Richard Gere',
+    respuesta2: 'Nicholas Cage',
+    respuesta3: 'Nick Nolte',
+    respuesta4: 'Jhon Travolta',
+    correcta: '0'
+},
+{
+    pregunta: '¿Con qué película recibió Marion Cotillard el oscar?',
+    respuesta1: 'Big Fish',
+    respuesta2: 'La vie in rose',
+    respuesta3: 'El caballero oscuro renace',
+    respuesta4: 'Jurassic Park',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién fue el primer director español en conseguir un oscar?',
+    respuesta1: 'Alejandro Amenabar',
+    respuesta2: 'Pedro Almodovar',
+    respuesta3: 'José Luís Garci',
+    respuesta4: 'Nick Nolte',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuántas películas hay de Indiana Jones?',
+    respuesta1: '3',
+    respuesta2: '4',
+    respuesta3: '2',
+    respuesta4: '5',
+    correcta: '1'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: ' ¿Quién dirigió El Gran Lebowski?',
+    respuesta1: 'Hermanos Coen',
+    respuesta2: 'Steven Spielberg',
+    respuesta3: 'George Lucas',
+    respuesta4: 'Quentin Tarantino',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién dirigió el Sexto Sentido?',
+    respuesta1: 'George Lucas',
+    respuesta2: 'Alfred Hitchcock',
+    respuesta3: 'M. Night Shyamalan',
+    respuesta4: 'Darren Aronofsk',
+    correcta: '2'
+},
+{
+    pregunta: '¿En qué año se estrenó Parasitos?',
+    respuesta1: '2017',
+    respuesta2: '2018',
+    respuesta3: '2019',
+    respuesta4: '2021',
+    correcta: '2'
+},
+{
+    pregunta: '¿En qué año se estrenó Parque Jurásico?',
+    respuesta1: '1993',
+    respuesta2: '1990',
+    respuesta3: '1995',
+    respuesta4: '1998',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién dirigió Annie Hall?',
+    respuesta1: 'Stanley Kubrick',
+    respuesta2: 'Woody Allen',
+    respuesta3: 'Peter Weir',
+    respuesta4: 'Olivia Colman',
+    correcta: '1'
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: '¿A qué día viaja Marty en Regreso al futuro 2?',
+    respuesta1: '6 de enero 2030',
+    respuesta2: '21 octubre 2015',
+    respuesta3: '4 noviembre 2020',
+    respuesta4: '5 octubre 2020',
+    correcta: '1'
+},
+{
+    pregunta: '¿Qué actriz ganó el oscar por La Favorita?',
+    respuesta1: 'Olivia Colman',
+    respuesta2: 'Emma Stone',
+    respuesta3: 'Rachel Weisz',
+    respuesta4: 'Michael Caine',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿Qué actor no aparece en Sin Perdón?',
+    respuesta1: 'Michael Caine',
+    respuesta2: 'Morgan Freeman',
+    respuesta3: 'Clint Eastwood',
+    respuesta4: 'Olivia Colman',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién fue el Coronel Kurtz?',
+    respuesta1: 'Marlon Brando',
+    respuesta2: 'Sean Penn',
+    respuesta3: 'John Wayne',
+    respuesta4: 'Clint Eastwood',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién dirigió Big Fish?',
+    respuesta1: 'Christopher Nolan',
+    respuesta2: 'Roland Emmerich',
+    respuesta3: 'Tim Burton',
+    respuesta4: 'Clint Eastwood',
+    correcta: '2'
+}
+
+----------------------

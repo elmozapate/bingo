@@ -1,0 +1,264 @@
+nivel1
+----------------------
+{
+    pregunta: ' ¿En qué país está ubicada la ciudad de Medellín?',
+    respuesta1: 'Colombia',
+    respuesta2: 'Brasil',
+    respuesta3: 'Venezuela',
+    respuesta4: 'Perú',
+    correcta: '0'
+},
+{
+    pregunta: '¿Con qué países tiene frontera Ecuador?',
+    respuesta1: 'Con Brasil y Colombia',
+    respuesta2: 'Con Colombia y Venezuela',
+    respuesta3: 'Con Colombia y Perú',
+    respuesta4: 'Con Perú y Bolivia',
+    correcta: '2'
+},
+{
+    pregunta: 'La capital de Colombia es:',
+    respuesta1: 'Bogota',
+    respuesta2: 'Medellin',
+    respuesta3: 'Antioquia',
+    respuesta4: 'Cundinamarca',
+    correcta: '0'
+},
+{
+    pregunta: 'La capital de Venezuela es',
+    respuesta1: 'Maracaibo',
+    respuesta2: 'Caracas',
+    respuesta3: 'Untia',
+    respuesta4: 'Melgar',
+    correcta: '1'
+},
+{
+    pregunta: 'Colombia tiene cuantos mars cerca',
+    respuesta1: '1',
+    respuesta2: '2',
+    respuesta3: '3',
+    respuesta4: '0',
+    correcta: '1'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: '¿Cuál es el país que tiene forma de bota?',
+    respuesta1: 'España',
+    respuesta2: 'Italia',
+    respuesta3: 'BotaLandia',
+    respuesta4: 'Honduras',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es la capital de Nicaragua?',
+    respuesta1: 'Santiago',
+    respuesta2: 'Brasilia',
+    respuesta3: 'No tiene',
+    respuesta4: 'Managua',
+    correcta: '3'
+},
+{
+    pregunta: '¿En qué año llegó Cristobal Colón a América?',
+    respuesta1: '1429',
+    respuesta2: '1492',
+    respuesta3: '1592',
+    respuesta4: '1600',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál de estos países se extiende entre dos continentes?',
+    respuesta1: 'Groenlandia',
+    respuesta2: 'Egipto',
+    respuesta3: 'Filipinas',
+    respuesta4: 'Rusia',
+    correcta: '3'
+},
+{
+    pregunta: 'Cual es la capital de Japon',
+    respuesta1: 'Okinagua',
+    respuesta2: 'Nagazaki',
+    respuesta3: 'Hiroshima',
+    respuesta4: 'Tokio',
+    correcta: '3'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: '¿Cuál es el nombre del río más largo del mundo?',
+    respuesta1: 'Río Nilo',
+    respuesta2: 'Río Amazonas',
+    respuesta3: 'Río Danubio',
+    respuesta4: 'Rio Ecurates',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es el océano más grande del mundo?',
+    respuesta1: 'Océano Pacífico',
+    respuesta2: 'Océano Índico',
+    respuesta3: 'Océano Rojo',
+    respuesta4: 'Océano Atlántico',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es el país más poblado de la tierra?',
+    respuesta1: ' Estados Unidos',
+    respuesta2: 'China',
+    respuesta3: 'Rusia',
+    respuesta4: 'Mexico',
+    correcta: '1'
+},
+{
+    pregunta: '¿En qué país se encuentra ubicada la Casa Rosada?',
+    respuesta1: 'Argentina',
+    respuesta2: 'Chile',
+    respuesta3: 'Mexico',
+    respuesta4: 'Brucelas',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuál es la montaña más alta del continente americano?',
+    respuesta1: 'Monte Everest',
+    respuesta2: 'Aconcagua',
+    respuesta3: 'Pico Neblina',
+    respuesta4: 'Pico Bolívar',
+    correcta: '1'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: '¿Cuál es el país más grande del mundo?',
+    respuesta1: 'India',
+    respuesta2: 'Rusia',
+    respuesta3: 'China',
+    respuesta4: 'Brazil',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es la ciudad de los rascacielos?',
+    respuesta1: 'New Yor',
+    respuesta2: 'Dubai',
+    respuesta3: 'Hong Kong',
+    respuesta4: 'Tokio',
+    correcta: '0'
+},
+{
+    pregunta: '¿En qué continente se encuentra Surinam?',
+    respuesta1: 'África',
+    respuesta2: 'Oceanía',
+    respuesta3: 'América del Sur',
+    respuesta4: 'No existe',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es la nación más pequeña del mundo?',
+    respuesta1: 'Andorra',
+    respuesta2: 'Mónaco',
+    respuesta3: 'El Vaticano',
+    respuesta4: 'Paris',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cuál es la capital de Australia?',
+    respuesta1: 'Canberra',
+    respuesta2: 'Melbourne',
+    respuesta3: 'Sydney',
+    respuesta4: 'Adelaide',
+    correcta: '0'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: '¿Cuál es la ciudad italiana conocida como «la novia del mar»?',
+    respuesta1: 'Roma',
+    respuesta2: 'Mariana',
+    respuesta3: 'Venecia',
+    respuesta4: 'Florencia',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cuál es la capital de Pakistán?',
+    respuesta1: 'Bagdag',
+    respuesta2: 'Islamabad',
+    respuesta3: 'Marrakech',
+    respuesta4: 'Paarishan',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Cuándo terminó la II Guerra Mundial?',
+    respuesta1: '1945',
+    respuesta2: '1947',
+    respuesta3: '1943',
+    respuesta4: '1890',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuáles de estas construcciones famosas quedan en los Estados Unidos?',
+    respuesta1: 'Lincoln Memorial, Sydney Opera House, Burj Khalifa',
+    respuesta2: 'Torre Eiffel, Museo Guggenheim, Abadía de Westminter',
+    respuesta3: 'Estatua de la Libertad, puente Golden Gate, Empire State Building',
+    respuesta4: 'Dancing House, 30 st Mary Axe, La Casa Blanca',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es el mayor archipiélago de la Tierra?',
+    respuesta1: 'Filipinas',
+    respuesta2: 'Indonesia',
+    respuesta3: 'Bahamas',
+    respuesta4: 'Finlandia',
+    correcta: ''
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: '¿Cuál es la única ciudad que está en dos continentes distintos?',
+    respuesta1: 'Moscú',
+    respuesta2: 'Estambul',
+    respuesta3: 'Berlín',
+    respuesta4: 'Ninguna',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es la cascada más alta del mundo?',
+    respuesta1: 'El Salto del Ángel',
+    respuesta2: 'ataratas de Iguazú',
+    respuesta3: 'Cataratas del Niáraga',
+    respuesta4: 'Cataratas del Niagara',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuál es la segunda montaña más alta del mundo?',
+    respuesta1: 'K2',
+    respuesta2: 'K1',
+    respuesta3: 'K3',
+    respuesta4: 'IMALAYA',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿Cuál es la religión monoteísta que cuenta con el mayor número de adeptos en el mundo?',
+    respuesta1: 'Judaísmo',
+    respuesta2: 'Zoroastrismo',
+    respuesta3: 'Islamismo',
+    respuesta4: 'Cristianismo',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es la altura del Everest?',
+    respuesta1: '9.849 m',
+    respuesta2: '8.649 m',
+    respuesta3: '8.889 m',
+    respuesta4: '8.849 m',
+    correcta: '3'
+}
+
+----------------------

@@ -1,0 +1,264 @@
+nivel1
+----------------------
+{
+    pregunta: '¿Cuáles son las notas musicales?',
+    respuesta1: 'Do, Re, Mi',
+    respuesta2: 'Do, Re, Mi, Sol, La, Si, Do',
+    respuesta3: 'Do, Re, Mi, Fa, Sol, La, Si',
+    respuesta4: 'Do, Re,Sol, La, Si',
+    correcta: '2'
+},
+{
+    pregunta: '¿Quién escribió Cien años de soledad?,
+    respuesta1: 'Gabriel García Márquez',
+    respuesta2: 'Mario Vargas Llosa',
+    respuesta3: 'Camilo José Cela',
+    respuesta4: 'Petro',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuál es el grupo de palabras escritas correctamente?',
+    respuesta1: 'Metamorfosis, extranjero, diversidac, equilivrio',
+    respuesta2: 'Metaformosis, estranjero, diversidad, ekilibrio',
+    respuesta3: 'Metamorfosis, extrangero, dibersidad, equilibrio',
+    respuesta4: 'Metamorfosis, extranjero, diversidad, equilibrio',
+    correcta: '3'
+},
+{
+    pregunta: ' ¿Cuál es el libro más vendido en el mundo ?',
+    respuesta1: 'El Señor de los Anillos',
+    respuesta2: 'Don Quijote de la Mancha',
+    respuesta3: 'El Principito',
+    respuesta4: 'La Biblia',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuáles son los nombres de los tres reyes magos?',
+    respuesta1: 'Gaspar, Nicolas y Nataniel',
+    respuesta2: 'Gaspar, Melchor y Baltazar',
+    respuesta3: 'Simon, Judas y Mateo',
+    respuesta4: 'Charles, George y Louis',
+    correcta: '1'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: ' ¿En qué país se usó la primera bomba atómica?',
+    respuesta1: 'Rusia',
+    respuesta2: 'Estados Unidos',
+    respuesta3: 'Japón',
+    respuesta4: 'Korea',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cómo se llama el Himno Nacional de Francia?',
+    respuesta1: 'La Internacional',
+    respuesta2: 'La Marsellesa',
+    respuesta3: 'La solitaria',
+    respuesta4: 'GangaStyle',
+    correcta: '1'
+},
+{
+    pregunta: '¿A qué se denomina séptimo arte?',
+    respuesta1: 'Cine',
+    respuesta2: 'Escultura',
+    respuesta3: 'Clarividencia',
+    respuesta4: 'Pintura',
+    correcta: '0'
+},
+{
+    pregunta: '¿Qué es un melómano?',
+    respuesta1: ' Un amante del cine',
+    respuesta2: 'Un amabte de los cómics',
+    respuesta3: 'Un amabte de los melones',
+    respuesta4: 'Un amante de la música',
+    correcta: '3'
+},
+{
+    pregunta: 'Cuantos es (2 x 2) - 1',
+    respuesta1: '1',
+    respuesta2: '2',
+    respuesta3: '3',
+    respuesta4: '4',
+    correcta: '2'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: ' ¿Cuál es el libro sagrado de los musulmanes?',
+    respuesta1: 'Biblia',
+    respuesta2: 'El Talmud    ',
+    respuesta3: 'El Corán',
+    respuesta4: 'Periodico',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cuál fue el primer hombre en ir a la luna?',
+    respuesta1: 'Louis Armstrong',
+    respuesta2: ' Neil Armstrong',
+    respuesta3: 'Michael Armstrong',
+    respuesta4: 'Fue una mujer',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es la obra más importante de la literatura en español?',
+    respuesta1: 'El Principito,
+    respuesta2: 'Cien años de soledad',
+    respuesta3: 'El hobbit',
+    respuesta4: ' Don Quijote de la Mancha',
+    correcta: '3'
+},
+{
+    pregunta: '¿Quién pintó el famoso cuadro La última cena?',
+    respuesta1: 'Rembrandt',
+    respuesta2: 'Velazquez',
+    respuesta3: 'Leonardo da Vinci',
+    respuesta4: 'Salamanca',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cuál fue el recurso utilizado inicialmente por el ser humano para explicar el origen de las cosas?',
+    respuesta1: 'La biología',
+    respuesta2: 'La matemática',
+    respuesta3: 'La astronomía',
+    respuesta4: 'La mitología',
+    correcta: '3'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: '¿Cuál es el idioma más antiguo que pervive en Europa?',
+    respuesta1: 'Vasco',
+    respuesta2: 'Inglés',
+    respuesta3: 'Francés',
+    respuesta4: 'Latin',
+    correcta: '3'
+},
+{
+    pregunta: 'En qué guerra participó Juana de Arco?',
+    respuesta1: 'Guerra de la independencia francesa',
+    respuesta2: 'Guerra de los 100 años',
+    respuesta3: ' Guerra Civil Española',
+    respuesta4: 'En una historia',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién escribió La Odisea?',
+    respuesta1: 'Homero',
+    respuesta2: 'Virgilio',
+    respuesta3: 'Cervantes',
+    respuesta4: 'Gabriel Garcia M',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién pintó La noche estrellada?',
+    respuesta1: 'Vincent van Gogh',
+    respuesta2: 'Rembrandt',
+    respuesta3: 'Velazquez',
+    respuesta4: 'Martin L',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién es el autor de la frase "Pienso, luego existo"?',
+    respuesta1: 'Platón',
+    respuesta2: 'Galileo Galilei',
+    respuesta3: 'Descartes',
+    respuesta4: 'Sócrates',
+    correcta: '2'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: '¿Cómo se llama la primera mujer que viajó al espacio?',
+    respuesta1: 'Valentina Tereshkova',
+    respuesta2: 'Alexandra Tereshkova',
+    respuesta3: 'No han ido',
+    respuesta4: 'Amanda Tereshkova',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién fue el primer emperador romano?',
+    respuesta1: 'César Augusto',
+    respuesta2: 'Julio Cesar',
+    respuesta3: 'Marco Aurelia',
+    respuesta4: 'Napoleon',
+    correcta: '0'
+},
+{
+    pregunta: '¿En qué isla murió Napoleón?',
+    respuesta1: 'Sicilia',
+    respuesta2: 'Santa Elena',
+    respuesta3: 'Creta',
+    respuesta4: 'Elba',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién pintó la obra "Guernica"?',
+    respuesta1: 'Paul Cézanne',
+    respuesta2: 'Pablo Picasso',
+    respuesta3: 'Diego Rivera',
+    respuesta4: 'Salvador Dalí',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Qué hora es en inglés "It is a quarter past six"?',
+    respuesta1: '6:15',
+    respuesta2: '3:46',
+    respuesta3: '6:45',
+    respuesta4: '5:15',
+    correcta: '0'
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: ' ¿De qué año es la primera constitución española conocida como «La Pepa»',
+    respuesta1: '1812',
+    respuesta2: '1835',
+    respuesta3: '1978',
+    respuesta4: '1997',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cómo se llama la estrofa poética que está conformada por 10 versos de 8 sílabas cada uno?',
+    respuesta1: 'Décima espinela',
+    respuesta2: 'Decasílabo',
+    respuesta3: ' Decasílabo octogonal',
+    respuesta4: 'EtraPoetica',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuáles son los representantes más destacados de la literatura renacentista?',
+    respuesta1: 'Miguel de Cervantes, William Shakespeare, Luis de Camões.',
+    respuesta2: 'Leonardo da Vinci, Miguel Angel Buonarroti, Sandro Boticelli',
+    respuesta3: 'Caravaggio, Bernini, Borromini',
+    respuesta4: 'Goethe, Victor Hugo, Gustavo Adolfo Bécquer',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién es el autor de "El Príncipe"?',
+    respuesta1: 'Antoine de Saint-Exupery',
+    respuesta2: 'Charles de Gales',
+    respuesta3: 'Friedrich Nietzche',
+    respuesta4: 'Nicolás Maquiavelo',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es la conjugación del verbo "caber" en la primera persona del singular del presente indicativo?',
+    respuesta1: 'Yo quepo',
+    respuesta2: 'Yo cabo',
+    respuesta3: 'Nosotros cabemos',
+    respuesta4: 'Nosotros quepamos',
+    correcta: '0'
+}
+
+----------------------

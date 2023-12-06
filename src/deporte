@@ -1,0 +1,267 @@
+nivel1
+----------------------
+{
+    pregunta: '¿Cuál es el “Rey de los Deportes”?',
+    respuesta1: 'baloncesto',
+    respuesta2: 'béisbol',
+    respuesta3: 'fútbol',
+    respuesta4: 'hockey sobre hielo',
+    correcta: '2'
+},
+{
+    pregunta: 'Es el único deporte en el que los competidores corren hacia la meta, pero nunca la cruzan. ¿Qué es?',
+    respuesta1: 'atletismo',
+    respuesta2: 'lanzamiento de jabalina',
+    respuesta3: 'natación',
+    respuesta4: 'carrera de 800 metros',
+    correcta: '2'
+},
+
+{
+    pregunta: 'Quien puede agarrar con las manos el balon',
+    respuesta1: 'Arbitro',
+    respuesta2: 'Delantero',
+    respuesta3: 'Portero',
+    respuesta4: 'Aguador',
+    correcta: '2'
+},
+{
+    pregunta: 'Se usa en el beisbol ',
+    respuesta1: 'Drogas',
+    respuesta2: 'Espada',
+    respuesta3: 'Bat',
+    respuesta4: 'Raqueta',
+    correcta: '0'
+},
+{
+    pregunta: 'De donde es Julio Cesar Chavez',
+    respuesta1: 'Mexico',
+    respuesta2: 'Roma',
+    respuesta3: 'India',
+    respuesta4: 'Quien es el?',
+    correcta: '0'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: ' ¿Cuáles son los cinco colores del anillo de los Juegos Olímpicos?',
+    respuesta1: 'Azul, rojo, amarillo, verde y negro',
+    respuesta2: 'Azul, rojo, amarillo, verde y violeta',
+    respuesta3: 'índigo, rojo, morado, verde y negro',
+    respuesta4: 'Azul, rojo, amarillo, naranja y verde',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿Cada cuántos años se realizan los Juegos Olímpicos?',
+    respuesta1: 'Cada 4 años',
+    respuesta2: 'Cada 3 años',
+    respuesta3: 'Cada 2 años',
+    respuesta4: 'Todos los años',
+    correcta: '0'
+},
+{
+    pregunta: '¿Qué parte de tu cuerpo no debe tocar el balón en el fútbol?',
+    respuesta1: 'cabeza',
+    respuesta2: 'pierna',
+    respuesta3: 'mano',
+    respuesta4: 'espalda',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál de los siguientes deportes no usa una pelota?',
+    respuesta1: 'golf',
+    respuesta2: 'tenis',
+    respuesta3: 'hockey',
+    respuesta4: 'polo',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cómo llamas a la cancha de fútbol?',
+    respuesta1: 'terreno de juego',
+    respuesta2: 'corte',
+    respuesta3: 'campo',
+    respuesta4: 'bol',
+    correcta: '0'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: ' ¿Cuántos jugadores pueden participar por equipo en el basquetbol?',
+    respuesta1: '2',
+    respuesta2: '|3',
+    respuesta3: '4',
+    respuesta4: '5',
+    correcta: '3'
+},
+{
+    pregunta: ' ¿Cuántas veces Michael Jordan ganó campeonatos para los Chicago Bulls?',
+    respuesta1: '5',
+    respuesta2: '7',
+    respuesta3: '6',
+    respuesta4: '4',
+    correcta: '2'
+},
+{
+    pregunta: '¿Por qué deporte son conocidos los Cachorros de Chicago y los Medias Rojas de Boston?',
+    respuesta1: 'baloncesto',
+    respuesta2: 'béisbol',
+    respuesta3: 'tenis',
+    respuesta4: 'vóleibol',
+    correcta: '1'
+},
+{
+    pregunta: '¿Manny Pacquiao es un boxeador legendario de qué país?',
+    respuesta1: 'Corea',
+    respuesta2: 'Filipinas',
+    respuesta3: 'China',
+    respuesta4: 'México',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuántos puntos vale un tiro libre en baloncesto?',
+    respuesta1: '1 punto',
+    respuesta2: '2 puntos',
+    respuesta3: '3 puntos',
+    respuesta4: '4 puntos',
+    correcta: '0'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: '¿Cuántos jugadores por equipo participan en un partido de voleibol?',
+    respuesta1: '3 jugadores',
+    respuesta2: '4 jugadores',
+    respuesta3: '5 jugadores',
+    respuesta4: '6 jugadores',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es la altura de la red de voleibol en los juegos masculino y femenino?',
+    respuesta1: '2,5 m y 2,0 m',
+    respuesta2: '1,8 m y 1,5 m',
+    respuesta3: '2,45 m y 2,15 m',
+    respuesta4: '2,43 m y 2,24 m',
+    correcta: '3'
+},
+{
+    pregunta: '¿Qué deporte tiene un equipo llamado foil?',
+    respuesta1: 'polo',
+    respuesta2: 'golf',
+    respuesta3: 'Esgrima',
+    respuesta4: 'boxeo',
+    correcta: '2'
+},
+{
+    pregunta: '¿Qué deporte de los Juegos Olímpicos implica pliegues y picas?',
+    respuesta1: 'natación',
+    respuesta2: 'esgrima',
+    respuesta3: 'bolos',
+    respuesta4: 'polo',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuánto dura un round típico de boxeo para hombres?',
+    respuesta1: '2 minutos',
+    respuesta2: '3 minutos',
+    respuesta3: '4 minutos',
+    respuesta4: '5 minutos',
+    correcta: '1'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: ' ¿Cuántos Km de distancia mide una maratón?',
+    respuesta1: '41.85 km',
+    respuesta2: '42.16 km',
+    respuesta3: '43.77 km',
+    respuesta4: '43.45 km',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuántos rounds hay en un solo juego de boxeo profesional?',
+    respuesta1: '5',
+    respuesta2: '8',
+    respuesta3: '12',
+    respuesta4: '15',
+    correcta: '2'
+},
+{
+    pregunta: '¿En el boxeo, TKO significa?',
+    respuesta1: 'Noqueo técnico',
+    respuesta2: 'Expulsión técnica',
+    respuesta3: 'Krankout Técnico',
+    respuesta4: 'Imitación técnica',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién es el mejor boxeador de todos los tiempos?',
+    respuesta1: 'Manny Pacquiao',
+    respuesta2: 'Muhammad Alí',
+    respuesta3: 'Floyd Mayweather',
+    respuesta4: 'Mike Tyson',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Quién tiene más jonrones en la historia de la MLB?',
+    respuesta1: 'Alex Rodriguez',
+    respuesta2: 'Bonos de Barry',
+    respuesta3: 'Hank Aarón',
+    respuesta4: 'Babe Ruth',
+    correcta: '1'
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: '¿Cuándo se realizó por primera vez el lanzamiento de jabalina en los Juegos Olímpicos?',
+    respuesta1: '1990',
+    respuesta2: '1908',
+    respuesta3: '2001',
+    respuesta4: '2008',
+    correcta: '1'
+},
+{
+    pregunta: '¿Qué deporte se jugó en los Juegos Olímpicos de 1900-1920 hasta que se decidió que involucraba a demasiados jugadores?',
+    respuesta1: 'hockey sobre hierba',
+    respuesta2: 'rugby',
+    respuesta3: 'tira y afloja',
+    respuesta4: 'carrera de obstáculos',
+    correcta: '2'
+},
+{
+    pregunta: 'Pregunta extra: ¿Quién es la mejor tenista de todos los tiempos?',
+    respuesta1: 'Serena Williams',
+    respuesta2: 'Jackie Robinson',
+    respuesta3: 'Nadia Comaneci',
+    respuesta4: 'Venus Williams',
+    correcta: '0'
+},
+{
+    pregunta: '¿Quién tiene más victorias en el Super Bowl?',
+    respuesta1: 'Acereros de Pittsburgh',
+    respuesta2: 'Cowboys de Dallas',
+    respuesta3: 'Los Patriotas de Nueva Inglaterra y los Acereros de Pittsburgh',
+    respuesta4: 'Los Patriotas de Nueva Inglaterra',
+    correcta: '2'
+}
+,
+{
+    pregunta: '¿Quién ha ganado más veces el Masters?',
+    respuesta1: 'Tom Watson',
+    respuesta2: 'Tiger Woods',
+    respuesta3: 'Gary jugador',
+    respuesta4: 'Jack Nicklaus',
+    correcta: '3'
+}
+
+
+----------------------

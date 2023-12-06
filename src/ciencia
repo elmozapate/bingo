@@ -1,0 +1,264 @@
+nivel1
+----------------------
+{
+    pregunta: ' ¿Qué rama de la biología estudia a los animales?',
+    respuesta1: 'Zoología',
+    respuesta2: 'Fauna',
+    respuesta3: 'Medicina',
+    respuesta4: 'Bioannimal',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuántas patas tiene una araña?',
+    respuesta1: '6',
+    respuesta2: '4',
+    respuesta3: '8',
+    respuesta4: '10',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cómo se llama el proceso por medio del cual las plantas obtienen su alimento?',
+    respuesta1: 'Biosíntesos',
+    respuesta2: 'Fotosíntesis',
+    respuesta3: 'Luminosíntesis',
+    respuesta4: 'Respiracion Vegetal',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cómo se denomina a los animales que nacen de un  huevo?',
+    respuesta1: 'Huevíparos',
+    respuesta2: 'Vivíparos',
+    respuesta3: 'Ovíparos',
+    respuesta4: 'Pollitos',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es la rama de la biología que estudia las plantas?',
+    respuesta1: 'Zoología',
+    respuesta2: 'Botánica',
+    respuesta3: 'Mineralogía',
+    respuesta4: 'Vegetraianos',
+    correcta: '0'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: '¿A cuánto equivale el numero Pi?',
+    respuesta1: '3.1614',
+    respuesta2: '3.1416',
+    respuesta3: '3.416',
+    respuesta4: '3.4116',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cómo se denomina al tipo de triángulo que tiene sus tres lados iguales?',
+    respuesta1: 'Isósceles',
+    respuesta2: 'Recto',
+    respuesta3: 'Curvo',
+    respuesta4: 'Equilátero',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cómo se le denomina al centro de un átomo?',
+    respuesta1: 'Electrón',
+    respuesta2: 'Núcleo',
+    respuesta3: 'Protón',
+    respuesta4: 'Neutron',
+    correcta: '2'
+},
+{
+    pregunta: 'La sal común está formada por dos elementos, ¿cuáles son?',
+    respuesta1: 'Sodio y potasio',
+    respuesta2: 'Sodio y cloro',
+    respuesta3: 'Sodio y carbono',
+    respuesta4: 'Potasio y cloro',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Cuales de las siguientes son enfermedades de transmisión sexual ETS?',
+    respuesta1: 'SIDA, tricomoniasis, ébola',
+    respuesta2: 'Chikunguya, malaria, herpes genital',
+    respuesta3: 'Gonorrea, clamidia, sífilis',
+    respuesta4: 'Botulismo, cistitis, chagas',
+    correcta: '2'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: ' ¿Cómo se denomina al resultado de una multiplicación?',
+    respuesta1: 'Múltiplo',
+    respuesta2: 'Resultado',
+    respuesta3: 'Producto',
+    respuesta4: 'Multiplicador',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál fue el primer metal que emplearon los seres humanos?',
+    respuesta1: 'Bronce',
+    respuesta2: 'Acero',
+    respuesta3: 'Cobre',
+    respuesta4: 'Oro',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es el primero de los números primos?',
+    respuesta1: '0',
+    respuesta2: '1',
+    respuesta3: '2',
+    respuesta4: '3',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es el gas que se encuentra en mayor cantidad en el aire que respiramos?',
+    respuesta1: 'Nitrógeno',
+    respuesta2: 'Oxígeno',
+    respuesta3: 'Carbono',
+    respuesta4: ' Helio',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuál es el orden de los planetas del sistema solar, partiendo desde su centro?',
+    respuesta1: 'Sol, Mercurio, Venus, Luna, Tierra, Marte, Júpiter, Saturno, Urano, Neptuno, Plutón',
+    respuesta2: 'Mercurio, Venus, Tierra, Marte, Júpiter, Saturno, Urano, Neptuno',
+    respuesta3: 'Mercurio, Venus, Tierra, Marte, Júpiter, Saturno, Urano, Neptuno, Plutón',
+    respuesta4: 'Venus, Mercurio, Tierra, Júpiter, Urano, Saturno, Neptuno',
+    correcta: '2'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: '¿Cuál es el primer elemento de la Tabla periódica?',
+    respuesta1: 'Helio',
+    respuesta2: 'Argón',
+    respuesta3: 'Hidrógeno',
+    respuesta4: 'Oxigeno',
+    correcta: '2'
+},
+{
+    pregunta: '¿Cuál es el símbolo químico del oro?',
+    respuesta1: 'Or',
+    respuesta2: 'Au',
+    respuesta3: 'Ao',
+    respuesta4: 'Ou',
+    correcta: '1'
+},
+{
+    pregunta: '¿Qué es el cobalto?',
+    respuesta1: 'Un mineral',
+    respuesta2: 'Un animal',
+    respuesta3: 'Un metal',
+    respuesta4: 'Un vegetal',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿Cuál es el animal más rápido del mundo?',
+    respuesta1: 'Cóndor',
+    respuesta2: 'Leopardo',
+    respuesta3: 'Aveztrus',
+    respuesta4: 'Guepardo',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es el único mamífero que puede volar?',
+    respuesta1: 'Murciélago',
+    respuesta2: 'Avestruz',
+    respuesta3: 'Águila',
+    respuesta4: 'Hombre',
+    correcta: '0'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: '¿Cuál es el elemento químico más abundante en la corteza terrestre?',
+    respuesta1: 'Oxígeno',
+    respuesta2: 'Nitrógeno',
+    respuesta3: 'Carbono',
+    respuesta4: 'H20',
+    correcta: '0'
+},
+{
+    pregunta: '¿Qué se le agrega al hierro para hacer acero?',
+    respuesta1: 'Oxígeno',
+    respuesta2: 'Carbono',
+    respuesta3: 'Nitrógeno',
+    respuesta4: 'Oro',
+    correcta: '1'
+},
+{
+    pregunta: '¿En qué parte del cuerpo se produce la insulina?',
+    respuesta1: 'Hígado',
+    respuesta2: 'Pulmones',
+    respuesta3: 'Corazon',
+    respuesta4: 'Páncreas',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuál es el ave voladora más grande del mundo?',
+    respuesta1: 'Águila real',
+    respuesta2: 'Condor Andino',
+    respuesta3: 'Halcón',
+    respuesta4: 'Aveztrus',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuántos corazones tienen los pulpos?',
+    respuesta1: '1',
+    respuesta2: 'Ninguno',
+    respuesta3: '3',
+    respuesta4: '5',
+    correcta: '2'
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: '¿Qué año solo tuvo 355 días?',
+    respuesta1: '1582',
+    respuesta2: '1615',
+    respuesta3: '1823',
+    respuesta4: '1456',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuántos huesos tiene en total un ser humano?',
+    respuesta1: '60',
+    respuesta2: '206',
+    respuesta3: '416',
+    respuesta4: 'Depende del genrero y la edad',
+    correcta: '3'
+},
+{
+    pregunta: '¿Cuántos litros de sangre tiene una persona adulta?',
+    respuesta1: 'Tiene entre 2 y 4 litros',
+    respuesta2: 'Tiene entre 4 y 6 litros',
+    respuesta3: 'Tiene 10 litros',
+    respuesta4: 'Tiene 7 litros',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuántos decimales tiene el número pi π?',
+    respuesta1: 'Dos',
+    respuesta2: 'Cien',
+    respuesta3: 'Infinitos',
+    respuesta4: 'Mil',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Cuánto tiempo tarda la luz del Sol en llegar a la Tierra?',
+    respuesta1: '12 minutos',
+    respuesta2: '1 día',
+    respuesta3: '12 horas',
+    respuesta4: '8 minutos',
+    correcta: '3'
+}
+
+----------------------

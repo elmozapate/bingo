@@ -1,0 +1,264 @@
+nivel1
+----------------------
+{
+    pregunta: 'Quién cantó la canción Girls Just Wanna Have Fun?',
+    respuesta1: 'Madonna',
+    respuesta2: 'Tammy Wynette',
+    respuesta3: 'Selena Gomez',
+    respuesta4: 'Cyndi Lauper',
+    correcta: '3'
+},
+{
+    pregunta: 'De donde  es Vicente Fernandez',
+    respuesta1: 'Colombia',
+    respuesta2: 'Uruguay',
+    respuesta3: 'Mexico',
+    respuesta4: 'Gringo',
+    correcta: '2'
+},
+{
+    pregunta: 'Que genero toca metalica',
+    respuesta1: 'Cumbia',
+    respuesta2: 'Boleros',
+    respuesta3: 'Rock',
+    respuesta4: 'Reguetton',
+    correcta: '2'
+},
+{
+    pregunta: 'Los prisioneros del...',
+    respuesta1: 'norte',
+    respuesta2: 'centro',
+    respuesta3: 'oriente',
+    respuesta4: 'sur',
+    correcta: '3'
+},
+{
+    pregunta: 'Quien interpreta Vuela Vuela',
+    respuesta1: 'Magento',
+    respuesta2: 'OV7',
+    respuesta3: 'Caifanes',
+    respuesta4: 'Shakira',
+    correcta: '0'
+}
+
+----------------------
+nivel2
+----------------------
+{
+    pregunta: ' ¿Quién es denominado el Rey del Rock and Roll en Estados Unidos?',
+    respuesta1: 'Bruce Springsteen',
+    respuesta2: 'Michael Jackson',
+    respuesta3: 'Elvis Presley',
+    respuesta4: 'Justin Bieber',
+    correcta: '2'
+},
+{
+    pregunta: ' ¿Qué cantante es conocido como La chica material?',
+    respuesta1: 'Dolly Parton',
+    respuesta2: 'Madonna',
+    respuesta3: 'Taylor Swift',
+    respuesta4: 'Janet Jackson',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Quién es el rey del rock n’ roll?',
+    respuesta1: 'Michael Jackson',
+    respuesta2: 'Bob Dylan',
+    respuesta3: 'Justin Timberlake',
+    respuesta4: 'Elvis Presley',
+    correcta: '3'
+},
+{
+    pregunta: ' ¿Quién es el cantante de Linkin Park?',
+    respuesta1: 'Freddie Mercury',
+    respuesta2: 'Chester',
+    respuesta3: 'Robert Plant',
+    respuesta4: 'Steven Tyle',
+    correcta: '1'
+},
+{
+    pregunta: 'Aparte de Bugs quien tambien es bonny',
+    respuesta1: 'Andres',
+    respuesta2: 'Bad',
+    respuesta3: 'Don omar',
+    respuesta4: 'De que me hablas',
+    correcta: '1'
+}
+
+----------------------
+nivel3
+----------------------
+{
+    pregunta: '¿De qué grupo era vocalista Jim Morrison?',
+    respuesta1: 'The Police',
+    respuesta2: 'The Doors',
+    respuesta3: 'Pink Floyd',
+    respuesta4: 'Nirvana',
+    correcta: '1'
+},
+{
+    pregunta: ' Cómo se llaman los fans de Ariana Grande?',
+    respuesta1: 'Arianators',
+    respuesta2: 'Arianación',
+    respuesta3: 'Arianers',
+    respuesta4: 'Arianions',
+    correcta: '0'
+},
+{
+    pregunta: ' ¿Dónde fue descubierto Justin Bieber?',
+    respuesta1: 'America’s Got Talent',
+    respuesta2: 'YouTube',
+    respuesta3: 'TikTok',
+    respuesta4: 'Instagram',
+    correcta: '1'
+},
+{
+    pregunta: ' ¿Cuál fue el álbum debut de Taylor Swift?',
+    respuesta1: 'Amante',
+    respuesta2: 'Rojo',
+    respuesta3: 'Sin miedo',
+    respuesta4: 'Taylor Swift',
+    correcta: '3'
+},
+{
+    pregunta: 'En qué película cantó Miley Cyrus la canción The Climb?',
+    respuesta1: 'El cuaderno de notas',
+    respuesta2: 'Espíritu adolescente',
+    respuesta3: 'Hannah Montana: La película',
+    respuesta4: 'Última canción',
+    correcta: '2'
+}
+
+----------------------
+nivel4
+----------------------
+{
+    pregunta: ' ¿En qué año murió Kurt Cobain?',
+    respuesta1: '1996',
+    respuesta2: '1994',
+    respuesta3: '1998',
+    respuesta4: 'No ha muerto',
+    correcta: '1'
+},
+{
+    pregunta: 'Una de estas obras no es de Mozart. ¿Cuál de ellas?',
+    respuesta1: 'La flauta mágica',
+    respuesta2: 'Las bodas de Fígaro',
+    respuesta3: 'La falsa jardinera',
+    respuesta4: 'Madama Butterfly',
+    correcta: '3'
+},
+{
+    pregunta: 'Europe y su The final countdown siguen despertando emociones. ¿Recuerdas de qué país era el grupo?',
+    respuesta1: 'Dinamarca',
+    respuesta2: 'Noruega',
+    respuesta3: 'Alemania',
+    respuesta4: 'Suecia',
+    correcta: '3'
+},
+{
+    pregunta: '¿De quién es la archiconocida canción All I have to do is dream?',
+    respuesta1: 'The Everly Brothers',
+    respuesta2: 'The Teenagers',
+    respuesta3: 'The Platters',
+    respuesta4: 'Johnny Cash',
+    correcta: '0'
+},
+{
+    pregunta: '¿Cuál de estas canciones no es del grupo inmortal Queen?',
+    respuesta1: 'Dont Stop me now',
+    respuesta2: 'Tie your mother down',
+    respuesta3: 'Where are we now?',
+    respuesta4: 'These are the days of our lives',
+    correcta: '2'
+}
+
+----------------------
+nivel5
+----------------------
+{
+    pregunta: '¿Cuál fue la primera grabación de Rock and Roll?',
+    respuesta1: 'Una canción de Elvis Presley ',
+    respuesta2: 'Una canción de Chuck Berry',
+    respuesta3: 'Una canción de Little Richard',
+    respuesta4: 'Una canción de Bill Haley',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál de los siguientes cantantes pronunció la frase Prefiero que me odien por lo que soy a que me admiren por lo que nunca seré?',
+    respuesta1: 'Kurt Cobain',
+    respuesta2: 'Jim Morrison',
+    respuesta3: 'John Lennon',
+    respuesta4: 'Freddie Mercury',
+    correcta: '0'
+},
+{
+    pregunta: '¿Sabías que el director de cine Pedro Almodóvar también tuvo su propia banda? Se llamaba...',
+    respuesta1: 'Los Guardianes',
+    respuesta2: 'Almodóvar y McNamara',
+    respuesta3: 'Los Satana',
+    respuesta4: 'Almodóvar y los Pegamoides',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál es la famosa banda de K-Pop?',
+    respuesta1: 'BTS',
+    respuesta2: 'Rosa negra',
+    respuesta3: 'Big Bang',
+    respuesta4: 'Exo',
+    correcta: '0'
+},
+{
+    pregunta: 'Cómo se llamaba la primera canción country famosa de Taylor Swift?',
+    respuesta1: 'Teardrops on My Guitar',
+    respuesta2: 'Tim McGraw',
+    respuesta3: 'Love Story',
+    respuesta4: 'Our Song',
+    correcta: '2'
+}
+
+----------------------
+nivel6
+----------------------
+{
+    pregunta: '¿Quién compuso Los Conciertos de Brandeburgo?',
+    respuesta1: 'Mozart',
+    respuesta2: 'Beethoven',
+    respuesta3: 'Bach',
+    respuesta4: 'Davinchi',
+    correcta: 'Bach'
+},
+{
+    pregunta: 'Cómo se llamaba la primera canción de rock n’ roll?',
+    respuesta1: 'Rocket 88',
+    respuesta2: 'It’s Too Soon to Know',
+    respuesta3: 'So Fine',
+    respuesta4: 'Good Golly, Miss Molly',
+    correcta: '0'
+},
+{
+    pregunta: '¿Qué grupo de rock clásico era conocido por estar drogado durante sus primeros conciertos?',
+    respuesta1: 'The Beatles',
+    respuesta2: 'Rolling Stones',
+    respuesta3: 'Guns n Roses',
+    respuesta4: 'Pearl Jam',
+    correcta: '1'
+},
+{
+    pregunta: '¿Cuál fue el primer álbum de Deff Leppard?',
+    respuesta1: 'Rock Brigade',
+    respuesta2: 'On Through the Night',
+    respuesta3: 'Hysteria',
+    respuesta4: 'Pyromania',
+    correcta: '1'
+},
+{
+    pregunta: '¿Quién fue el ex-Beatle que consiguió un éxito con Stevie Wonder en 1982?',
+    respuesta1: 'John Lennon',
+    respuesta2: 'Ringo Starr',
+    respuesta3: 'Paul McCartney',
+    respuesta4: 'George Harrison',
+    correcta: '2'
+}
+
+----------------------
