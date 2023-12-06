@@ -1,0 +1,21 @@
+{
+  "name": "bingoServer",
+  "version": "1.0",
+  "description": "server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node server.js"
+  },
+  "keywords": [],
+  "author": "Moet Zapata",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "mongodb": "^4.13.0",
+    "node": "^17.5.0",
+    "socket.io": "^4.5.1",
+    "xhr2": "^0.2.1"
+  }
+}
